@@ -8,7 +8,7 @@
     "dev": "nodemon server.js"
   },
   "keywords": [
-    "kwiksend",
+    "KwikSend",
     "backend",
     "wallet",
     "api"
