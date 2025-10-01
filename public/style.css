@@ -1,29 +1,35 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #fdf8f3;
-  color: #1a1a1a;
+:root{
+  --bg:#0f1115;
+  --card:#0f1720;
+  --muted:#9aa6b2;
+  --accent:#1e90ff;
+  --glass: rgba(255,255,255,0.03);
 }
 
-header {
-  background: linear-gradient(90deg, #ff7a00, #ffcc00);
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+*{box-sizing:border-box;font-family:Inter,Segoe UI,Helvetica,Arial,sans-serif}
+html,body{height:100%;margin:0;background:#fff;color:#111}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid #eee;background:#fafafa;
 }
-
-.logo {
-  font-size: 20px;
-  font-weight: bold;
+.brand{font-weight:700;font-size:18px}
+nav a{margin-left:14px;color:#111;text-decoration:none}
+nav a:hover{text-decoration:underline}
+main{padding:28px;max-width:960px;margin:0 auto}
+.view{display:none}
+.view.active{display:block}
+.card{background:#fff;border:1px solid #eee;padding:16px;border-radius:8px;box-shadow:0 4px 18px rgba(12,12,12,0.04)}
+.balance{font-size:28px;margin-top:8px}
+.actions, .form-actions, .cta-row{margin-top:12px}
+button{
+  background:var(--accent);border:none;color:white;padding:8px 12px;border-radius:6px;cursor:pointer;font-weight:600
 }
-
-nav a {
-  margin: 0 10px;
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
+button:disabled{opacity:.6}
+label{display:block;margin:8px 0}
+input{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px}
+#history-list .tx{padding:10px;border-bottom:1px dashed #eee}
+.footer{padding:10px 20px;text-align:center;color:#666;border-top:1px solid #f1f1f1;margin-top:40px}
+@media (max-width:600px){
+  .topbar{flex-direction:column;align-items:flex-start}
+  nav{margin-top:10px}
 }
-
-.view { display: none; padding: 20px; }
-.view.active { display: block; }

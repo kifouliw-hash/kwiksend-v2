@@ -1,14 +1,12 @@
 {
-  "name": "kwiksend",
+  "name": "kwiksend-v2",
   "version": "1.0.0",
-  "description": "KwikSend V2 - Express app",
+  "description": "KwikSend V2 - SPA + simulated API for Render",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "path": "^0.12.7",
-    "debug": "^4.3.4"
+    "express": "^4.18.2"
   }
 }

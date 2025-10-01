@@ -1,10 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>KwikSend Test</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KwikSend V2</title>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <h1>✅ KwikSend fonctionne sur Railway !</h1>
+  <header class="topbar">
+    <div class="brand">✅ KwikSend</div>
+    <nav>
+      <a href="/" data-link>Accueil</a>
+      <a href="/wallet" data-link>Wallet</a>
+      <a href="/send" data-link>Envoyer</a>
+      <a href="/history" data-link>Historique</a>
+    </nav>
+  </header>
+
+  <main id="app">
+    <!-- Vue Accueil -->
+    <section id="view-home" class="view active">
+      <h1>Bienvenue sur KwikSend 🌍</h1>
+      <p>La nouvelle façon d’envoyer et recevoir de l’argent entre l’Afrique et l’Europe.</p>
+      <div class="cta-row">
+        <button id="go-wallet">Accéder à mon Wallet</button>
+      </div>
+    </section>
+
+    <!-- Vue Wallet -->
+    <section id="view-wallet" class="view">
+      <h2>Mon Wallet</h2>
+      <div id="wallet-card" class="card">
+        <div><strong id="w-name">—</strong></div>
+        <div id="w-balance" class="balance">—</div>
+        <div id="w-currency">—</div>
+      </div>
+      <div class="actions">
+        <button id="btn-refresh">🔄 Rafraîchir</button>
+        <button id="btn-go-send">💸 Envoyer de l'argent</button>
+      </div>
+    </section>
+
+    <!-- Vue Envoyer -->
+    <section id="view-send" class="view">
+      <h2>Envoyer de l’argent</h2>
+      <form id="send-form" class="card">
+        <label>Destinataire
+          <input name="to" required placeholder="ex: user@example.com" />
+        </label>
+        <label>Montant
+          <input name="amount" type="number" step="0.01" required />
+        </label>
+        <label>Note
+          <input name="note" placeholder="optionnel" />
+        </label>
+        <div class="form-actions">
+          <button type="submit">Envoyer ✅</button>
+          <button type="button" id="send-cancel">Annuler</button>
+        </div>
+      </form>
+      <div id="send-result"></div>
+    </section>
+
+    <!-- Vue Historique -->
+    <section id="view-history" class="view">
+      <h2>Historique des transactions</h2>
+      <div id="history-list"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>KwikSend Prototype — simulation d’API sur Render.</small>
+  </footer>
+
+  <!-- Notre JS unique -->
+  <script src="/app.js" defer></script>
 </body>
 </html>
