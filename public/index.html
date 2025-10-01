@@ -3,77 +3,300 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KwikSend V2</title>
+  <title>KwikSend — Envoyer & recevoir</title>
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
+  <!-- Header -->
   <header class="topbar">
-    <div class="brand">✅ KwikSend</div>
-    <nav>
-      <a href="/" data-link>Accueil</a>
-      <a href="/wallet" data-link>Wallet</a>
-      <a href="/send" data-link>Envoyer</a>
-      <a href="/history" data-link>Historique</a>
-    </nav>
+    <div class="brand">
+      <img src="/logo-kwiksend.svg" alt="KwikSend" class="brand-logo" onerror="this.style.display='none'"/>
+      <span class="brand-text">KwikSend</span>
+    </div>
+
+    <div class="header-actions">
+      <div class="region-switch">
+        <label for="region">Région</label>
+        <select id="region" aria-label="Sélectionner la région">
+          <option value="africa">Afrique</option>
+          <option value="europe">Europe</option>
+        </select>
+      </div>
+
+      <nav class="main-nav" aria-label="Navigation principale">
+        <a href="/" data-link>Accueil</a>
+        <a href="/wallet" data-link>Wallet</a>
+        <a href="/send" data-link>Envoyer</a>
+        <a href="/receive" data-link>Recevoir</a>
+        <a href="/history" data-link>Historique</a>
+      </nav>
+
+      <div class="user-actions">
+        <button id="btn-open-signup" class="btn-outline">Créer un compte</button>
+        <button id="btn-open-login" class="btn-primary">Se connecter</button>
+      </div>
+    </div>
   </header>
 
-  <main id="app">
-    <!-- Vue Accueil -->
+  <!-- Main SPA container -->
+  <main id="app" class="container">
+    <!-- 1. Home -->
     <section id="view-home" class="view active">
-      <h1>Bienvenue sur KwikSend 🌍</h1>
-      <p>La nouvelle façon d’envoyer et recevoir de l’argent entre l’Afrique et l’Europe.</p>
-      <div class="cta-row">
-        <button id="go-wallet">Accéder à mon Wallet</button>
-      </div>
-    </section>
-
-    <!-- Vue Wallet -->
-    <section id="view-wallet" class="view">
-      <h2>Mon Wallet</h2>
-      <div id="wallet-card" class="card">
-        <div><strong id="w-name">—</strong></div>
-        <div id="w-balance" class="balance">—</div>
-        <div id="w-currency">—</div>
-      </div>
-      <div class="actions">
-        <button id="btn-refresh">🔄 Rafraîchir</button>
-        <button id="btn-go-send">💸 Envoyer de l'argent</button>
-      </div>
-    </section>
-
-    <!-- Vue Envoyer -->
-    <section id="view-send" class="view">
-      <h2>Envoyer de l’argent</h2>
-      <form id="send-form" class="card">
-        <label>Destinataire
-          <input name="to" required placeholder="ex: user@example.com" />
-        </label>
-        <label>Montant
-          <input name="amount" type="number" step="0.01" required />
-        </label>
-        <label>Note
-          <input name="note" placeholder="optionnel" />
-        </label>
-        <div class="form-actions">
-          <button type="submit">Envoyer ✅</button>
-          <button type="button" id="send-cancel">Annuler</button>
+      <div class="hero">
+        <div class="hero-content">
+          <h1>La banque révolutionnaire pour l'Afrique & l'Europe</h1>
+          <p class="lead">Envoyez et recevez de l'argent rapidement, avec des frais transparents et une sécurité de niveau bancaire.</p>
+          <div class="hero-cta">
+            <button id="cta-signup" class="btn-primary large">Créer un compte gratuit</button>
+            <button id="cta-learn" class="btn-outline large">En savoir plus</button>
+          </div>
         </div>
-      </form>
-      <div id="send-result"></div>
+
+        <div class="hero-card">
+          <div class="card balance-card">
+            <div class="card-head">
+              <div class="title">Solde estimé</div>
+              <div class="muted">Compte démo</div>
+            </div>
+            <div class="card-body">
+              <div class="big-balance">1 250.50 <span class="currency">USD</span></div>
+              <div class="small">0.00 FCFA — 1 250.50 EUR</div>
+            </div>
+            <div class="card-actions">
+              <button id="hero-send" class="btn-ghost">Envoyer</button>
+              <button id="hero-receive" class="btn-ghost">Recevoir</button>
+            </div>
+          </div>
+
+          <ul class="benefits">
+            <li><strong>Transferts rapides</strong> — jusqu'à 90% plus vite</li>
+            <li><strong>Frais transparents</strong> — pas de surprises</li>
+            <li><strong>Sécurité</strong> — 2FA & chiffrement</li>
+          </ul>
+        </div>
+      </div>
+
+      <section class="features">
+        <article>
+          <h3>Pourquoi KwikSend ?</h3>
+          <p>Interface simple, tarifs clairs, conversions compétitives. Conçu pour les courants Afrique ↔ Europe.</p>
+        </article>
+        <article>
+          <h3>Comptes multi-devises</h3>
+          <p>Gérez FCFA, EUR et autres depuis un seul wallet.</p>
+        </article>
+        <article>
+          <h3>Sécurité</h3>
+          <p>Double authentification, vérifications en temps réel et historique détaillé.</p>
+        </article>
+      </section>
     </section>
 
-    <!-- Vue Historique -->
+    <!-- 2. Wallet -->
+    <section id="view-wallet" class="view" aria-live="polite">
+      <div class="page-head">
+        <h2>Mon Wallet</h2>
+        <div class="page-actions">
+          <button id="btn-refresh" class="btn-ghost">🔄 Rafraîchir</button>
+          <button id="btn-export" class="btn-ghost">📥 Exporter</button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card wallet-card">
+          <div class="wallet-header">
+            <div>
+              <div class="muted">Portefeuille principal</div>
+              <div id="w-name" class="wallet-name">KwikSend Demo</div>
+            </div>
+            <div class="wallet-balance" id="w-balance">—</div>
+          </div>
+
+          <div class="wallet-actions">
+            <button id="btn-go-send" class="btn-primary">Envoyer</button>
+            <button id="btn-go-receive" class="btn-outline">Recevoir</button>
+          </div>
+
+          <div class="wallet-info">
+            <div class="muted">Devise</div>
+            <div id="w-currency">USD</div>
+          </div>
+        </div>
+
+        <div class="card history-card">
+          <h3>Dernières transactions</h3>
+          <div id="history-list" class="history-list">
+            <!-- injected -->
+          </div>
+          <div class="more">
+            <button id="btn-view-all-history" class="btn-link">Voir tout l'historique</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Send -->
+    <section id="view-send" class="view">
+      <div class="page-head">
+        <h2>Envoyer de l'argent</h2>
+        <div class="muted">Rapide, sécurisé — simulation activée.</div>
+      </div>
+
+      <div class="form-panel card">
+        <form id="send-form">
+          <div class="form-row">
+            <label>Destinataire</label>
+            <input name="to" placeholder="email ou téléphone" required />
+          </div>
+
+          <div class="form-row two">
+            <div>
+              <label>Montant</label>
+              <input name="amount" type="number" step="0.01" required />
+            </div>
+            <div>
+              <label>Devise</label>
+              <select name="currency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="XOF">FCFA</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Motif (optionnel)</label>
+            <input name="note" placeholder="Ex : Aide famille" />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Confirmer l'envoi</button>
+            <button type="button" id="send-cancel" class="btn-ghost">Annuler</button>
+          </div>
+        </form>
+
+        <div id="send-result" class="send-result"></div>
+      </div>
+    </section>
+
+    <!-- 4. Receive -->
+    <section id="view-receive" class="view">
+      <div class="page-head">
+        <h2>Recevoir de l'argent</h2>
+        <div class="muted">Partagez un lien ou un QR code sécurisé.</div>
+      </div>
+
+      <div class="card receive-card">
+        <div class="receive-actions">
+          <div class="qr-placeholder">QR</div>
+          <div>
+            <div class="muted">Lien de réception</div>
+            <input id="receive-link" readonly value="https://kwiksend.demo/receive/abcd1234" />
+            <div class="small muted">Partager ce lien ou demander un virement via IBAN KwikSend</div>
+            <div class="mt">
+              <button id="btn-copy-link" class="btn-ghost">Copier le lien</button>
+              <button id="btn-generate-qr" class="btn-outline">Télécharger QR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. History -->
     <section id="view-history" class="view">
-      <h2>Historique des transactions</h2>
-      <div id="history-list"></div>
+      <div class="page-head">
+        <h2>Historique complet</h2>
+        <div class="muted">Toutes les transactions (simulateur)</div>
+      </div>
+
+      <div class="card history-full">
+        <div id="history-full-list">
+          <!-- injected -->
+        </div>
+      </div>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="footer">
-    <small>KwikSend Prototype — simulation d’API sur Render.</small>
+    <div>© <strong>KwikSend</strong> — Prototype. Données simulées.</div>
+    <div class="footer-links">
+      <a href="#" target="_blank">Mentions légales</a> · <a href="#" target="_blank">Support</a>
+    </div>
   </footer>
 
-  <!-- Notre JS unique -->
+  <!-- Modals: Login / Signup / Forgot / 2FA -->
+  <div id="modal-root" aria-hidden="true">
+    <!-- Modal common wrapper -->
+    <div class="modal" id="modal-login" role="dialog" aria-modal="true" aria-labelledby="modal-login-title" hidden>
+      <div class="modal-card">
+        <h3 id="modal-login-title">Se connecter</h3>
+        <form id="login-form">
+          <label>Email<input name="email" type="email" required /></label>
+          <label>Mot de passe<input name="password" type="password" required /></label>
+          <div class="row-between">
+            <label><input type="checkbox" name="remember" /> Se souvenir</label>
+            <button id="btn-forgot" class="btn-link" type="button">Mot de passe oublié ?</button>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Se connecter</button>
+            <button type="button" class="btn-ghost" data-close>Annuler</button>
+          </div>
+        </form>
+        <div class="small muted">Ou continuer avec</div>
+        <div class="socials">
+          <button class="btn-ghost">Google</button>
+          <button class="btn-ghost">Apple</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-signup" role="dialog" aria-modal="true" aria-labelledby="modal-signup-title" hidden>
+      <div class="modal-card">
+        <h3 id="modal-signup-title">Créer un compte</h3>
+        <form id="signup-form">
+          <label>Nom complet<input name="name" required /></label>
+          <label>Email<input name="email" type="email" required /></label>
+          <label>Mot de passe<input name="password" type="password" required /></label>
+          <label>Confirmer mot de passe<input name="password2" type="password" required /></label>
+          <div class="muted small">En créant un compte, vous acceptez les conditions.</div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Créer le compte</button>
+            <button type="button" class="btn-ghost" data-close>Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-forgot" role="dialog" aria-modal="true" aria-labelledby="modal-forgot-title" hidden>
+      <div class="modal-card">
+        <h3 id="modal-forgot-title">Mot de passe oublié</h3>
+        <form id="forgot-form">
+          <label>Indiquez votre email<input name="email" type="email" required /></label>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Envoyer lien de réinitialisation</button>
+            <button type="button" class="btn-ghost" data-close>Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-2fa" role="dialog" aria-modal="true" aria-labelledby="modal-2fa-title" hidden>
+      <div class="modal-card">
+        <h3 id="modal-2fa-title">Vérification 2FA</h3>
+        <p class="muted small">Entrez le code envoyé sur votre téléphone</p>
+        <form id="form-2fa">
+          <label>Code 6 chiffres<input name="code" required pattern="[0-9]{6}" /></label>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Valider</button>
+            <button type="button" class="btn-ghost" data-close>Annuler</button>
+          </div>
+        </form>
+        <div class="small muted">Pas de code ? <button id="resend-2fa" class="btn-link">Renvoyer</button></div>
+      </div>
+    </div>
+  </div>
+
   <script src="/app.js" defer></script>
 </body>
 </html>
