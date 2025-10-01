@@ -2,14 +2,15 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
-// Dossier public pour tes fichiers statiques
-app.use(express.static(path.join(__dirname, "public")));
+// Servir les fichiers statiques du dossier public
+app.use(express.static(path.join(__dirname, "../public")));
 
-// Route racine -> renvoie bien index.html
+// Route racine -> index.html
 app.get("/", (req, res) => {
-  res.sendFile(path.resolve("public/index.html"));
+  res.sendFile(path.resolve(__dirname, "../public/index.html"));
 });
 
 // Lancer le serveur
