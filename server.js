@@ -1,9 +1,7 @@
-// server.js - KwikSend demo API (in-memory, for Render demo)
+// server.js - KwikSend Demo API
 const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
-const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,37 +9,36 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// ---------- In-memory stores (demo) ----------
-const users = {};   // users[email] = { name, email, passwordHash, token, pending2fa, wallet }
-                   // wallet: { id, balance, currency, history: [] }
+// ==============================
+// 🗂️ In-memory store (demo only)
+// ==============================
+const users = {}; // { email: { name, email, password, token, wallet, pending2fa } }
 
-// Helper: create demo wallet
-function createDemoWallet() {
+function createWallet(currency = "EUR") {
   return {
-    id: uuidv4(),
-    balance: 1250.50,
-    currency: "USD",
+    balance: 1500,
+    currency,
     history: [
-      { id: uuidv4(), type: "receive", amount: 500, date: Date.now() - 1000 * 60 * 60 * 24 },
-      { id: uuidv4(), type: "send", amount: 50, date: Date.now() - 1000 * 60 * 60 * 2 },
-    ],
+      { type: "Réception", amount: 500, from: "KwikSend", date: new Date().toISOString() },
+      { type: "Envoi", amount: -200, to: "Jean Dupont", date: new Date().toISOString() }
+    ]
   };
 }
 
-// Helper: generate 6-digit code
-function generate2FACode() {
+function generateToken() {
+  return crypto.randomBytes(16).toString("hex");
+}
+
+function generate2FA() {
   return ("" + Math.floor(100000 + Math.random() * 900000));
 }
 
-// Helper: generate token (fake JWT for demo)
-function generateToken() {
-  return crypto.randomBytes(24).toString("hex");
-}
-
-// Middleware: require auth
+// Middleware auth
 function requireAuth(req, res, next) {
   const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith("Bearer ")) return res.status(401).json({ success: false, message: "Unauthorized" });
+  if (!auth || !auth.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Unauthorized" });
+  }
   const token = auth.split(" ")[1];
   const user = Object.values(users).find(u => u.token === token);
   if (!user) return res.status(401).json({ success: false, message: "Invalid token" });
@@ -49,122 +46,90 @@ function requireAuth(req, res, next) {
   next();
 }
 
-// ---------------- Routes ----------------
-
-// Health check
-app.get("/healthz", (req, res) => res.json({ ok: true }));
-
-// Signup
-app.post("/api/signup", async (req, res) => {
+// ==============================
+// 🔐 Auth Routes
+// ==============================
+app.post("/api/signup", (req, res) => {
   const { name, email, password } = req.body || {};
-  if (!name || !email || !password) return res.status(400).json({ success: false, message: "Missing fields" });
+  if (!name || !email || !password) {
+    return res.status(400).json({ success: false, message: "Champs manquants" });
+  }
   const lc = email.toLowerCase();
-  if (users[lc]) return res.status(400).json({ success: false, message: "User already exists" });
+  if (users[lc]) return res.status(400).json({ success: false, message: "Utilisateur existe déjà" });
 
-  const passwordHash = await bcrypt.hash(password, 10);
-  const twofa = generate2FACode();
+  const twofa = generate2FA();
+  users[lc] = { name, email: lc, password, wallet: createWallet(), pending2fa: twofa, token: null };
+  console.log(`[DEMO] 2FA signup pour ${lc}: ${twofa}`);
 
-  users[lc] = {
-    name,
-    email: lc,
-    passwordHash,
-    token: null,
-    pending2fa: twofa,
-    wallet: createDemoWallet()
-  };
-
-  // Simulate sending 2FA (for demo we return code in response)
-  console.log(`[DEMO] 2FA for signup ${lc}: ${twofa}`);
-  return res.json({ success: true, require2fa: true, message: "Code 2FA envoyé (demo)", demo2fa: twofa });
+  return res.json({ success: true, require2fa: true, demo2fa: twofa });
 });
 
-// Login
-app.post("/api/login", async (req, res) => {
+app.post("/api/login", (req, res) => {
   const { email, password } = req.body || {};
-  if (!email || !password) return res.status(400).json({ success: false, message: "Missing fields" });
-  const lc = email.toLowerCase();
+  const lc = email?.toLowerCase();
   const user = users[lc];
-  if (!user) return res.status(400).json({ success: false, message: "User not found" });
+  if (!user || user.password !== password) {
+    return res.status(401).json({ success: false, message: "Email ou mot de passe invalide" });
+  }
 
-  const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) return res.status(401).json({ success: false, message: "Invalid credentials" });
-
-  const twofa = generate2FACode();
+  const twofa = generate2FA();
   user.pending2fa = twofa;
-  console.log(`[DEMO] 2FA for login ${lc}: ${twofa}`);
-  return res.json({ success: true, require2fa: true, message: "Code 2FA envoyé (demo)", demo2fa: twofa });
+  console.log(`[DEMO] 2FA login pour ${lc}: ${twofa}`);
+
+  return res.json({ success: true, require2fa: true, demo2fa: twofa });
 });
 
-// 2FA validate
 app.post("/api/2fa", (req, res) => {
   const { email, code } = req.body || {};
-  if (!email || !code) return res.status(400).json({ success: false, message: "Missing fields" });
-  const lc = email.toLowerCase();
+  const lc = email?.toLowerCase();
   const user = users[lc];
-  if (!user || !user.pending2fa) return res.status(400).json({ success: false, message: "No pending 2FA" });
-  if (user.pending2fa !== String(code)) return res.status(401).json({ success: false, message: "Invalid 2FA code" });
-
-  // OK: generate token and clear pending2fa
+  if (!user || user.pending2fa !== code) {
+    return res.status(401).json({ success: false, message: "Code invalide" });
+  }
+  user.pending2fa = null;
   user.token = generateToken();
-  delete user.pending2fa;
-
-  return res.json({
-    success: true,
-    message: "2FA validé",
-    token: user.token,
-    wallet: user.wallet,
-    user: { email: user.email, name: user.name }
-  });
+  return res.json({ success: true, token: user.token, wallet: user.wallet, user: { email: user.email, name: user.name } });
 });
 
-// Logout
 app.post("/api/logout", requireAuth, (req, res) => {
   req.user.token = null;
-  return res.json({ success: true, message: "Logged out" });
+  return res.json({ success: true, message: "Déconnecté" });
 });
 
-// Get wallet (protected)
+// ==============================
+// 💳 Wallet & Transactions
+// ==============================
 app.get("/api/wallet", requireAuth, (req, res) => {
   return res.json({ success: true, wallet: req.user.wallet });
 });
 
-// Send (protected)
 app.post("/api/send", requireAuth, (req, res) => {
-  const { to, amount, currency, note } = req.body || {};
-  if (!to || typeof amount !== "number" || amount <= 0) {
-    return res.status(400).json({ success: false, message: "Invalid payload" });
+  const { to, amount } = req.body || {};
+  if (!to || !amount) return res.status(400).json({ success: false, message: "Données invalides" });
+
+  if (req.user.wallet.balance < amount) {
+    return res.status(400).json({ success: false, message: "Solde insuffisant" });
   }
 
-  // simple balance check
-  if (amount > req.user.wallet.balance) {
-    return res.status(400).json({ success: false, message: "Insufficient balance" });
-  }
+  req.user.wallet.balance -= amount;
+  req.user.wallet.history.unshift({ type: "Envoi", amount: -amount, to, date: new Date().toISOString() });
 
-  // debit sender
-  req.user.wallet.balance = +(req.user.wallet.balance - amount).toFixed(2);
-  const entry = { id: uuidv4(), type: "send", amount, to, note: note || "", date: Date.now() };
-  req.user.wallet.history.unshift(entry);
-
-  // If recipient is a KwikSend demo user (same platform), credit them
-  const recip = users[String(to).toLowerCase()];
-  if (recip) {
-    recip.wallet.balance = +(recip.wallet.balance + amount).toFixed(2);
-    const rEntry = { id: uuidv4(), type: "receive", amount, from: req.user.email, date: Date.now() };
-    recip.wallet.history.unshift(rEntry);
-  }
-
-  return res.json({ success: true, message: "Transaction completed (demo)", tx: entry, wallet: req.user.wallet });
+  return res.json({ success: true, wallet: req.user.wallet });
 });
 
-// SPA fallback: serve index.html for client-side routes (but keep API routes above)
+// ==============================
+// 🌍 Serve SPA
+// ==============================
 app.get("*", (req, res) => {
-  if (req.path.startsWith("/api/") || req.path === "/healthz") {
+  if (req.path.startsWith("/api/")) {
     return res.status(404).json({ success: false, message: "Not found" });
   }
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// start
+// ==============================
+// 🚀 Start
+// ==============================
 app.listen(PORT, () => {
-  console.log(`🚀 KwikSend demo API running on port ${PORT}`);
+  console.log(`🚀 KwikSend API running on port ${PORT}`);
 });
