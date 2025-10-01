@@ -1,21 +1,13 @@
 const express = require("express");
-const path = require("path");
 const app = express();
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 
-// Chemin vers le dossier public (depuis backend)
-const publicPath = path.join(__dirname, "../public");
-
-// Servir les fichiers statiques
-app.use(express.static(publicPath));
-
-// Route pour la racine
+// Test route racine
 app.get("/", (req, res) => {
-  res.sendFile(path.join(publicPath, "index.html"));
+  res.send("✅ KwikSend backend is running on Railway!");
 });
 
-// Lancer le serveur
 app.listen(PORT, () => {
   console.log(`🚀 KwikSend running on port ${PORT}`);
 });
