@@ -1,12 +1,11 @@
 {
   "name": "kwiksend-v2",
   "version": "1.0.0",
-  "description": "KwikSend V2 backend + frontend",
-  "main": "backend/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.21.2"
   }
 }
