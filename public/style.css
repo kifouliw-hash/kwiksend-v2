@@ -1,0 +1,29 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #fdf8f3;
+  color: #1a1a1a;
+}
+
+header {
+  background: linear-gradient(90deg, #ff7a00, #ffcc00);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+nav a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.view { display: none; padding: 20px; }
+.view.active { display: block; }

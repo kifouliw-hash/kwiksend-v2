@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 // Chemin vers le dossier public (depuis backend)
 const publicPath = path.join(__dirname, "../public");
