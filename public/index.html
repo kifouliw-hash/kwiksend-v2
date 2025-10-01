@@ -2,64 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KwikSend</title>
-  <link rel="stylesheet" href="style.css">
+  <title>KwikSend Test</title>
 </head>
 <body>
-  <header>
-    <div class="logo">Kwik<span>Send</span></div>
-    <nav>
-      <a href="#" onclick="showView('home')">Accueil</a>
-      <a href="#" onclick="showView('wallet')">Portefeuille</a>
-      <a href="#" onclick="showView('transfer')">Transferts</a>
-      <a href="#" onclick="showView('virtualcard')">Carte virtuelle</a>
-    </nav>
-  </header>
-
-  <main>
-    <!-- Accueil -->
-    <section id="home" class="view active">
-      <h1>Votre argent partout tout de suite 🌍</h1>
-      <p>La nouvelle façon d’envoyer et recevoir de l’argent entre l’Afrique et l’Europe.</p>
-      <button onclick="showView('wallet')">Accéder au Portefeuille</button>
-    </section>
-
-    <!-- Portefeuille -->
-    <section id="wallet" class="view">
-      <h2>Mon Portefeuille</h2>
-      <h1 id="balance">-- FCFA</h1>
-      <p id="balance-eur">≈ -- EUR</p>
-      <button onclick="topupWallet()">Alimenter</button>
-      <ul id="history"></ul>
-    </section>
-
-    <!-- Transfert -->
-    <section id="transfer" class="view">
-      <h2>Envoyer de l’argent</h2>
-      <form onsubmit="simulateTransfer(event)">
-        <input type="text" placeholder="Bénéficiaire" id="beneficiaire" required>
-        <input type="number" placeholder="Montant" id="montant" required>
-        <select id="channel">
-          <option value="Orange Money">Orange Money</option>
-          <option value="MTN">MTN</option>
-          <option value="IBAN">IBAN</option>
-        </select>
-        <button type="submit">Envoyer</button>
-      </form>
-      <p id="result"></p>
-    </section>
-
-    <!-- Carte virtuelle -->
-    <section id="virtualcard" class="view">
-      <h2>Carte Virtuelle KwikSend</h2>
-      <p>Numéro : **** **** **** 1234</p>
-      <p>Expiration : 12/27</p>
-      <p>CVV : 123</p>
-      <button onclick="alert('Carte activée 🚀')">Activer</button>
-    </section>
-  </main>
-
-  <script src="wallet.js"></script>
+  <h1>✅ KwikSend fonctionne sur Railway !</h1>
 </body>
 </html>
