@@ -2,18 +2,20 @@ const express = require("express");
 const path = require("path");
 const app = express();
 
-// Railway donne automatiquement le PORT
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-// Servir les fichiers statiques (CSS, JS, images, etc.)
-app.use(express.static(path.join(__dirname, "../public")));
+// Chemin vers le dossier public (depuis backend)
+const publicPath = path.join(__dirname, "../public");
 
-// Route pour la racine "/"
+// Servir les fichiers statiques
+app.use(express.static(publicPath));
+
+// Route pour la racine
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+  res.sendFile(path.join(publicPath, "index.html"));
 });
 
 // Lancer le serveur
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(`🚀 KwikSend running on port ${PORT}`);
 });
