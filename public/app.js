@@ -177,27 +177,26 @@ function renderWallet() {
 // --- Nouvelle fonction pour saisir le montant et rediriger vers transfert ---
 function sendAndRedirect() {
   const amountInput = document.getElementById("amount");
-  let amount = amountInput ? parseFloat(amountInput.value) : 0;
+  const amount = parseFloat(amountInput.value);
 
-  if (!amount || amount <= 0) {
-    alert("⚠️ Veuillez entrer un montant valide.");
+  if (isNaN(amount) || amount <= 0) {
+    alert("⚠️ Veuillez entrer un montant valide !");
     return;
   }
 
-  // Débit du portefeuille
+  // Débiter le portefeuille (simulation)
   wallet.balance -= amount;
   wallet.history.unshift({
     type: "Envoi",
     amount: -amount,
-    to: "Transfert",
+    to: "Test",
     date: new Date().toLocaleDateString(),
     status: "validé"
   });
-
   renderWallet();
 
-  // 🔀 Redirection après envoi
-  window.location.href = "transferts.html"; // (ou transfert.html si tu gardes sans "s")
+  // 👉 Redirection
+  window.location.href = "transfert.html";
 }
 
 function simulateSend() {
