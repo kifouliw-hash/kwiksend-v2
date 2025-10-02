@@ -184,6 +184,7 @@ function sendAndRedirect() {
     return;
   }
 
+  // Débit du portefeuille
   wallet.balance -= amount;
   wallet.history.unshift({
     type: "Envoi",
@@ -194,7 +195,9 @@ function sendAndRedirect() {
   });
 
   renderWallet();
-  window.location.href = "transfert.html"; 
+
+  // 🔀 Redirection après envoi
+  window.location.href = "transferts.html"; // (ou transfert.html si tu gardes sans "s")
 }
 
 function simulateSend() {
