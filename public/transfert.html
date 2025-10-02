@@ -100,7 +100,7 @@
   const dynamicField = document.getElementById("dynamicField");
   const form = document.getElementById("transferForm");
 
-  // Adapter le champ selon la destination
+  // Adapter le champ selon la destination (IBAN ou Mobile Money)
   function updateDynamicField() {
     const dest = destinationEl.value;
     if (dest === "afrique") {
@@ -118,7 +118,25 @@
   destinationEl.addEventListener("change", updateDynamicField);
   updateDynamicField();
 
-  // Simulation d'envoi
+  // 🔀 Adapter les sources selon la destination
+  function updateSourceOptions() {
+    const dest = document.getElementById("destination").value;
+    const source = document.getElementById("source");
+
+    source.innerHTML = ""; // reset options
+
+    if (dest === "afrique") {
+      source.innerHTML += `<option value="wallet">💼 Portefeuille KwikSend</option>`;
+      source.innerHTML += `<option value="cb">💳 Carte bancaire</option>`;
+    } else {
+      source.innerHTML += `<option value="wallet">💼 Portefeuille KwikSend</option>`;
+      source.innerHTML += `<option value="mobile">📲 Mobile Money (OM, Wave…)</option>`;
+    }
+  }
+  document.getElementById("destination").addEventListener("change", updateSourceOptions);
+  updateSourceOptions();
+
+  // 🚀 Gestion du formulaire de transfert
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const dest = destinationEl.value;
@@ -132,6 +150,7 @@
     }
 
     if (source === "wallet") {
+      // Débit du portefeuille simulé
       if (wallet.balance >= amount) {
         wallet.balance -= amount;
         wallet.history.unshift({
@@ -141,13 +160,16 @@
           date: new Date().toLocaleDateString(),
           status: "validé"
         });
-        alert(`✅ Transfert de ${amount} EUR vers ${receiver} (${dest}) effectué avec succès depuis votre portefeuille KwikSend.`);
+        renderWallet();
+        alert(`✅ Transfert de ${amount} EUR vers ${receiver} (${dest}) effectué depuis votre portefeuille KwikSend.`);
       } else {
         alert("❌ Solde insuffisant dans le portefeuille KwikSend.");
         return;
       }
-    } else {
-      alert(`💳 Paiement de ${amount} EUR par carte bancaire vers ${receiver} (${dest}) simulé avec succès.`);
+    } else if (source === "cb") {
+      alert(`💳 Paiement de ${amount} EUR par carte bancaire vers ${receiver} (${dest}) simulé.`);
+    } else if (source === "mobile") {
+      alert(`📲 Paiement de ${amount} EUR par Mobile Money vers ${receiver} (${dest}) simulé.`);
     }
 
     // Redirection vers le portefeuille après envoi
