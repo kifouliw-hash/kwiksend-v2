@@ -74,13 +74,45 @@
   <!-- Boutons actions -->
 <div class="actions" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
   <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
+
   <button onclick="sendAndRedirect()">💸 Envoyer</button>
-  <button onclick="simulateReceive()">📥 Recevoir</button>
+  <button onclick="openReceiveModal()">📥 Recevoir</button>
+
   <button onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
-  <button onclick="location.href='mobile.html'">📲 Mobile Money</button> 
-  <button onclick="simulateSend()">🔄 Test Envoi (mock API)</button>
-  <button onclick="simulateReceive()">💰 Test Réception (mock API)</button>
+  <button onclick="location.href='mobile.html'">📲 Mobile Money</button>
 </div>
+
+<!-- Modal QR Code Recevoir -->
+<div id="receiveModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
+  <div style="background:white;padding:2rem;border-radius:12px;max-width:400px;text-align:center;">
+    <h2>📥 Recevoir de l’argent</h2>
+    <canvas id="qrcode"></canvas>
+    <p>Mon lien KwikSend :</p>
+    <a href="https://kwiksend.com/user123" target="_blank">https://kwiksend.com/user123</a>
+    <div style="margin-top:1rem;">
+      <button onclick="shareWhatsApp()">📲 WhatsApp</button>
+      <button onclick="shareEmail()">📧 Email</button>
+    </div>
+    <button style="margin-top:1rem;" onclick="closeReceiveModal()">❌ Fermer</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+  function openReceiveModal() {
+    document.getElementById("receiveModal").style.display = "flex";
+    QRCode.toCanvas(document.getElementById("qrcode"), "https://kwiksend.com/user123");
+  }
+  function closeReceiveModal() {
+    document.getElementById("receiveModal").style.display = "none";
+  }
+  function shareWhatsApp() {
+    window.open("https://wa.me/?text=Voici mon lien KwikSend : https://kwiksend.com/user123");
+  }
+  function shareEmail() {
+    window.location.href = "mailto:?subject=Mon lien KwikSend&body=Voici mon lien KwikSend : https://kwiksend.com/user123";
+  }
+</script>
 
 
   <!-- Historique -->

@@ -176,22 +176,25 @@ function renderWallet() {
 
 // --- Nouvelle fonction pour saisir le montant et rediriger vers transfert ---
 function sendAndRedirect() {
-  const input = document.getElementById("amount");
-  const value = input && input.value ? parseFloat(input.value) : 50;
-  if (value > 0 && wallet.balance >= value) {
-    wallet.balance -= value;
-    wallet.history.unshift({
-      type: "Envoi",
-      amount: -value,
-      to: "Page Transfert",
-      date: new Date().toLocaleDateString(),
-      status: "validé"
-    });
-    renderWallet();
-    window.location.href = "transfert.html";
-  } else {
-    alert("Montant invalide ou solde insuffisant.");
+  const amountInput = document.getElementById("amount");
+  let amount = amountInput ? parseFloat(amountInput.value) : 0;
+
+  if (!amount || amount <= 0) {
+    alert("⚠️ Veuillez entrer un montant valide.");
+    return;
   }
+
+  wallet.balance -= amount;
+  wallet.history.unshift({
+    type: "Envoi",
+    amount: -amount,
+    to: "Transfert",
+    date: new Date().toLocaleDateString(),
+    status: "validé"
+  });
+
+  renderWallet();
+  window.location.href = "transfert.html"; 
 }
 
 function simulateSend() {

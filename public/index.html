@@ -26,8 +26,16 @@
 <header>
   <div class="container header-container">
     <div class="logo">Kwik<span>Send</span></div>
+
+    <!-- 🍔 Burger -->
+    <div class="burger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
     <nav>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-menu">
         <li><a href="index.html" class="active" data-i18n="nav.home">Accueil</a></li>
         <li><a href="#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
         <li><a href="#avantages" data-i18n="nav.advantages">Avantages</a></li>
@@ -35,6 +43,7 @@
         <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
       </ul>
     </nav>
+
     <div class="header-actions">
       <select id="langSwitcher" onchange="switchLang(this.value)">
         <option value="fr">🇫🇷 FR</option>
@@ -62,7 +71,7 @@
       <h3 data-i18n="features.wallet.title">💰 Portefeuille numérique</h3>
       <p data-i18n="features.wallet.text">Gérez votre argent en CFA et en EUR.</p>
     </div>
-    <div class="card clickable" onclick="location.href='transferts.html'">
+    <div class="card clickable" onclick="location.href='transfert.html'">
       <h3 data-i18n="features.africaeurope.title">🌐 Transferts Afrique ↔ Europe</h3>
       <p data-i18n="features.africaeurope.text">Envoyez ou recevez instantanément.</p>
     </div>
@@ -103,13 +112,5 @@
 <script src="script.js"></script>
 <script src="translate.js"></script>
 <script src="app.js"></script>
-
-<!-- 📲 Enregistrement du Service Worker -->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(console.error);
-  }
-</script>
-
 </body>
 </html>
