@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KwikSend - Retrait IBAN</title>
+  <meta name="description" content="Effectuez un retrait sécurisé vers votre compte bancaire IBAN avec KwikSend.">
+  <meta name="theme-color" content="#ff7a00">
+
+  <!-- Favicon & icônes -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🧭 Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
+        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
+        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
+        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
+        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <select id="langSwitcher" onchange="switchLang(this.value)">
+        <option value="fr">🇫🇷 FR</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button id="darkToggle">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- 🏦 Retrait -->
+<section class="hero" style="padding:2rem 1rem;">
+  <div class="hero-content" style="max-width:600px;margin:auto;">
+    <h1>🏦 Retrait bancaire (IBAN)</h1>
+    <p>Saisissez votre IBAN et le montant à retirer.</p>
+
+    <!-- Formulaire -->
+    <form id="withdrawForm" style="display:flex;flex-direction:column;gap:1rem;margin-top:2rem;">
+      <label>IBAN :</label>
+      <input type="text" id="iban" placeholder="FR76 3000 6000 ..." required>
+
+      <label>Montant :</label>
+      <input type="number" id="withdrawAmount" placeholder="Ex: 200" required min="1">
+
+      <button type="submit" class="cta">Valider le retrait</button>
+    </form>
+  </div>
+</section>
+
+<!-- 📝 Footer -->
+<footer>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+</footer>
+
+<!-- 📜 Scripts communs -->
+<script src="script.js"></script>
+<script src="translate.js"></script>
+<script src="app.js"></script>
+
+<!-- 📲 Service Worker + logique -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  }
+
+  const form = document.getElementById("withdrawForm");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const iban = document.getElementById("iban").value.trim();
+    const amount = parseFloat(document.getElementById("withdrawAmount").value);
+
+    if (!iban || iban.length < 15) {
+      alert("⚠️ Veuillez saisir un IBAN valide.");
+      return;
+    }
+    if (isNaN(amount) || amount <= 0) {
+      alert("⚠️ Veuillez entrer un montant valide.");
+      return;
+    }
+
+    // Simulation du retrait
+    wallet.balance -= amount;
+    wallet.history.unshift({
+      type: "Retrait IBAN",
+      amount: -amount,
+      to: iban,
+      date: new Date().toLocaleDateString(),
+      status: "attente"
+    });
+
+    alert(`⏳ Votre retrait de ${amount} EUR vers l’IBAN ${iban} est en cours de traitement.`);
+
+    // Redirection portefeuille
+    window.location.href = "portefeuille.html";
+  });
+</script>
+</body>
+</html>

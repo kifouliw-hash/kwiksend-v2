@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KwikSend - Connexion</title>
+  <meta name="description" content="Connectez-vous à KwikSend pour envoyer et recevoir de l’argent entre l’Afrique et l’Europe.">
+  <meta name="theme-color" content="#ff7a00">
+
+  <!-- Favicon & icônes -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🧭 Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
+        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
+        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
+        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
+        <li><a href="connexion.html" class="cta-nav active" data-i18n="nav.login">Connexion</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <select id="langSwitcher" onchange="switchLang(this.value)">
+        <option value="fr">🇫🇷 FR</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button id="darkToggle">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- 🔐 Auth -->
+<section class="hero" style="padding-top:3rem;padding-bottom:3rem;">
+  <div class="hero-content" style="max-width:900px;margin:auto;">
+    <h1 data-i18n="login.title">Connexion</h1>
+    <p class="subtitle" data-i18n="hero.subtitle">La nouvelle façon d’envoyer et de recevoir de l’argent entre l’Afrique et l’Europe.</p>
+
+    <!-- Onglets -->
+    <div style="display:flex;gap:.5rem;justify-content:center;margin:1rem 0 2rem;">
+      <button class="cta" id="tab-login"  onclick="showAuth('login')">Connexion</button>
+      <button class="cta" id="tab-signup" onclick="showAuth('signup')" style="background:#0a8f2f;">Créer un compte</button>
+      <button class="cta" id="tab-reset"  onclick="showAuth('reset')"  style="background:#0a8f2f;">Mot de passe</button>
+    </div>
+
+    <!-- Cartes -->
+    <div style="display:grid;grid-template-columns:1fr;gap:1rem;max-width:420px;margin:0 auto;">
+      <!-- Connexion -->
+      <div class="card" id="box-login">
+        <h3 style="margin-bottom:.5rem;" data-i18n="login.title">Connexion</h3>
+        <form onsubmit="return simulateLogin(event)" style="display:flex;flex-direction:column;gap:.8rem;">
+          <input type="email" placeholder="Adresse e-mail" required>
+          <input type="password" placeholder="Mot de passe" required>
+          <button type="submit" class="cta" data-i18n="login.submit">Se connecter</button>
+        </form>
+        <div class="links" style="margin-top:.8rem;font-size:.95rem;">
+          <a href="javascript:void(0)" onclick="showAuth('reset')" data-i18n="login.forgot">Mot de passe oublié ?</a>
+          <span> · </span>
+          <a href="javascript:void(0)" onclick="showAuth('signup')" data-i18n="login.signup">Pas encore de compte ? Inscrivez-vous</a>
+        </div>
+      </div>
+
+      <!-- Inscription -->
+      <div class="card" id="box-signup" style="display:none;">
+        <h3 style="margin-bottom:.5rem;" data-i18n="signup.title">Créer un compte</h3>
+        <form onsubmit="return simulateSignup(event)" style="display:flex;flex-direction:column;gap:.8rem;">
+          <input type="text" placeholder="Nom complet" required>
+          <input type="email" placeholder="Adresse e-mail" required>
+          <input type="password" placeholder="Mot de passe" required>
+          <button type="submit" class="cta" data-i18n="signup.submit">S’inscrire</button>
+        </form>
+        <div class="links" style="margin-top:.8rem;font-size:.95rem;">
+          <a href="javascript:void(0)" onclick="showAuth('login')">⬅ Retour à la connexion</a>
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="card" id="box-reset" style="display:none;">
+        <h3 style="margin-bottom:.5rem;">Réinitialisation</h3>
+        <form onsubmit="return simulateReset(event)" style="display:flex;flex-direction:column;gap:.8rem;">
+          <input type="email" placeholder="Adresse e-mail" required>
+          <button type="submit" class="cta">Envoyer le lien</button>
+        </form>
+        <div class="links" style="margin-top:.8rem;font-size:.95rem;">
+          <a href="javascript:void(0)" onclick="showAuth('login')">⬅ Retour à la connexion</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 📝 Footer -->
+<footer>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+</footer>
+
+<!-- 📜 Scripts communs -->
+<script src="script.js"></script>
+<script src="translate.js"></script>
+<script src="app.js"></script>
+
+<!-- 📲 Enregistrement du Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  }
+
+  // Tabs simples
+  function showAuth(which){
+    const boxes = {login:'box-login', signup:'box-signup', reset:'box-reset'};
+    Object.values(boxes).forEach(id => document.getElementById(id).style.display = 'none');
+    document.getElementById(boxes[which]).style.display = 'block';
+    const firstInput = document.querySelector('#'+boxes[which]+' input');
+    if(firstInput) firstInput.focus();
+  }
+
+  // Simulations légères
+  function simulateLogin(e){
+    e.preventDefault();
+    alert("✅ Simulation : connexion réussie.");
+    window.location.href = "portefeuille.html";
+    return false;
+  }
+  function simulateSignup(e){
+    e.preventDefault();
+    alert("🎉 Compte créé avec succès !");
+    window.location.href = "portefeuille.html";
+    return false;
+  }
+  function simulateReset(e){
+    e.preventDefault();
+    alert("📩 Lien de réinitialisation envoyé.");
+    showAuth('login');
+    return false;
+  }
+
+  // Sélection onglet par défaut
+  showAuth('login');
+</script>
+</body>
+</html>

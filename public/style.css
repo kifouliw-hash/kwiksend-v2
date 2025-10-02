@@ -1,35 +1,282 @@
-:root{
-  --bg:#0f1115;
-  --card:#0f1720;
-  --muted:#9aa6b2;
-  --accent:#1e90ff;
-  --glass: rgba(255,255,255,0.03);
+/* ================================
+ 🌍 Variables Globales
+================================ */
+:root {
+  --orange: #ff7a00;
+  --yellow: #ffcc00;
+  --green-cta: #0a8f2f;
+  --text-dark: #1a1a1a;
+  --text-light: #ffffff;
+  --bg-light: #fdf8f3;
 }
 
-*{box-sizing:border-box;font-family:Inter,Segoe UI,Helvetica,Arial,sans-serif}
-html,body{height:100%;margin:0;background:#fff;color:#111}
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 20px;border-bottom:1px solid #eee;background:#fafafa;
+/* 🌙 Dark Mode */
+body.dark {
+  --bg-light: #1a1a1a;
+  --text-dark: #ffffff;
+  background: #121212;
+  color: var(--text-dark);
 }
-.brand{font-weight:700;font-size:18px}
-nav a{margin-left:14px;color:#111;text-decoration:none}
-nav a:hover{text-decoration:underline}
-main{padding:28px;max-width:960px;margin:0 auto}
-.view{display:none}
-.view.active{display:block}
-.card{background:#fff;border:1px solid #eee;padding:16px;border-radius:8px;box-shadow:0 4px 18px rgba(12,12,12,0.04)}
-.balance{font-size:28px;margin-top:8px}
-.actions, .form-actions, .cta-row{margin-top:12px}
-button{
-  background:var(--accent);border:none;color:white;padding:8px 12px;border-radius:6px;cursor:pointer;font-weight:600
+
+/* ================================
+ 📝 Base
+================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-button:disabled{opacity:.6}
-label{display:block;margin:8px 0}
-input{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px}
-#history-list .tx{padding:10px;border-bottom:1px dashed #eee}
-.footer{padding:10px 20px;text-align:center;color:#666;border-top:1px solid #f1f1f1;margin-top:40px}
-@media (max-width:600px){
-  .topbar{flex-direction:column;align-items:flex-start}
-  nav{margin-top:10px}
+
+body {
+  background: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* ================================
+ 🧭 Header
+================================ */
+header {
+  background: linear-gradient(90deg, var(--orange), var(--yellow));
+  padding: 1rem 0;
+}
+
+.header-container {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: var(--text-light);
+}
+
+.logo span {
+  color: var(--yellow);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.nav-links .cta-nav {
+  background: white;
+  color: var(--orange);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#langSwitcher, #darkToggle {
+  border: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ================================
+ 🌍 Hero
+================================ */
+.hero {
+  background: linear-gradient(180deg, var(--orange), var(--yellow));
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.cta {
+  background: var(--green-cta);
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.8rem 1.6rem;
+  border-radius: 20px;
+  transition: 0.2s ease;
+  display: inline-block;
+}
+
+.cta:hover {
+  background: #066a22;
+}
+
+/* ================================
+ ✨ Features
+================================ */
+.features {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* ================================
+ 🔘 Boutons & Formulaires
+================================ */
+button {
+  background: var(--orange);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: 600;
+}
+
+button:hover {
+  background: var(--yellow);
+  color: var(--text-dark);
+}
+
+input, select {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+/* ================================
+ 💳 Carte virtuelle
+================================ */
+.virtual-card {
+  width: 320px;
+  height: 200px;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  margin: 2rem auto;
+}
+
+.card-chip {
+  width: 50px;
+  height: 35px;
+  background: gold;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.card-number {
+  font-size: 1.4rem;
+  letter-spacing: 3px;
+  margin-bottom: 1rem;
+}
+
+.card-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* ================================
+ 📊 Historique
+================================ */
+#wallet-history li {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ================================
+ 📝 Footer
+================================ */
+footer {
+  background: var(--orange);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 3rem;
+}
+
+/* ================================
+ 📱 Responsive
+================================ */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+.burger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background: var(--orange);
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 200px;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  .nav-links.open {
+    display: flex;
+  }
+  .burger {
+    display: flex;
+  }
 }

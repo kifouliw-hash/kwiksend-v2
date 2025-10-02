@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KwikSend - Liste d’attente</title>
+  <meta name="description" content="Inscrivez-vous à la liste d’attente KwikSend pour être parmi les premiers à utiliser notre service de transferts Afrique ↔ Europe.">
+  <meta name="theme-color" content="#ff7a00">
+
+  <!-- Favicon & icônes -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🧭 Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
+        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
+        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
+        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
+        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <select id="langSwitcher" onchange="switchLang(this.value)">
+        <option value="fr">🇫🇷 FR</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button id="darkToggle">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- 🚀 Liste d’attente -->
+<section class="hero" style="padding:3rem 1rem;text-align:center;">
+  <div class="hero-content" style="max-width:600px;margin:auto;">
+    <h1>🚀 Rejoignez la liste d’attente</h1>
+    <p>Inscrivez-vous pour être parmi les premiers à tester KwikSend dès son lancement.</p>
+
+    <form class="waitlist-form" onsubmit="return joinWaitlist(event)" style="margin-top:2rem;display:flex;flex-direction:column;gap:1rem;">
+      <input type="text" placeholder="Nom complet" required>
+      <input type="email" placeholder="Adresse e-mail" required>
+      <button type="submit" class="cta">Je m’inscris</button>
+    </form>
+  </div>
+</section>
+
+<!-- 📝 Footer -->
+<footer>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+</footer>
+
+<!-- 📜 Scripts communs -->
+<script src="script.js"></script>
+<script src="translate.js"></script>
+<script src="app.js"></script>
+
+<!-- 📲 Enregistrement du Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  }
+
+  function joinWaitlist(e){
+    e.preventDefault();
+    alert("✅ Merci ! Vous êtes inscrit sur la liste d’attente KwikSend.");
+    window.location.href="index.html";
+    return false;
+  }
+</script>
+</body>
+</html>

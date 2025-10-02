@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KwikSend - Recevoir de l'argent</title>
+  <meta name="description" content="Recevez de l’argent via KwikSend : partagez votre lien ou QR code pour des transferts rapides et sécurisés.">
+  <meta name="theme-color" content="#ff7a00">
+
+  <!-- Favicon & icônes -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🧭 Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
+        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
+        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
+        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
+        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <select id="langSwitcher" onchange="switchLang(this.value)">
+        <option value="fr">🇫🇷 FR</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button id="darkToggle">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- 📥 Recevoir -->
+<section class="hero" style="padding:2rem 1rem;">
+  <div class="hero-content" style="max-width:650px;margin:auto;text-align:center;">
+    <h1>📥 Recevoir de l’argent</h1>
+    <p>Partagez votre lien ou QR code pour recevoir un transfert instantané.</p>
+
+    <!-- QR Code mock -->
+    <div style="margin:2rem auto;width:200px;height:200px;background:white;padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://kwiksend.com/user123" alt="QR Code KwikSend">
+    </div>
+
+    <!-- Lien unique -->
+    <p><strong>Mon lien KwikSend :</strong></p>
+    <p style="word-break:break-all;color:#0a8f2f;">https://kwiksend.com/user123</p>
+
+    <!-- Boutons de partage -->
+    <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;">
+      <button onclick="shareWhatsApp()">📲 Partager WhatsApp</button>
+      <button onclick="shareEmail()">✉️ Partager Email</button>
+    </div>
+
+    <!-- Simulation réception -->
+    <div style="margin-top:2rem;">
+      <button onclick="simulateIncoming()" class="cta">💰 Simuler un virement reçu</button>
+    </div>
+  </div>
+</section>
+
+<!-- 📝 Footer -->
+<footer>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+</footer>
+
+<!-- 📜 Scripts communs -->
+<script src="script.js"></script>
+<script src="translate.js"></script>
+<script src="app.js"></script>
+
+<!-- 📲 Service Worker + logique -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  }
+
+  function shareWhatsApp() {
+    const link = encodeURIComponent("Reçois de l’argent via mon lien KwikSend : https://kwiksend.com/user123");
+    window.open("https://wa.me/?text=" + link, "_blank");
+  }
+
+  function shareEmail() {
+    window.location.href = "mailto:?subject=Mon lien KwikSend&body=Reçois de l’argent via mon lien KwikSend : https://kwiksend.com/user123";
+  }
+
+  function simulateIncoming() {
+    const amount = 75;
+    wallet.balance += amount;
+    wallet.history.unshift({
+      type: "Réception",
+      amount: +amount,
+      from: "Transfert externe",
+      date: new Date().toLocaleDateString(),
+      status: "validé"
+    });
+    alert(`✅ Vous avez reçu ${amount} EUR sur votre portefeuille KwikSend.`);
+    window.location.href = "portefeuille.html";
+  }
+</script>
+</body>
+</html>

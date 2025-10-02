@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KwikSend - Portefeuille</title>
+  <meta name="description" content="Votre portefeuille KwikSend : consultez vos soldes, envoyez et recevez de l’argent en toute simplicité.">
+  <meta name="theme-color" content="#ff7a00">
+
+  <!-- Favicon & icônes -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🧭 Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
+        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
+        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
+        <li><a href="portefeuille.html" class="active" data-i18n="nav.wallet">Portefeuille</a></li>
+        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <select id="langSwitcher" onchange="switchLang(this.value)">
+        <option value="fr">🇫🇷 FR</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button id="darkToggle">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- 💼 Wallet -->
+<section class="wallet" style="padding:3rem 1rem;max-width:900px;margin:auto;">
+  <h1 data-i18n="wallet.title" style="text-align:center;margin-bottom:2rem;">💼 Mon Portefeuille</h1>
+
+  <!-- Solde multi-devises -->
+  <div class="balances" style="display:flex;justify-content:space-around;margin-bottom:2rem;">
+    <div class="card" style="flex:1;margin:0 1rem;text-align:center;">
+      <h3>EUR</h3>
+      <p id="wallet-balance">0 €</p>
+    </div>
+    <div class="card" style="flex:1;margin:0 1rem;text-align:center;">
+      <h3>FCFA</h3>
+      <p id="wallet-balance-fcfa">0 FCFA</p>
+    </div>
+  </div>
+
+  <!-- Carte virtuelle -->
+  <div class="virtual-card">
+    <div class="card-chip"></div>
+    <div class="card-number">**** **** **** 1250</div>
+    <div class="card-info">
+      <span>KwikSend User</span>
+      <span>12/28</span>
+    </div>
+  </div>
+
+  <!-- Boutons actions -->
+  <div class="actions" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
+    <button onclick="location.href='transferts.html'">💸 Envoyer</button>
+    <button onclick="location.href='recevoir.html'">📥 Recevoir</button>
+    <button onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
+    <button onclick="location.href='mobile.html'">📲 Mobile Money</button>
+    <button onclick="simulateSend()">🔄 Test Envoi (mock API)</button>
+    <button onclick="simulateReceive()">💰 Test Réception (mock API)</button>
+  </div>
+
+  <!-- Historique -->
+  <section style="margin-top:3rem;">
+    <h2 data-i18n="wallet.history">📊 Historique des transactions</h2>
+    <ul id="wallet-history" style="list-style:none;padding:0;margin-top:1rem;"></ul>
+  </section>
+</section>
+
+<!-- 📝 Footer -->
+<footer>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+</footer>
+
+<!-- 📜 Scripts communs -->
+<script src="script.js"></script>
+<script src="translate.js"></script>
+<script src="app.js"></script>
+
+<!-- 📲 Enregistrement du Service Worker + logique wallet -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  }
+
+  // Conversion mock : 1 EUR = 650 FCFA
+  function renderWalletCustom() {
+    const balanceEl = document.getElementById("wallet-balance");
+    const balanceFcfaEl = document.getElementById("wallet-balance-fcfa");
+    const historyEl = document.getElementById("wallet-history");
+
+    if (!balanceEl || !historyEl) return;
+
+    balanceEl.textContent = `${wallet.balance} ${wallet.currency}`;
+    balanceFcfaEl.textContent = `${wallet.balance * 650} FCFA`;
+
+    historyEl.innerHTML = "";
+    wallet.history.forEach(tx => {
+      const li = document.createElement("li");
+      li.style.marginBottom = "10px";
+      li.style.padding = "10px";
+      li.style.borderRadius = "8px";
+      li.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
+      li.style.display = "flex";
+      li.style.justifyContent = "space-between";
+      li.style.alignItems = "center";
+
+      const left = document.createElement("span");
+      left.textContent = `${tx.date} - ${tx.type} : ${tx.amount} ${wallet.currency}`;
+
+      const status = document.createElement("span");
+      if (tx.status === "validé") {
+        status.textContent = "✅ Validé";
+        status.style.color = "green";
+      } else if (tx.status === "attente") {
+        status.textContent = "⏳ En attente";
+        status.style.color = "orange";
+      } else {
+        status.textContent = "❌ Échoué";
+        status.style.color = "red";
+      }
+
+      li.appendChild(left);
+      li.appendChild(status);
+      historyEl.appendChild(li);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", renderWalletCustom);
+
+  function simulateSend() {
+    wallet.balance -= 50;
+    wallet.history.unshift({
+      type: "Envoi",
+      amount: -50,
+      to: "Test",
+      date: new Date().toLocaleDateString(),
+      status: "validé"
+    });
+    renderWalletCustom();
+  }
+
+  function simulateReceive() {
+    wallet.balance += 100;
+    wallet.history.unshift({
+      type: "Réception",
+      amount: +100,
+      from: "Test",
+      date: new Date().toLocaleDateString(),
+      status: "attente"
+    });
+    renderWalletCustom();
+  }
+</script>
+</body>
+</html>

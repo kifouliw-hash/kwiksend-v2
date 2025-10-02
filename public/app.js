@@ -1,266 +1,199 @@
-// ============================
-// 🔹 Utilities
-// ============================
-const qs = (s, el = document) => el.querySelector(s);
-const qsa = (s, el = document) => Array.from(el.querySelectorAll(s));
+// ==============================
+// 🌍 Traductions
+// ==============================
+const translations = {
+  fr: {
+    "nav.home": "Accueil",
+    "nav.features": "Fonctionnalités",
+    "nav.advantages": "Avantages",
+    "nav.wallet": "Portefeuille",
+    "nav.about": "À propos",
+    "nav.login": "Connexion",
 
-function showToast(msg, type = "info") {
-  alert(`[${type.toUpperCase()}] ${msg}`); // 👉 tu pourras remplacer par un vrai toast UI
-}
+    "hero.title": "Votre argent, partout, instantanément 🌍",
+    "hero.subtitle": "La nouvelle façon d’envoyer et recevoir de l’argent entre l’Afrique et l’Europe.",
+    "hero.cta": "Créer un compte gratuit",
 
-// ============================
-// 🔹 SPA Navigation
-// ============================
-const views = {
-  "/": "view-home",
-  "/wallet": "view-wallet",
-  "/send": "view-send",
-  "/receive": "view-receive",
-  "/history": "view-history",
+    "features.title": "Ce que vous pouvez faire avec KwikSend",
+    "features.wallet.title": "Portefeuille numérique",
+    "features.wallet.text": "Gérez votre argent facilement en CFA et en Euro, où que vous soyez.",
+    "features.africaeurope.title": "Transferts Afrique ↔ Europe",
+    "features.africaeurope.text": "Envoyez ou recevez instantanément entre l’Afrique et l’Europe, sans tracas.",
+    "features.kwiksend.title": "Transferts KwikSend ↔ KwikSend",
+    "features.kwiksend.text": "Transférez gratuitement ou à petit coût entre utilisateurs KwikSend.",
+    "features.mobile.title": "Mobile Money & IBAN",
+    "features.mobile.text": "Alimentez ou retirez facilement via Orange Money, Wave ou comptes bancaires.",
+
+    "advantages.title": "Pourquoi choisir KwikSend ?",
+    "advantages.speed": "Rapidité : transferts instantanés",
+    "advantages.security": "Sécurité : transactions protégées avec 2FA",
+    "advantages.access": "Accessibilité : utilisable en Afrique et en Europe",
+    "advantages.flex": "Flexibilité : multiples moyens de paiement",
+
+    "wallet.title": "Votre Portefeuille",
+    "wallet.balance": "Solde :",
+    "wallet.send": "Envoyer",
+    "wallet.receive": "Recevoir",
+    "wallet.history": "Historique des transactions",
+
+    "about.title": "À propos",
+    "about.text": "KwikSend est une solution moderne de transfert d’argent pensée pour connecter l’Afrique et l’Europe, en offrant rapidité, simplicité et sécurité.",
+
+    "footer.rights": "Tous droits réservés.",
+
+    "login.title": "Connexion",
+    "login.submit": "Se connecter",
+    "login.forgot": "Mot de passe oublié ?",
+    "login.signup": "Pas encore de compte ? Inscrivez-vous",
+
+    "signup.title": "Créer un compte",
+    "signup.submit": "S’inscrire",
+  },
+
+  en: {
+    "nav.home": "Home",
+    "nav.features": "Features",
+    "nav.advantages": "Advantages",
+    "nav.wallet": "Wallet",
+    "nav.about": "About",
+    "nav.login": "Login",
+
+    "hero.title": "Your money, everywhere, instantly 🌍",
+    "hero.subtitle": "The new way to send and receive money between Africa and Europe.",
+    "hero.cta": "Create a free account",
+
+    "features.title": "What you can do with KwikSend",
+    "features.wallet.title": "Digital Wallet",
+    "features.wallet.text": "Easily manage your money in CFA and Euro, wherever you are.",
+    "features.africaeurope.title": "Africa ↔ Europe Transfers",
+    "features.africaeurope.text": "Send or receive instantly between Africa and Europe, hassle-free.",
+    "features.kwiksend.title": "KwikSend ↔ KwikSend",
+    "features.kwiksend.text": "Transfer for free or at low cost between KwikSend users.",
+    "features.mobile.title": "Mobile Money & IBAN",
+    "features.mobile.text": "Easily top up or withdraw via Orange Money, Wave, or bank accounts.",
+
+    "advantages.title": "Why choose KwikSend?",
+    "advantages.speed": "Speed: instant transfers",
+    "advantages.security": "Security: transactions protected with 2FA",
+    "advantages.access": "Accessibility: usable in Africa and Europe",
+    "advantages.flex": "Flexibility: multiple payment methods",
+
+    "wallet.title": "Your Wallet",
+    "wallet.balance": "Balance:",
+    "wallet.send": "Send",
+    "wallet.receive": "Receive",
+    "wallet.history": "Transaction history",
+
+    "about.title": "About",
+    "about.text": "KwikSend is a modern money transfer solution designed to connect Africa and Europe, offering speed, simplicity, and security.",
+
+    "footer.rights": "All rights reserved.",
+
+    "login.title": "Login",
+    "login.submit": "Sign in",
+    "login.forgot": "Forgot password?",
+    "login.signup": "No account yet? Sign up",
+
+    "signup.title": "Sign up",
+    "signup.submit": "Register",
+  }
 };
 
-function showView(pathname) {
-  const id = views[pathname] || views["/"];
-  qsa(".view").forEach((v) => v.classList.remove("active"));
-  qs(`#${id}`).classList.add("active");
-
-  // Hooks
-  if (id === "view-wallet") loadWallet();
-  if (id === "view-history") loadHistoryFull();
+// ==============================
+// 🌐 Langues
+// ==============================
+function switchLang(lang) {
+  localStorage.setItem("lang", lang);
+  applyTranslations(lang);
 }
 
-function navigate(to) {
-  history.pushState({}, "", to);
-  showView(to);
-}
-
-// intercept navigation links
-document.addEventListener("click", (e) => {
-  const a = e.target.closest("a[data-link]");
-  if (a) {
-    e.preventDefault();
-    navigate(a.getAttribute("href"));
-  }
-});
-
-// browser back/forward
-window.addEventListener("popstate", () => showView(location.pathname));
-
-// ============================
-// 🔹 API Helpers
-// ============================
-async function apiGet(path) {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error("API GET " + path);
-  return res.json();
-}
-async function apiPost(path, body) {
-  const res = await fetch(path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  return res.json();
-}
-
-// ============================
-// 🔹 Wallet & History
-// ============================
-async function loadWallet() {
-  try {
-    const json = await apiGet("/api/wallet");
-    if (!json.success) throw new Error("Wallet error");
-    const w = json.wallet;
-    qs("#w-name").textContent = w.name;
-    qs("#w-balance").textContent = `${w.balance.toFixed(2)} ${w.currency}`;
-    qs("#w-currency").textContent = w.currency;
-
-    // mini-history on wallet page
-    const list = qs("#history-list");
-    list.innerHTML = "";
-    w.history.slice(0, 3).forEach((tx) => {
-      const el = document.createElement("div");
-      el.className = "tx";
-      el.innerHTML = `<div><strong>${tx.type.toUpperCase()}</strong> — ${tx.amount} ${w.currency}</div>
-                      <div class="muted small">${new Date(tx.date).toLocaleString()}</div>`;
-      list.appendChild(el);
-    });
-  } catch (e) {
-    console.error(e);
-    qs("#w-name").textContent = "Erreur wallet";
-  }
-}
-
-async function loadHistoryFull() {
-  try {
-    const json = await apiGet("/api/wallet");
-    const list = qs("#history-full-list");
-    list.innerHTML = "";
-    json.wallet.history.forEach((tx) => {
-      const el = document.createElement("div");
-      el.className = "tx";
-      el.innerHTML = `<div><strong>${tx.type.toUpperCase()}</strong> — ${tx.amount} ${json.wallet.currency}</div>
-                      <div class="muted small">${new Date(tx.date).toLocaleString()}</div>`;
-      list.appendChild(el);
-    });
-  } catch (e) {
-    qs("#history-full-list").textContent = "Impossible de charger l'historique";
-  }
-}
-
-// ============================
-// 🔹 Envoi d’argent
-// ============================
-async function handleSend(ev) {
-  ev.preventDefault();
-  const form = ev.target;
-  const data = {
-    to: form.to.value.trim(),
-    amount: parseFloat(form.amount.value),
-    currency: form.currency.value,
-    note: form.note.value.trim(),
-  };
-  qs("#send-result").textContent = "⏳ Envoi en cours...";
-  try {
-    const json = await apiPost("/api/send", data);
-    if (!json.success) {
-      qs("#send-result").textContent = `Erreur: ${json.message}`;
-    } else {
-      qs("#send-result").textContent = "✅ Transaction simulée";
-      loadWallet();
-      loadHistoryFull();
-      navigate("/wallet");
+function applyTranslations(lang) {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[lang] && translations[lang][key]) {
+      el.textContent = translations[lang][key];
     }
-  } catch (err) {
-    qs("#send-result").textContent = "❌ Erreur réseau";
-  }
+  });
+  document.documentElement.lang = lang;
 }
 
-// ============================
-// 🔹 Auth simulation
-// ============================
-let currentUser = JSON.parse(localStorage.getItem("kwik-user")) || null;
-
-function updateAuthUI() {
-  const logged = !!currentUser;
-  qs("#btn-open-login").style.display = logged ? "none" : "inline-block";
-  qs("#btn-open-signup").style.display = logged ? "none" : "inline-block";
-  if (logged) {
-    showToast(`Connecté en tant que ${currentUser.email}`);
-  }
-}
-
-// --- login ---
-function simulateLogin(email, pass) {
-  // Simulation simple
-  currentUser = { email, token: "fake-jwt-token" };
-  localStorage.setItem("kwik-user", JSON.stringify(currentUser));
-  updateAuthUI();
-  closeModal("#modal-login");
-  showToast("Connexion réussie ✅", "success");
-}
-
-// --- signup ---
-function simulateSignup(name, email, pass) {
-  currentUser = { email, name, token: "fake-jwt-token" };
-  localStorage.setItem("kwik-user", JSON.stringify(currentUser));
-  updateAuthUI();
-  closeModal("#modal-signup");
-  showToast("Compte créé ✅", "success");
-}
-
-// --- forgot ---
-function simulateForgot(email) {
-  showToast("Lien de réinitialisation envoyé à " + email, "info");
-  closeModal("#modal-forgot");
-}
-
-// --- 2FA simulation ---
-function simulate2FA(code) {
-  if (code === "123456") {
-    closeModal("#modal-2fa");
-    showToast("2FA validé ✅", "success");
-  } else {
-    showToast("Code invalide ❌", "error");
-  }
-}
-
-// ============================
-// 🔹 Modals
-// ============================
-function openModal(id) {
-  qs(id).hidden = false;
-  qs("#modal-root").classList.add("active");
-}
-function closeModal(id) {
-  if (id) qs(id).hidden = true;
-  else qsa(".modal").forEach((m) => (m.hidden = true));
-  qs("#modal-root").classList.remove("active");
-}
-
-// close buttons
-document.addEventListener("click", (e) => {
-  if (e.target.dataset.close !== undefined) {
-    closeModal();
-  }
-  if (e.target === qs("#modal-root")) {
-    closeModal();
-  }
-});
-
-// ============================
-// 🔹 DOM Ready
-// ============================
 document.addEventListener("DOMContentLoaded", () => {
-  // Navigation CTA
-  qs("#go-wallet")?.addEventListener("click", () => navigate("/wallet"));
-  qs("#btn-go-send")?.addEventListener("click", () => navigate("/send"));
-  qs("#btn-go-receive")?.addEventListener("click", () => navigate("/receive"));
-
-  // Send form
-  qs("#send-form")?.addEventListener("submit", handleSend);
-  qs("#send-cancel")?.addEventListener("click", () => navigate("/wallet"));
-
-  // Auth modals
-  qs("#btn-open-login")?.addEventListener("click", () => openModal("#modal-login"));
-  qs("#btn-open-signup")?.addEventListener("click", () => openModal("#modal-signup"));
-  qs("#btn-forgot")?.addEventListener("click", () => {
-    closeModal("#modal-login");
-    openModal("#modal-forgot");
-  });
-
-  // Auth forms
-  qs("#login-form")?.addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    simulateLogin(ev.target.email.value, ev.target.password.value);
-    openModal("#modal-2fa"); // active 2FA après login
-  });
-  qs("#signup-form")?.addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    simulateSignup(ev.target.name.value, ev.target.email.value, ev.target.password.value);
-    openModal("#modal-2fa"); // active 2FA après création
-  });
-  qs("#forgot-form")?.addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    simulateForgot(ev.target.email.value);
-  });
-  qs("#form-2fa")?.addEventListener("submit", (ev) => {
-    ev.preventDefault();
-    simulate2FA(ev.target.code.value);
-  });
-  qs("#resend-2fa")?.addEventListener("click", () => showToast("Code renvoyé 🔄", "info"));
-
-  // Wallet refresh
-  qs("#btn-refresh")?.addEventListener("click", loadWallet);
-
-  // Region switch
-  qs("#region")?.addEventListener("change", (ev) => {
-    const region = ev.target.value;
-    showToast("Interface adaptée pour " + region, "info");
-    // Ici tu pourrais adapter les fonctionnalités
-  });
-
-  // init
-  updateAuthUI();
-  showView(location.pathname);
+  const savedLang = localStorage.getItem("lang") || "fr";
+  const langSwitcher = document.getElementById("langSwitcher");
+  if (langSwitcher) langSwitcher.value = savedLang;
+  applyTranslations(savedLang);
+  renderWallet();
 });
+
+// ==============================
+// 🔐 Modals (Connexion / Signup)
+// ==============================
+function openModal(type) {
+  document.getElementById(type + "Modal").style.display = "flex";
+}
+
+function closeModal(type) {
+  document.getElementById(type + "Modal").style.display = "none";
+}
+
+window.onclick = function(event) {
+  const login = document.getElementById("loginModal");
+  const signup = document.getElementById("signupModal");
+  if (event.target === login) login.style.display = "none";
+  if (event.target === signup) signup.style.display = "none";
+};
+
+// ==============================
+// 💳 Wallet Simulation
+// ==============================
+let wallet = {
+  balance: 1500,
+  currency: "EUR",
+  history: [
+    { type: "Envoi", amount: -200, to: "Jean Dupont", date: "2025-09-25", status: "validé" },
+    { type: "Réception", amount: +500, from: "KwikSend", date: "2025-09-20", status: "validé" },
+    { type: "Envoi", amount: -100, to: "Awa Koné", date: "2025-09-18", status: "échoué" }
+  ]
+};
+
+function renderWallet() {
+  const balanceEl = document.getElementById("wallet-balance");
+  const balanceFcfaEl = document.getElementById("wallet-balance-fcfa");
+  const historyEl = document.getElementById("wallet-history");
+  if (!balanceEl || !historyEl) return;
+
+  // Conversion automatique : 1 EUR = 650 FCFA
+  balanceEl.textContent = `${wallet.balance} ${wallet.currency}`;
+  if (balanceFcfaEl) balanceFcfaEl.textContent = `${wallet.balance * 650} FCFA`;
+
+  historyEl.innerHTML = "";
+  wallet.history.forEach(tx => {
+    const li = document.createElement("li");
+    li.textContent = `${tx.date} - ${tx.type} : ${tx.amount} ${wallet.currency} (${tx.status})`;
+    historyEl.appendChild(li);
+  });
+}
+
+function simulateSend() {
+  wallet.balance -= 50;
+  wallet.history.unshift({
+    type: "Envoi",
+    amount: -50,
+    to: "Test",
+    date: new Date().toLocaleDateString(),
+    status: "validé"
+  });
+  renderWallet();
+}
+
+function simulateReceive() {
+  wallet.balance += 100;
+  wallet.history.unshift({
+    type: "Réception",
+    amount: +100,
+    from: "Test",
+    date: new Date().toLocaleDateString(),
+    status: "attente"
+  });
+  renderWallet();
+}

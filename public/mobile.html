@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KwikSend - Mobile Money & IBAN</title>
+  <meta name="description" content="Rechargez ou retirez facilement avec KwikSend via Mobile Money (Orange Money, Wave, MTN, Moov) ou votre IBAN bancaire.">
+  <meta name="theme-color" content="#ff7a00">
+
+  <!-- Favicon & icônes -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🧭 Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
+        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
+        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
+        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
+        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <select id="langSwitcher" onchange="switchLang(this.value)">
+        <option value="fr">🇫🇷 FR</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button id="darkToggle">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- 📲 Mobile Money & IBAN -->
+<section class="hero" style="padding:2rem 1rem;">
+  <div class="hero-content" style="max-width:650px;margin:auto;">
+    <h1>📲 Mobile Money & IBAN</h1>
+    <p>Alimentez ou retirez de l’argent via Mobile Money ou votre compte bancaire.</p>
+
+    <!-- Choix action -->
+    <form id="mobileForm" style="display:flex;flex-direction:column;gap:1rem;margin-top:2rem;">
+      <label>Action :</label>
+      <select id="action" required>
+        <option value="alimenter">➕ Alimenter</option>
+        <option value="retirer">➖ Retirer</option>
+      </select>
+
+      <label>Méthode :</label>
+      <select id="method" required>
+        <option value="om">Orange Money</option>
+        <option value="wave">Wave</option>
+        <option value="mtn">MTN</option>
+        <option value="moov">Moov</option>
+        <option value="iban">IBAN bancaire</option>
+      </select>
+
+      <label>Montant :</label>
+      <input type="number" id="amount" placeholder="Ex: 100" required min="1">
+
+      <!-- Champ dynamique -->
+      <div id="detailsField"></div>
+
+      <button type="submit" class="cta">Valider</button>
+    </form>
+  </div>
+</section>
+
+<!-- 📝 Footer -->
+<footer>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+</footer>
+
+<!-- 📜 Scripts communs -->
+<script src="script.js"></script>
+<script src="translate.js"></script>
+<script src="app.js"></script>
+
+<!-- 📲 Service Worker + logique -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  }
+
+  const actionEl = document.getElementById("action");
+  const methodEl = document.getElementById("method");
+  const detailsField = document.getElementById("detailsField");
+  const form = document.getElementById("mobileForm");
+
+  // Affichage du champ selon méthode
+  function updateDetailsField() {
+    const method = methodEl.value;
+    if (method === "iban") {
+      detailsField.innerHTML = `
+        <label>IBAN :</label>
+        <input type="text" id="detailInput" placeholder="FR76 3000 6000 ..." required>
+      `;
+    } else {
+      detailsField.innerHTML = `
+        <label>Numéro Mobile Money :</label>
+        <input type="text" id="detailInput" placeholder="0700000000" required>
+      `;
+    }
+  }
+  methodEl.addEventListener("change", updateDetailsField);
+  updateDetailsField();
+
+  // Simulation
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const action = actionEl.value;
+    const method = methodEl.value;
+    const amount = parseFloat(document.getElementById("amount").value);
+    const detail = document.getElementById("detailInput").value;
+
+    if (isNaN(amount) || amount <= 0) {
+      alert("⚠️ Veuillez entrer un montant valide.");
+      return;
+    }
+
+    if (action === "alimenter") {
+      wallet.balance += amount;
+      wallet.history.unshift({
+        type: "Alimentation",
+        amount: +amount,
+        from: method.toUpperCase(),
+        date: new Date().toLocaleDateString(),
+        status: "validé"
+      });
+      alert(`✅ Votre portefeuille a été alimenté de ${amount} EUR via ${method.toUpperCase()}.`);
+    } else {
+      wallet.balance -= amount;
+      wallet.history.unshift({
+        type: "Retrait",
+        amount: -amount,
+        to: method.toUpperCase(),
+        date: new Date().toLocaleDateString(),
+        status: "attente"
+      });
+      alert(`⏳ Retrait de ${amount} EUR via ${method.toUpperCase()} en cours de traitement.`);
+    }
+
+    // Redirection vers portefeuille
+    window.location.href = "portefeuille.html";
+  });
+</script>
+</body>
+</html>

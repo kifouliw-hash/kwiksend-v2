@@ -1,302 +1,115 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KwikSend — Envoyer & recevoir</title>
-  <link rel="stylesheet" href="/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KwikSend - Accueil</title>
+  <meta name="description" content="KwikSend — transferts rapides et sécurisés entre l’Afrique et l’Europe.">
+  <meta name="theme-color" content="#ff7a00">
+
+  <!-- Favicon & icônes -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Header -->
-  <header class="topbar">
-    <div class="brand">
-      <img src="/logo-kwiksend.svg" alt="KwikSend" class="brand-logo" onerror="this.style.display='none'"/>
-      <span class="brand-text">KwikSend</span>
-    </div>
 
+<!-- 🧭 Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active" data-i18n="nav.home">Accueil</a></li>
+        <li><a href="#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
+        <li><a href="#avantages" data-i18n="nav.advantages">Avantages</a></li>
+        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
+        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+      </ul>
+    </nav>
     <div class="header-actions">
-      <div class="region-switch">
-        <label for="region">Région</label>
-        <select id="region" aria-label="Sélectionner la région">
-          <option value="africa">Afrique</option>
-          <option value="europe">Europe</option>
-        </select>
-      </div>
-
-      <nav class="main-nav" aria-label="Navigation principale">
-        <a href="/" data-link>Accueil</a>
-        <a href="/wallet" data-link>Wallet</a>
-        <a href="/send" data-link>Envoyer</a>
-        <a href="/receive" data-link>Recevoir</a>
-        <a href="/history" data-link>Historique</a>
-      </nav>
-
-      <div class="user-actions">
-        <button id="btn-open-signup" class="btn-outline">Créer un compte</button>
-        <button id="btn-open-login" class="btn-primary">Se connecter</button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main SPA container -->
-  <main id="app" class="container">
-    <!-- 1. Home -->
-    <section id="view-home" class="view active">
-      <div class="hero">
-        <div class="hero-content">
-          <h1>La banque révolutionnaire pour l'Afrique & l'Europe</h1>
-          <p class="lead">Envoyez et recevez de l'argent rapidement, avec des frais transparents et une sécurité de niveau bancaire.</p>
-          <div class="hero-cta">
-            <button id="cta-signup" class="btn-primary large">Créer un compte gratuit</button>
-            <button id="cta-learn" class="btn-outline large">En savoir plus</button>
-          </div>
-        </div>
-
-        <div class="hero-card">
-          <div class="card balance-card">
-            <div class="card-head">
-              <div class="title">Solde estimé</div>
-              <div class="muted">Compte démo</div>
-            </div>
-            <div class="card-body">
-              <div class="big-balance">1 250.50 <span class="currency">USD</span></div>
-              <div class="small">0.00 FCFA — 1 250.50 EUR</div>
-            </div>
-            <div class="card-actions">
-              <button id="hero-send" class="btn-ghost">Envoyer</button>
-              <button id="hero-receive" class="btn-ghost">Recevoir</button>
-            </div>
-          </div>
-
-          <ul class="benefits">
-            <li><strong>Transferts rapides</strong> — jusqu'à 90% plus vite</li>
-            <li><strong>Frais transparents</strong> — pas de surprises</li>
-            <li><strong>Sécurité</strong> — 2FA & chiffrement</li>
-          </ul>
-        </div>
-      </div>
-
-      <section class="features">
-        <article>
-          <h3>Pourquoi KwikSend ?</h3>
-          <p>Interface simple, tarifs clairs, conversions compétitives. Conçu pour les courants Afrique ↔ Europe.</p>
-        </article>
-        <article>
-          <h3>Comptes multi-devises</h3>
-          <p>Gérez FCFA, EUR et autres depuis un seul wallet.</p>
-        </article>
-        <article>
-          <h3>Sécurité</h3>
-          <p>Double authentification, vérifications en temps réel et historique détaillé.</p>
-        </article>
-      </section>
-    </section>
-
-    <!-- 2. Wallet -->
-    <section id="view-wallet" class="view" aria-live="polite">
-      <div class="page-head">
-        <h2>Mon Wallet</h2>
-        <div class="page-actions">
-          <button id="btn-refresh" class="btn-ghost">🔄 Rafraîchir</button>
-          <button id="btn-export" class="btn-ghost">📥 Exporter</button>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="card wallet-card">
-          <div class="wallet-header">
-            <div>
-              <div class="muted">Portefeuille principal</div>
-              <div id="w-name" class="wallet-name">KwikSend Demo</div>
-            </div>
-            <div class="wallet-balance" id="w-balance">—</div>
-          </div>
-
-          <div class="wallet-actions">
-            <button id="btn-go-send" class="btn-primary">Envoyer</button>
-            <button id="btn-go-receive" class="btn-outline">Recevoir</button>
-          </div>
-
-          <div class="wallet-info">
-            <div class="muted">Devise</div>
-            <div id="w-currency">USD</div>
-          </div>
-        </div>
-
-        <div class="card history-card">
-          <h3>Dernières transactions</h3>
-          <div id="history-list" class="history-list">
-            <!-- injected -->
-          </div>
-          <div class="more">
-            <button id="btn-view-all-history" class="btn-link">Voir tout l'historique</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. Send -->
-    <section id="view-send" class="view">
-      <div class="page-head">
-        <h2>Envoyer de l'argent</h2>
-        <div class="muted">Rapide, sécurisé — simulation activée.</div>
-      </div>
-
-      <div class="form-panel card">
-        <form id="send-form">
-          <div class="form-row">
-            <label>Destinataire</label>
-            <input name="to" placeholder="email ou téléphone" required />
-          </div>
-
-          <div class="form-row two">
-            <div>
-              <label>Montant</label>
-              <input name="amount" type="number" step="0.01" required />
-            </div>
-            <div>
-              <label>Devise</label>
-              <select name="currency">
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="XOF">FCFA</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <label>Motif (optionnel)</label>
-            <input name="note" placeholder="Ex : Aide famille" />
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Confirmer l'envoi</button>
-            <button type="button" id="send-cancel" class="btn-ghost">Annuler</button>
-          </div>
-        </form>
-
-        <div id="send-result" class="send-result"></div>
-      </div>
-    </section>
-
-    <!-- 4. Receive -->
-    <section id="view-receive" class="view">
-      <div class="page-head">
-        <h2>Recevoir de l'argent</h2>
-        <div class="muted">Partagez un lien ou un QR code sécurisé.</div>
-      </div>
-
-      <div class="card receive-card">
-        <div class="receive-actions">
-          <div class="qr-placeholder">QR</div>
-          <div>
-            <div class="muted">Lien de réception</div>
-            <input id="receive-link" readonly value="https://kwiksend.demo/receive/abcd1234" />
-            <div class="small muted">Partager ce lien ou demander un virement via IBAN KwikSend</div>
-            <div class="mt">
-              <button id="btn-copy-link" class="btn-ghost">Copier le lien</button>
-              <button id="btn-generate-qr" class="btn-outline">Télécharger QR</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. History -->
-    <section id="view-history" class="view">
-      <div class="page-head">
-        <h2>Historique complet</h2>
-        <div class="muted">Toutes les transactions (simulateur)</div>
-      </div>
-
-      <div class="card history-full">
-        <div id="history-full-list">
-          <!-- injected -->
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div>© <strong>KwikSend</strong> — Prototype. Données simulées.</div>
-    <div class="footer-links">
-      <a href="#" target="_blank">Mentions légales</a> · <a href="#" target="_blank">Support</a>
-    </div>
-  </footer>
-
-  <!-- Modals: Login / Signup / Forgot / 2FA -->
-  <div id="modal-root" aria-hidden="true">
-    <!-- Modal common wrapper -->
-    <div class="modal" id="modal-login" role="dialog" aria-modal="true" aria-labelledby="modal-login-title" hidden>
-      <div class="modal-card">
-        <h3 id="modal-login-title">Se connecter</h3>
-        <form id="login-form">
-          <label>Email<input name="email" type="email" required /></label>
-          <label>Mot de passe<input name="password" type="password" required /></label>
-          <div class="row-between">
-            <label><input type="checkbox" name="remember" /> Se souvenir</label>
-            <button id="btn-forgot" class="btn-link" type="button">Mot de passe oublié ?</button>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Se connecter</button>
-            <button type="button" class="btn-ghost" data-close>Annuler</button>
-          </div>
-        </form>
-        <div class="small muted">Ou continuer avec</div>
-        <div class="socials">
-          <button class="btn-ghost">Google</button>
-          <button class="btn-ghost">Apple</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal" id="modal-signup" role="dialog" aria-modal="true" aria-labelledby="modal-signup-title" hidden>
-      <div class="modal-card">
-        <h3 id="modal-signup-title">Créer un compte</h3>
-        <form id="signup-form">
-          <label>Nom complet<input name="name" required /></label>
-          <label>Email<input name="email" type="email" required /></label>
-          <label>Mot de passe<input name="password" type="password" required /></label>
-          <label>Confirmer mot de passe<input name="password2" type="password" required /></label>
-          <div class="muted small">En créant un compte, vous acceptez les conditions.</div>
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Créer le compte</button>
-            <button type="button" class="btn-ghost" data-close>Annuler</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div class="modal" id="modal-forgot" role="dialog" aria-modal="true" aria-labelledby="modal-forgot-title" hidden>
-      <div class="modal-card">
-        <h3 id="modal-forgot-title">Mot de passe oublié</h3>
-        <form id="forgot-form">
-          <label>Indiquez votre email<input name="email" type="email" required /></label>
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Envoyer lien de réinitialisation</button>
-            <button type="button" class="btn-ghost" data-close>Annuler</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div class="modal" id="modal-2fa" role="dialog" aria-modal="true" aria-labelledby="modal-2fa-title" hidden>
-      <div class="modal-card">
-        <h3 id="modal-2fa-title">Vérification 2FA</h3>
-        <p class="muted small">Entrez le code envoyé sur votre téléphone</p>
-        <form id="form-2fa">
-          <label>Code 6 chiffres<input name="code" required pattern="[0-9]{6}" /></label>
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Valider</button>
-            <button type="button" class="btn-ghost" data-close>Annuler</button>
-          </div>
-        </form>
-        <div class="small muted">Pas de code ? <button id="resend-2fa" class="btn-link">Renvoyer</button></div>
-      </div>
+      <select id="langSwitcher" onchange="switchLang(this.value)">
+        <option value="fr">🇫🇷 FR</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button id="darkToggle">🌙</button>
     </div>
   </div>
+</header>
 
-  <script src="/app.js" defer></script>
+<!-- 🌍 Hero -->
+<section class="hero" id="accueil">
+  <div class="hero-content">
+    <h1 data-i18n="hero.title">Votre argent partout tout de suite 🌍</h1>
+    <p data-i18n="hero.subtitle">La nouvelle façon d’envoyer et de recevoir de l’argent entre l’Afrique et l’Europe.</p>
+    <a href="attente.html" class="cta" data-i18n="hero.cta">Rejoindre la liste d’attente</a>
+  </div>
+</section>
+
+<!-- ✨ Fonctionnalités -->
+<section class="features" id="fonctionnalites">
+  <h2 data-i18n="features.title">Ce que vous pouvez faire avec KwikSend</h2>
+  <div class="features-grid">
+    <div class="card clickable" onclick="location.href='portefeuille.html'">
+      <h3 data-i18n="features.wallet.title">💰 Portefeuille numérique</h3>
+      <p data-i18n="features.wallet.text">Gérez votre argent en CFA et en EUR.</p>
+    </div>
+    <div class="card clickable" onclick="location.href='transferts.html'">
+      <h3 data-i18n="features.africaeurope.title">🌐 Transferts Afrique ↔ Europe</h3>
+      <p data-i18n="features.africaeurope.text">Envoyez ou recevez instantanément.</p>
+    </div>
+    <div class="card clickable" onclick="location.href='kwiktransfert.html'">
+      <h3 data-i18n="features.kwiksend.title">👥 Transferts KwikSend ↔ KwikSend</h3>
+      <p data-i18n="features.kwiksend.text">Gratuit ou à petit coût.</p>
+    </div>
+    <div class="card clickable" onclick="location.href='mobile.html'">
+      <h3 data-i18n="features.mobile.title">🏦 Mobile Money & IBAN</h3>
+      <p data-i18n="features.mobile.text">Rechargez ou retirez facilement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 🌟 Avantages -->
+<section class="advantages" id="avantages">
+  <h2 data-i18n="advantages.title">Pourquoi choisir KwikSend ?</h2>
+  <ul>
+    <li data-i18n="advantages.speed">⚡ Rapidité : transferts instantanés</li>
+    <li data-i18n="advantages.security">🔒 Sécurité : transactions chiffrées</li>
+    <li data-i18n="advantages.access">🌍 Accessibilité : Afrique & Europe</li>
+    <li data-i18n="advantages.flex">💳 Flexibilité : Mobile Money & IBAN</li>
+  </ul>
+</section>
+
+<!-- ℹ️ À propos -->
+<section class="about" id="apropos">
+  <h2 data-i18n="about.title">À propos</h2>
+  <p data-i18n="about.text">KwikSend connecte l’Afrique et l’Europe avec rapidité et sécurité.</p>
+</section>
+
+<!-- 📝 Footer -->
+<footer>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+</footer>
+
+<!-- 📜 Scripts -->
+<script src="script.js"></script>
+<script src="translate.js"></script>
+<script src="app.js"></script>
+
+<!-- 📲 Enregistrement du Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  }
+</script>
+
 </body>
 </html>
