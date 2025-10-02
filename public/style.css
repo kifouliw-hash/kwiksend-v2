@@ -188,66 +188,7 @@ input, select {
 }
 
 /* ================================
- 💳 Carte virtuelle
-================================ */
-.virtual-card {
-  width: 320px;
-  height: 200px;
-  background: linear-gradient(135deg, var(--orange), var(--yellow));
-  border-radius: 20px;
-  padding: 1.5rem;
-  color: white;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-  margin: 2rem auto;
-}
-
-.card-chip {
-  width: 50px;
-  height: 35px;
-  background: gold;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.card-number {
-  font-size: 1.4rem;
-  letter-spacing: 3px;
-  margin-bottom: 1rem;
-}
-
-.card-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  font-weight: bold;
-}
-
-/* ================================
- 📊 Historique
-================================ */
-#wallet-history li {
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* ================================
- 📝 Footer
-================================ */
-footer {
-  background: var(--orange);
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 3rem;
-}
-
-/* ================================
- 📱 Responsive
+ 📱 Responsive + Burger
 ================================ */
 .burger {
   display: none;
@@ -255,10 +196,24 @@ footer {
   gap: 5px;
   cursor: pointer;
 }
+
 .burger span {
   width: 25px;
   height: 3px;
   background: white;
+  transition: all 0.3s ease;
+}
+
+.burger.active span:nth-child(1) {
+  transform: rotate(45deg) translateY(8px);
+}
+
+.burger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger.active span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-8px);
 }
 
 @media (max-width: 768px) {

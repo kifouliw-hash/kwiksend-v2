@@ -174,6 +174,26 @@ function renderWallet() {
   });
 }
 
+// --- Nouvelle fonction pour saisir le montant et rediriger vers transfert ---
+function sendAndRedirect() {
+  const input = document.getElementById("amount");
+  const value = input && input.value ? parseFloat(input.value) : 50;
+  if (value > 0 && wallet.balance >= value) {
+    wallet.balance -= value;
+    wallet.history.unshift({
+      type: "Envoi",
+      amount: -value,
+      to: "Page Transfert",
+      date: new Date().toLocaleDateString(),
+      status: "validé"
+    });
+    renderWallet();
+    window.location.href = "transfert.html";
+  } else {
+    alert("Montant invalide ou solde insuffisant.");
+  }
+}
+
 function simulateSend() {
   wallet.balance -= 50;
   wallet.history.unshift({

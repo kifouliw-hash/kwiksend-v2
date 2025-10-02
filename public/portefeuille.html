@@ -72,14 +72,16 @@
   </div>
 
   <!-- Boutons actions -->
-  <div class="actions" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
-    <button onclick="location.href='transferts.html'">💸 Envoyer</button>
-    <button onclick="location.href='recevoir.html'">📥 Recevoir</button>
-    <button onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
-    <button onclick="location.href='mobile.html'">📲 Mobile Money</button>
-    <button onclick="simulateSend()">🔄 Test Envoi (mock API)</button>
-    <button onclick="simulateReceive()">💰 Test Réception (mock API)</button>
-  </div>
+<div class="actions" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
+  <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
+  <button onclick="sendAndRedirect()">💸 Envoyer</button>
+  <button onclick="simulateReceive()">📥 Recevoir</button>
+  <button onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
+  <button onclick="location.href='mobile.html'">📲 Mobile Money</button> 
+  <button onclick="simulateSend()">🔄 Test Envoi (mock API)</button>
+  <button onclick="simulateReceive()">💰 Test Réception (mock API)</button>
+</div>
+
 
   <!-- Historique -->
   <section style="margin-top:3rem;">

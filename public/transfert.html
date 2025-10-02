@@ -54,14 +54,14 @@
     <!-- Formulaire -->
     <form id="transferForm" style="display:flex;flex-direction:column;gap:1rem;margin-top:2rem;">
       <!-- Destination -->
-      <label>Destination :</label>
+      <label for="destination">Destination :</label>
       <select id="destination" required>
-        <option value="afrique">🌍 Afrique</option>
-        <option value="europe">🇪🇺 Europe</option>
+        <option value="afrique">🌍 Afrique (Mobile Money)</option>
+        <option value="europe">🇪🇺 Europe (IBAN)</option>
       </select>
 
       <!-- Source -->
-      <label>Source des fonds :</label>
+      <label for="source">Source des fonds :</label>
       <select id="source" required>
         <option value="wallet">💼 Portefeuille KwikSend</option>
         <option value="cb">💳 Carte bancaire</option>
@@ -71,7 +71,7 @@
       <div id="dynamicField"></div>
 
       <!-- Montant -->
-      <label>Montant :</label>
+      <label for="amount">Montant :</label>
       <input type="number" id="amount" placeholder="Ex: 100" required min="1">
 
       <!-- Bouton -->
@@ -90,7 +90,7 @@
 <script src="translate.js"></script>
 <script src="app.js"></script>
 
-<!-- 📲 Service Worker + logique -->
+<!-- 📲 Logique transfert -->
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(console.error);
@@ -105,12 +105,12 @@
     const dest = destinationEl.value;
     if (dest === "afrique") {
       dynamicField.innerHTML = `
-        <label>Numéro Mobile Money :</label>
+        <label for="receiver">Numéro Mobile Money :</label>
         <input type="text" id="receiver" placeholder="Ex: 0700000000" required>
       `;
     } else {
       dynamicField.innerHTML = `
-        <label>IBAN destinataire :</label>
+        <label for="receiver">IBAN destinataire :</label>
         <input type="text" id="receiver" placeholder="FR76 3000 6000 ..." required>
       `;
     }
@@ -131,19 +131,26 @@
       return;
     }
 
-    // Simulation Wallet
-    wallet.balance -= amount;
-    wallet.history.unshift({
-      type: "Envoi",
-      amount: -amount,
-      to: receiver,
-      date: new Date().toLocaleDateString(),
-      status: "validé"
-    });
+    if (source === "wallet") {
+      if (wallet.balance >= amount) {
+        wallet.balance -= amount;
+        wallet.history.unshift({
+          type: "Envoi",
+          amount: -amount,
+          to: receiver,
+          date: new Date().toLocaleDateString(),
+          status: "validé"
+        });
+        alert(`✅ Transfert de ${amount} EUR vers ${receiver} (${dest}) effectué avec succès depuis votre portefeuille KwikSend.`);
+      } else {
+        alert("❌ Solde insuffisant dans le portefeuille KwikSend.");
+        return;
+      }
+    } else {
+      alert(`💳 Paiement de ${amount} EUR par carte bancaire vers ${receiver} (${dest}) simulé avec succès.`);
+    }
 
-    alert(`✅ Transfert de ${amount} EUR vers ${receiver} (${dest}) effectué avec succès !`);
-
-    // Redirection vers le portefeuille
+    // Redirection vers le portefeuille après envoi
     window.location.href = "portefeuille.html";
   });
 </script>
