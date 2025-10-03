@@ -28,19 +28,15 @@
     <div class="logo">Kwik<span>Send</span></div>
     <nav>
       <ul class="nav-links">
-        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
-        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
-        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
-        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
-        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="transfert.html" class="active">Transfert</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+        <li><a href="mobile.html">Mobile Money</a></li>
       </ul>
     </nav>
     <div class="header-actions">
-      <select id="langSwitcher" onchange="switchLang(this.value)">
-        <option value="fr">🇫🇷 FR</option>
-        <option value="en">🇬🇧 EN</option>
-      </select>
-      <button id="darkToggle">🌙</button>
+      <button class="cta" onclick="logout()">Déconnexion</button>
     </div>
   </div>
 </header>
@@ -82,7 +78,7 @@
 
 <!-- 📝 Footer -->
 <footer>
-  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+  <p>© 2025 KwikSend. <span>Tous droits réservés.</span></p>
 </footer>
 
 <!-- 📜 Scripts communs -->
@@ -100,7 +96,7 @@
   const dynamicField = document.getElementById("dynamicField");
   const form = document.getElementById("transferForm");
 
-  // Adapter le champ selon la destination (IBAN ou Mobile Money)
+  // --- Adapter le champ selon la destination (IBAN ou Mobile Money)
   function updateDynamicField() {
     const dest = destinationEl.value;
     if (dest === "afrique") {
@@ -118,7 +114,7 @@
   destinationEl.addEventListener("change", updateDynamicField);
   updateDynamicField();
 
-  // 🔀 Adapter les sources selon la destination
+  // --- Adapter les sources selon la destination
   function updateSourceOptions() {
     const dest = document.getElementById("destination").value;
     const source = document.getElementById("source");
@@ -136,7 +132,7 @@
   document.getElementById("destination").addEventListener("change", updateSourceOptions);
   updateSourceOptions();
 
-  // 🚀 Gestion du formulaire de transfert
+  // --- Gestion du formulaire de transfert
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const dest = destinationEl.value;
@@ -149,75 +145,55 @@
       return;
     }
 
+    // --- Gestion portefeuille simulé
+    const BAL_KEY = 'ks_balance';
+    const HIST_KEY = 'ks_history';
+    let balance = parseFloat(localStorage.getItem(BAL_KEY) || '0');
+    let history = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+
     if (source === "wallet") {
-      // Débit du portefeuille simulé
-      if (wallet.balance >= amount) {
-        wallet.balance -= amount;
-        wallet.history.unshift({
-          type: "Envoi",
-          amount: -amount,
-          to: receiver,
-          date: new Date().toLocaleDateString(),
-          status: "validé"
-        });
-        renderWallet();
-        alert(`✅ Transfert de ${amount} EUR vers ${receiver} (${dest}) effectué depuis votre portefeuille KwikSend.`);
-      } else {
+      if (amount > balance) {
         alert("❌ Solde insuffisant dans le portefeuille KwikSend.");
         return;
       }
+      balance -= amount;
+      localStorage.setItem(BAL_KEY, balance);
+
+      history.unshift({
+        date: new Date().toLocaleString(),
+        type: "Envoi",
+        amount: -amount,
+        to: receiver,
+        status: "validé"
+      });
+      localStorage.setItem(HIST_KEY, JSON.stringify(history));
+
+      alert(`✅ Transfert de ${amount} EUR vers ${receiver} (${dest}) effectué avec succès.`);
+
     } else if (source === "cb") {
       alert(`💳 Paiement de ${amount} EUR par carte bancaire vers ${receiver} (${dest}) simulé.`);
     } else if (source === "mobile") {
       alert(`📲 Paiement de ${amount} EUR par Mobile Money vers ${receiver} (${dest}) simulé.`);
     }
 
-    // Redirection vers le portefeuille après envoi
-    window.location.href = "portefeuille.html";
+    // Redirection avec succès
+    sessionStorage.removeItem("ks_amount");
+    window.location.href = "portefeuille.html?ok=1";
   });
+
+  // --- Préremplissage montant depuis portefeuille
+  document.addEventListener("DOMContentLoaded", () => {
+    const saved = sessionStorage.getItem('ks_amount');
+    if(saved){
+      document.getElementById('amount').value = saved;
+    }
+  });
+
+  // --- Déconnexion
+  function logout(){
+    localStorage.removeItem("kwiksend_user");
+    window.location.href = "index.html";
+  }
 </script>
 </body>
 </html>
-<script>
-(function(){
-  const BAL_KEY='ks_balance';
-  const HIST_KEY='ks_history';
-  const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
-  const setBal = v => localStorage.setItem(BAL_KEY, String(v));
-  const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
-  const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
-
-  // préremplir montant depuis portefeuille
-  const saved = sessionStorage.getItem('ks_amount');
-  const amountInput = document.getElementById('amount');
-  if(saved && amountInput){ amountInput.value = saved; }
-
-  // confirmer transfert
-  const btn = document.getElementById('confirm-transfer');
-  if(btn){
-    btn.addEventListener('click', e=>{
-      e.preventDefault();
-      const amount = parseFloat((document.getElementById('amount')||{}).value || '0');
-      const to = (document.getElementById('to')||{}).value || '';
-      if(!(amount>0)) return alert('Montant invalide');
-      const bal = getBal();
-      if(amount>bal) return alert('Solde insuffisant');
-
-      // débit + historique
-      setBal(bal - amount);
-      const hist = getHist();
-      hist.unshift({
-        type:'Transfert',
-        amount,
-        to,
-        date: new Date().toLocaleString('fr-FR')
-      });
-      setHist(hist);
-
-      // clean + retour portefeuille avec OK
-      sessionStorage.removeItem('ks_amount');
-      window.location.href='portefeuille.html?ok=1';
-    });
-  }
-})();
-</script>

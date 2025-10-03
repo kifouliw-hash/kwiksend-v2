@@ -28,26 +28,22 @@
     <div class="logo">Kwik<span>Send</span></div>
     <nav>
       <ul class="nav-links">
-        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
-        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
-        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
-        <li><a href="portefeuille.html" class="active" data-i18n="nav.wallet">Portefeuille</a></li>
-        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html" class="active">Portefeuille</a></li>
+        <li><a href="transfert.html">Transfert</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+        <li><a href="mobile.html">Mobile Money</a></li>
       </ul>
     </nav>
     <div class="header-actions">
-      <select id="langSwitcher" onchange="switchLang(this.value)">
-        <option value="fr">🇫🇷 FR</option>
-        <option value="en">🇬🇧 EN</option>
-      </select>
-      <button id="darkToggle">🌙</button>
+      <button onclick="logout()" class="cta">Déconnexion</button>
     </div>
   </div>
 </header>
 
 <!-- 💼 Wallet -->
 <section class="wallet" style="padding:3rem 1rem;max-width:900px;margin:auto;">
-  <h1 data-i18n="wallet.title" style="text-align:center;margin-bottom:2rem;">💼 Mon Portefeuille</h1>
+  <h1 style="text-align:center;margin-bottom:2rem;">💼 Mon Portefeuille</h1>
 
   <!-- Solde multi-devises -->
   <div class="balances" style="display:flex;justify-content:space-around;margin-bottom:2rem;">
@@ -72,141 +68,43 @@
   </div>
 
   <!-- Boutons actions -->
-<div class="actions" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
-  <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
-  <button onclick="sendAndRedirect()">💸 Envoyer</button>
-  <button onclick="openReceiveModal()">📥 Recevoir</button>
-  <button onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
-  <button onclick="location.href='mobile.html'">📲 Mobile Money</button>
-</div>
+  <form id="send-form" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
+    <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
+    <button type="submit">💸 Envoyer</button>
+    <button type="button" onclick="openReceiveModal()">📥 Recevoir</button>
+    <button type="button" onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
+    <button type="button" onclick="location.href='mobile.html'">📲 Mobile Money</button>
+  </form>
 
-<!-- Modal QR Code Recevoir -->
-<div id="receiveModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
-  <div style="background:white;padding:2rem;border-radius:12px;max-width:400px;text-align:center;">
-    <h2>📥 Recevoir de l’argent</h2>
-    <canvas id="qrcode"></canvas>
-    <p>Mon lien KwikSend :</p>
-    <a href="https://kwiksend.com/user123" target="_blank">https://kwiksend.com/user123</a>
-    <div style="margin-top:1rem;">
-      <button onclick="shareWhatsApp()">📲 WhatsApp</button>
-      <button onclick="shareEmail()">📧 Email</button>
+  <!-- Modal Recevoir -->
+  <div id="receiveModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
+    <div style="background:white;padding:2rem;border-radius:12px;max-width:400px;text-align:center;">
+      <h2>📥 Recevoir de l’argent</h2>
+      <canvas id="qrcode"></canvas>
+      <p>Mon lien KwikSend :</p>
+      <a href="https://kwiksend.com/user123" target="_blank">https://kwiksend.com/user123</a>
+      <div style="margin-top:1rem;">
+        <button onclick="shareWhatsApp()">📲 WhatsApp</button>
+        <button onclick="shareEmail()">📧 Email</button>
+      </div>
+      <button style="margin-top:1rem;" onclick="closeReceiveModal()">❌ Fermer</button>
     </div>
-    <button style="margin-top:1rem;" onclick="closeReceiveModal()">❌ Fermer</button>
   </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-<script>
-  function openReceiveModal() {
-    document.getElementById("receiveModal").style.display = "flex";
-    QRCode.toCanvas(document.getElementById("qrcode"), "https://kwiksend.com/user123");
-  }
-  function closeReceiveModal() {
-    document.getElementById("receiveModal").style.display = "none";
-  }
-  function shareWhatsApp() {
-    window.open("https://wa.me/?text=Voici mon lien KwikSend : https://kwiksend.com/user123");
-  }
-  function shareEmail() {
-    window.location.href = "mailto:?subject=Mon lien KwikSend&body=Voici mon lien KwikSend : https://kwiksend.com/user123";
-  }
-</script>
-
 
   <!-- Historique -->
   <section style="margin-top:3rem;">
-    <h2 data-i18n="wallet.history">📊 Historique des transactions</h2>
+    <h2>📊 Historique des transactions</h2>
     <ul id="wallet-history" style="list-style:none;padding:0;margin-top:1rem;"></ul>
   </section>
 </section>
 
 <!-- 📝 Footer -->
 <footer>
-  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+  <p>© 2025 KwikSend. <span>Tous droits réservés.</span></p>
 </footer>
 
-<!-- 📜 Scripts communs -->
-<script src="script.js"></script>
-<script src="translate.js"></script>
-<script src="app.js"></script>
-
-<!-- 📲 Enregistrement du Service Worker + logique wallet -->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(console.error);
-  }
-
-  // Conversion mock : 1 EUR = 650 FCFA
-  function renderWalletCustom() {
-    const balanceEl = document.getElementById("wallet-balance");
-    const balanceFcfaEl = document.getElementById("wallet-balance-fcfa");
-    const historyEl = document.getElementById("wallet-history");
-
-    if (!balanceEl || !historyEl) return;
-
-    balanceEl.textContent = `${wallet.balance} ${wallet.currency}`;
-    balanceFcfaEl.textContent = `${wallet.balance * 650} FCFA`;
-
-    historyEl.innerHTML = "";
-    wallet.history.forEach(tx => {
-      const li = document.createElement("li");
-      li.style.marginBottom = "10px";
-      li.style.padding = "10px";
-      li.style.borderRadius = "8px";
-      li.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
-      li.style.display = "flex";
-      li.style.justifyContent = "space-between";
-      li.style.alignItems = "center";
-
-      const left = document.createElement("span");
-      left.textContent = `${tx.date} - ${tx.type} : ${tx.amount} ${wallet.currency}`;
-
-      const status = document.createElement("span");
-      if (tx.status === "validé") {
-        status.textContent = "✅ Validé";
-        status.style.color = "green";
-      } else if (tx.status === "attente") {
-        status.textContent = "⏳ En attente";
-        status.style.color = "orange";
-      } else {
-        status.textContent = "❌ Échoué";
-        status.style.color = "red";
-      }
-
-      li.appendChild(left);
-      li.appendChild(status);
-      historyEl.appendChild(li);
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", renderWalletCustom);
-
-  function simulateSend() {
-    wallet.balance -= 50;
-    wallet.history.unshift({
-      type: "Envoi",
-      amount: -50,
-      to: "Test",
-      date: new Date().toLocaleDateString(),
-      status: "validé"
-    });
-    renderWalletCustom();
-  }
-
-  function simulateReceive() {
-    wallet.balance += 100;
-    wallet.history.unshift({
-      type: "Réception",
-      amount: +100,
-      from: "Test",
-      date: new Date().toLocaleDateString(),
-      status: "attente"
-    });
-    renderWalletCustom();
-  }
-</script>
-</body>
-</html>
+<!-- 📲 Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
 (function(){
   const BAL_KEY='ks_balance';
@@ -217,42 +115,65 @@
   const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
   const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
 
-  // init demo si première fois
+  // init démo
   if(localStorage.getItem(BAL_KEY)===null){
-    setBal(0);     // mets 0 ici (ou un montant de démo, ex: 100000)
+    setBal(500);  // 👈 solde de départ démo
     setHist([]);
   }
 
-  // affichage solde
-  const balEl = document.getElementById('balance');
-  if(balEl) balEl.textContent = getBal().toLocaleString('fr-FR') + ' CFA';
+  const balanceEl = document.getElementById("wallet-balance");
+  const balanceFcfaEl = document.getElementById("wallet-balance-fcfa");
+  const historyEl = document.getElementById("wallet-history");
 
-  // affichage historique
-  const histEl = document.getElementById('history');
-  if(histEl){
-    const items = getHist();
-    histEl.innerHTML = items.length
-      ? items.map(tx => `<li>${tx.date} — ${tx.type} : -${tx.amount.toLocaleString('fr-FR')} CFA ${tx.to?('→ '+tx.to):''}</li>`).join('')
-      : '<li>Aucun mouvement pour le moment.</li>';
+  function renderWallet(){
+    const bal = getBal();
+    balanceEl.textContent = bal.toLocaleString('fr-FR') + " €";
+    balanceFcfaEl.textContent = (bal*650).toLocaleString('fr-FR') + " FCFA";
+
+    const hist = getHist();
+    historyEl.innerHTML = hist.length 
+      ? hist.map(tx => `<li>${tx.date} — ${tx.type} : ${tx.amount} € <b>${tx.status||""}</b></li>`).join("")
+      : "<li>Aucun mouvement</li>";
   }
+  renderWallet();
 
-  // envoyer → mémoriser montant + aller vers transfert
-  const form = document.getElementById('send-form');
-  if(form){
-    form.addEventListener('submit', e=>{
-      e.preventDefault();
-      const amount = parseFloat(document.getElementById('amount').value);
-      if(!(amount>0)) return alert('Montant invalide');
-      if(amount>getBal()) return alert('Solde insuffisant');
-      sessionStorage.setItem('ks_amount', String(amount));
-      window.location.href='transfert.html';
-    });
-  }
+  // envoyer → enregistre montant + redirige vers transfert
+  document.getElementById("send-form").addEventListener("submit", e=>{
+    e.preventDefault();
+    const amount = parseFloat(document.getElementById("amount").value);
+    if(!(amount>0)) return alert("Montant invalide");
+    if(amount>getBal()) return alert("Solde insuffisant");
+    sessionStorage.setItem("ks_amount", String(amount));
+    window.location.href="transfert.html";
+  });
 
-  // toast succès au retour
+  // toast succès si retour
   const params = new URLSearchParams(location.search);
-  if(params.get('ok')==='1'){
-    alert('✅ Transfert envoyé. Votre portefeuille a été débité.');
+  if(params.get("ok")==="1"){
+    alert("✅ Transfert simulé avec succès !");
+  }
+
+  // Modal QR
+  window.openReceiveModal=function(){
+    document.getElementById("receiveModal").style.display="flex";
+    QRCode.toCanvas(document.getElementById("qrcode"), "https://kwiksend.com/user123");
+  }
+  window.closeReceiveModal=function(){
+    document.getElementById("receiveModal").style.display="none";
+  }
+  window.shareWhatsApp=function(){
+    window.open("https://wa.me/?text=Voici mon lien KwikSend : https://kwiksend.com/user123");
+  }
+  window.shareEmail=function(){
+    window.location.href="mailto:?subject=Mon lien KwikSend&body=Voici mon lien KwikSend : https://kwiksend.com/user123";
+  }
+
+  // Déconnexion
+  window.logout=function(){
+    localStorage.removeItem("kwiksend_user");
+    window.location.href="index.html";
   }
 })();
 </script>
+</body>
+</html>
