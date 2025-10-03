@@ -5,81 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>KwikSend - Tableau de bord</title>
-  <meta name="description" content="Votre espace utilisateur KwikSend.">
+  <meta name="description" content="Votre espace personnel KwikSend pour envoyer et recevoir de l’argent.">
   <meta name="theme-color" content="#ff7a00">
 
+  <!-- Favicon & icônes -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- 🧭 Header -->
+<!-- 🧭 Header connecté -->
 <header>
   <div class="container header-container">
     <div class="logo">Kwik<span>Send</span></div>
     <nav>
       <ul class="nav-links">
-        <li><a href="index.html">Accueil</a></li>
+        <li><a href="dashboard.html" class="active">Accueil</a></li>
         <li><a href="portefeuille.html">Portefeuille</a></li>
         <li><a href="transferts.html">Transferts</a></li>
-        <li><a href="dashboard.html" class="cta-nav active">Mon compte</a></li>
-        <li><a href="connexion.html" onclick="logout()">Déconnexion</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+        <li><a href="mobile.html">Mobile Money</a></li>
       </ul>
     </nav>
+    <div class="header-actions">
+      <span id="welcome-user" style="margin-right:1rem;font-weight:600;"></span>
+      <button class="cta" onclick="logout()">Déconnexion</button>
+    </div>
   </div>
 </header>
 
-<!-- 👤 Dashboard -->
-<section class="hero" style="padding:3rem;">
-  <div class="hero-content" style="max-width:900px;margin:auto;">
-    <h1>Bienvenue sur votre espace KwikSend 👋</h1>
-    <p id="user-info">Chargement des informations utilisateur...</p>
+<!-- 🎉 Bienvenue -->
+<section class="hero" style="padding:3rem 1rem;text-align:center;">
+  <h1 id="welcome-title">Bienvenue sur votre espace KwikSend 👋</h1>
+  <p>Gérez vos transferts, votre portefeuille et vos services en toute simplicité.</p>
 
-    <div class="card" style="margin-top:2rem;padding:1.5rem;">
-      <h3>Vos informations</h3>
-      <ul>
-        <li><strong>Nom :</strong> <span id="user-name">-</span></li>
-        <li><strong>Email :</strong> <span id="user-email">-</span></li>
-        <li><strong>ID :</strong> <span id="user-id">-</span></li>
-      </ul>
-    </div>
-
-    <div class="card" style="margin-top:2rem;padding:1.5rem;">
-      <h3>Actions rapides</h3>
-      <ul>
-        <li><a href="portefeuille.html" class="cta">💳 Voir mon portefeuille</a></li>
-        <li><a href="transferts.html" class="cta">📤 Effectuer un transfert</a></li>
-      </ul>
-    </div>
+  <div style="margin-top:2rem;">
+    <a href="portefeuille.html" class="cta">Voir mon portefeuille</a>
+    <a href="transferts.html" class="cta" style="background:#0a8f2f;">Effectuer un transfert</a>
   </div>
+</section>
+
+<!-- 🔑 Fonctionnalités (copie de la vitrine) -->
+<section id="fonctionnalites" style="padding:3rem 1rem;">
+  <h2>Nos fonctionnalités</h2>
+  <div class="features-grid">
+    <div class="card">💳 Portefeuille multi-devises</div>
+    <div class="card">🌍 Transferts Afrique ↔ Europe</div>
+    <div class="card">⚡ Transferts instantanés KwikSend</div>
+    <div class="card">📱 Mobile Money intégré</div>
+  </div>
+</section>
+
+<!-- 🌟 Avantages -->
+<section id="avantages" style="padding:3rem 1rem;background:#fdf8f3;">
+  <h2>Pourquoi choisir KwikSend ?</h2>
+  <ul>
+    <li>✔ Rapidité et fiabilité</li>
+    <li>✔ Frais réduits et transparents</li>
+    <li>✔ Accessible partout, 24h/24</li>
+    <li>✔ Sécurité renforcée</li>
+  </ul>
 </section>
 
 <!-- 📝 Footer -->
 <footer>
-  <p>© 2025 KwikSend. Tous droits réservés.</p>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
 </footer>
 
+<!-- Scripts -->
 <script>
-// Charger infos utilisateur depuis localStorage
-document.addEventListener("DOMContentLoaded", () => {
+  // Récupération des infos utilisateur
   const user = JSON.parse(localStorage.getItem("kwiksend_user"));
-
   if(user){
-    document.getElementById("user-info").innerText = `Bienvenue ${user.name || ""} (${user.email})`;
-    document.getElementById("user-name").innerText = user.name || "-";
-    document.getElementById("user-email").innerText = user.email || "-";
-    document.getElementById("user-id").innerText = user.id || "-";
+    document.getElementById("welcome-user").textContent = user.name;
+    document.getElementById("welcome-title").textContent = `Bienvenue ${user.name} 👋`;
   } else {
-    alert("⚠️ Vous devez être connecté pour accéder à cette page.");
-    window.location.href = "connexion.html";
+    // si pas connecté -> retour vitrine
+    window.location.href = "index.html";
   }
-});
 
-// Déconnexion
-function logout(){
-  localStorage.removeItem("kwiksend_user");
-  alert("Déconnecté ✅");
-}
+  // Déconnexion
+  function logout(){
+    localStorage.removeItem("kwiksend_user");
+    window.location.href = "index.html";
+  }
 </script>
-
 </body>
 </html>
