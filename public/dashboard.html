@@ -19,6 +19,42 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* --- Burger CSS --- */
+    .burger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+    .burger div {
+      width: 25px;
+      height: 3px;
+      background: #333;
+      transition: 0.3s;
+    }
+    @media(max-width: 768px) {
+      nav {
+        display: none;
+      }
+      nav.nav-active {
+        display: block;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 1rem;
+      }
+      nav.nav-active ul {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .burger {
+        display: flex;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -26,18 +62,27 @@
 <header>
   <div class="container header-container">
     <div class="logo">Kwik<span>Send</span></div>
-    <nav>
+
+    <nav id="nav">
       <ul class="nav-links">
         <li><a href="dashboard.html" class="active">Accueil</a></li>
         <li><a href="portefeuille.html">Portefeuille</a></li>
-        <li><a href="transferts.html">Transferts</a></li>
+        <li><a href="transfert.html">Transfert</a></li>
         <li><a href="kwiktransfert.html">KwikTransfert</a></li>
         <li><a href="mobile.html">Mobile Money</a></li>
       </ul>
     </nav>
+
     <div class="header-actions">
       <span id="welcome-user" style="margin-right:1rem;font-weight:600;"></span>
       <button class="cta" onclick="logout()">Déconnexion</button>
+    </div>
+
+    <!-- Burger -->
+    <div class="burger" id="burger">
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   </div>
 </header>
@@ -49,25 +94,34 @@
 
   <div style="margin-top:2rem;">
     <a href="portefeuille.html" class="cta">Voir mon portefeuille</a>
-    <a href="transferts.html" class="cta" style="background:#0a8f2f;">Effectuer un transfert</a>
+    <a href="transfert.html" class="cta" style="background:#0a8f2f;">Effectuer un transfert</a>
   </div>
 </section>
 
 <!-- 🔑 Fonctionnalités (copie de la vitrine) -->
 <section id="fonctionnalites" style="padding:3rem 1rem;">
   <h2>Nos fonctionnalités</h2>
+
   <div class="features-grid">
-    <div class="card">💳 Portefeuille multi-devises</div>
-    <div class="card">🌍 Transferts Afrique ↔ Europe</div>
-    <div class="card">⚡ Transferts instantanés KwikSend</div>
-    <div class="card">📱 Mobile Money intégré</div>
+    <a class="card-link" href="portefeuille.html">
+      <div class="card">💳 Portefeuille multi-devises</div>
+    </a>
+    <a class="card-link" href="transfert.html">
+      <div class="card">🌍 Transferts Afrique ↔ Europe</div>
+    </a>
+    <a class="card-link" href="kwiktransfert.html">
+      <div class="card">⚡ Transferts instantanés KwikSend</div>
+    </a>
+    <a class="card-link" href="mobile.html">
+      <div class="card">📱 Mobile Money intégré</div>
+    </a>
   </div>
 </section>
 
 <!-- 🌟 Avantages -->
-<section id="avantages" style="padding:3rem 1rem;background:#fdf8f3;">
+<section id="avantages" style="padding:3rem 1rem;background:#fdf8f3;text-align:center;">
   <h2>Pourquoi choisir KwikSend ?</h2>
-  <ul>
+  <ul style="list-style:none;padding:0;">
     <li>✔ Rapidité et fiabilité</li>
     <li>✔ Frais réduits et transparents</li>
     <li>✔ Accessible partout, 24h/24</li>
@@ -97,6 +151,14 @@
     localStorage.removeItem("kwiksend_user");
     window.location.href = "index.html";
   }
+
+  // Burger toggle
+  const burger = document.getElementById("burger");
+  const nav = document.getElementById("nav");
+  burger.addEventListener("click", () => {
+    nav.classList.toggle("nav-active");
+    burger.classList.toggle("toggle");
+  });
 </script>
 </body>
 </html>

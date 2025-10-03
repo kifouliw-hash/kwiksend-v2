@@ -178,3 +178,46 @@
 </script>
 </body>
 </html>
+<script>
+(function(){
+  const BAL_KEY='ks_balance';
+  const HIST_KEY='ks_history';
+  const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
+  const setBal = v => localStorage.setItem(BAL_KEY, String(v));
+  const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+  const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
+
+  // préremplir montant depuis portefeuille
+  const saved = sessionStorage.getItem('ks_amount');
+  const amountInput = document.getElementById('amount');
+  if(saved && amountInput){ amountInput.value = saved; }
+
+  // confirmer transfert
+  const btn = document.getElementById('confirm-transfer');
+  if(btn){
+    btn.addEventListener('click', e=>{
+      e.preventDefault();
+      const amount = parseFloat((document.getElementById('amount')||{}).value || '0');
+      const to = (document.getElementById('to')||{}).value || '';
+      if(!(amount>0)) return alert('Montant invalide');
+      const bal = getBal();
+      if(amount>bal) return alert('Solde insuffisant');
+
+      // débit + historique
+      setBal(bal - amount);
+      const hist = getHist();
+      hist.unshift({
+        type:'Transfert',
+        amount,
+        to,
+        date: new Date().toLocaleString('fr-FR')
+      });
+      setHist(hist);
+
+      // clean + retour portefeuille avec OK
+      sessionStorage.removeItem('ks_amount');
+      window.location.href='portefeuille.html?ok=1';
+    });
+  }
+})();
+</script>

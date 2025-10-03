@@ -23,6 +23,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.get("/connexion", (req, res) => res.sendFile(path.join(__dirname, "public", "connexion.html")));
 app.get("/dashboard", (req, res) => res.sendFile(path.join(__dirname, "public", "dashboard.html")));
+// Page Transfert
+app.get("/transfert", (req, res) => 
+  res.sendFile(path.join(__dirname, "public", "transfert.html"))
+);
 
 // === ROUTE INSCRIPTION ===
 app.post("/register", async (req, res) => {

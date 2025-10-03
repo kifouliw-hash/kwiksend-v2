@@ -235,3 +235,16 @@ input, select {
     display: flex;
   }
 }
+/* Centrage du bloc Avantages */
+#avantages, .advantages {
+  text-align: center;
+}
+#avantages ul, .advantages ul {
+  display: inline-block;
+  text-align: left;
+  margin: 0 auto;
+}
+/* cartes cliquables + micro-hover */
+.card-link { text-decoration: none; color: inherit; }
+.card-link .card { transition: transform .15s ease; cursor: pointer; }
+.card-link .card:hover { transform: translateY(-2px); }

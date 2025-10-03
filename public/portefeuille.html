@@ -74,10 +74,8 @@
   <!-- Boutons actions -->
 <div class="actions" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
   <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
-
   <button onclick="sendAndRedirect()">💸 Envoyer</button>
   <button onclick="openReceiveModal()">📥 Recevoir</button>
-
   <button onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
   <button onclick="location.href='mobile.html'">📲 Mobile Money</button>
 </div>
@@ -209,3 +207,52 @@
 </script>
 </body>
 </html>
+<script>
+(function(){
+  const BAL_KEY='ks_balance';
+  const HIST_KEY='ks_history';
+
+  const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
+  const setBal = v => localStorage.setItem(BAL_KEY, String(v));
+  const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+  const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
+
+  // init demo si première fois
+  if(localStorage.getItem(BAL_KEY)===null){
+    setBal(0);     // mets 0 ici (ou un montant de démo, ex: 100000)
+    setHist([]);
+  }
+
+  // affichage solde
+  const balEl = document.getElementById('balance');
+  if(balEl) balEl.textContent = getBal().toLocaleString('fr-FR') + ' CFA';
+
+  // affichage historique
+  const histEl = document.getElementById('history');
+  if(histEl){
+    const items = getHist();
+    histEl.innerHTML = items.length
+      ? items.map(tx => `<li>${tx.date} — ${tx.type} : -${tx.amount.toLocaleString('fr-FR')} CFA ${tx.to?('→ '+tx.to):''}</li>`).join('')
+      : '<li>Aucun mouvement pour le moment.</li>';
+  }
+
+  // envoyer → mémoriser montant + aller vers transfert
+  const form = document.getElementById('send-form');
+  if(form){
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('amount').value);
+      if(!(amount>0)) return alert('Montant invalide');
+      if(amount>getBal()) return alert('Solde insuffisant');
+      sessionStorage.setItem('ks_amount', String(amount));
+      window.location.href='transfert.html';
+    });
+  }
+
+  // toast succès au retour
+  const params = new URLSearchParams(location.search);
+  if(params.get('ok')==='1'){
+    alert('✅ Transfert envoyé. Votre portefeuille a été débité.');
+  }
+})();
+</script>
