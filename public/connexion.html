@@ -53,47 +53,40 @@
 
     <!-- Onglets -->
     <div style="display:flex;gap:.5rem;justify-content:center;margin:1rem 0 2rem;">
-      <button class="cta" id="tab-login"  onclick="showAuth('login')">Connexion</button>
-      <button class="cta" id="tab-signup" onclick="showAuth('signup')" style="background:#0a8f2f;">Créer un compte</button>
-      <button class="cta" id="tab-reset"  onclick="showAuth('reset')"  style="background:#0a8f2f;">Mot de passe</button>
+      <button class="cta" onclick="showAuth('login')">Connexion</button>
+      <button class="cta" onclick="showAuth('signup')" style="background:#0a8f2f;">Créer un compte</button>
+      <button class="cta" onclick="showAuth('reset')" style="background:#0a8f2f;">Mot de passe</button>
     </div>
 
     <!-- Cartes -->
     <div style="display:grid;grid-template-columns:1fr;gap:1rem;max-width:420px;margin:0 auto;">
+      
       <!-- Connexion -->
       <div class="card" id="box-login">
-        <h3 style="margin-bottom:.5rem;" data-i18n="login.title">Connexion</h3>
-        <form onsubmit="return simulateLogin(event)" style="display:flex;flex-direction:column;gap:.8rem;">
-          <input type="email" placeholder="Adresse e-mail" required>
-          <input type="password" placeholder="Mot de passe" required>
-          <button type="submit" class="cta" data-i18n="login.submit">Se connecter</button>
+        <h3>Connexion</h3>
+        <form id="login-form" style="display:flex;flex-direction:column;gap:.8rem;">
+          <input type="email" name="email" placeholder="Adresse e-mail" required>
+          <input type="password" name="password" placeholder="Mot de passe" required>
+          <button type="submit" class="cta">Se connecter</button>
         </form>
-        <div class="links" style="margin-top:.8rem;font-size:.95rem;">
-          <a href="javascript:void(0)" onclick="showAuth('reset')" data-i18n="login.forgot">Mot de passe oublié ?</a>
-          <span> · </span>
-          <a href="javascript:void(0)" onclick="showAuth('signup')" data-i18n="login.signup">Pas encore de compte ? Inscrivez-vous</a>
-        </div>
       </div>
 
       <!-- Inscription -->
       <div class="card" id="box-signup" style="display:none;">
-        <h3 style="margin-bottom:.5rem;" data-i18n="signup.title">Créer un compte</h3>
-        <form onsubmit="return simulateSignup(event)" style="display:flex;flex-direction:column;gap:.8rem;">
-          <input type="text" placeholder="Nom complet" required>
-          <input type="email" placeholder="Adresse e-mail" required>
-          <input type="password" placeholder="Mot de passe" required>
-          <button type="submit" class="cta" data-i18n="signup.submit">S’inscrire</button>
+        <h3>Créer un compte</h3>
+        <form id="signup-form" style="display:flex;flex-direction:column;gap:.8rem;">
+          <input type="text" name="name" placeholder="Nom complet" required>
+          <input type="email" name="email" placeholder="Adresse e-mail" required>
+          <input type="password" name="password" placeholder="Mot de passe" required>
+          <button type="submit" class="cta">S’inscrire</button>
         </form>
-        <div class="links" style="margin-top:.8rem;font-size:.95rem;">
-          <a href="javascript:void(0)" onclick="showAuth('login')">⬅ Retour à la connexion</a>
-        </div>
       </div>
 
       <!-- Reset -->
       <div class="card" id="box-reset" style="display:none;">
         <h3 style="margin-bottom:.5rem;">Réinitialisation</h3>
-        <form onsubmit="return simulateReset(event)" style="display:flex;flex-direction:column;gap:.8rem;">
-          <input type="email" placeholder="Adresse e-mail" required>
+        <form id="reset-form" style="display:flex;flex-direction:column;gap:.8rem;">
+          <input type="email" name="email" placeholder="Adresse e-mail" required>
           <button type="submit" class="cta">Envoyer le lien</button>
         </form>
         <div class="links" style="margin-top:.8rem;font-size:.95rem;">
@@ -120,7 +113,7 @@
     navigator.serviceWorker.register('/sw.js').catch(console.error);
   }
 
-  // Tabs simples
+  // --- Gestion des onglets ---
   function showAuth(which){
     const boxes = {login:'box-login', signup:'box-signup', reset:'box-reset'};
     Object.values(boxes).forEach(id => document.getElementById(id).style.display = 'none');
@@ -129,27 +122,57 @@
     if(firstInput) firstInput.focus();
   }
 
-  // Simulations légères
-  function simulateLogin(e){
+  // --- Auth Signup ---
+  document.getElementById("signup-form").addEventListener("submit", async e => {
     e.preventDefault();
-    alert("✅ Simulation : connexion réussie.");
-    window.location.href = "portefeuille.html";
-    return false;
-  }
-  function simulateSignup(e){
-    e.preventDefault();
-    alert("🎉 Compte créé avec succès !");
-    window.location.href = "portefeuille.html";
-    return false;
-  }
-  function simulateReset(e){
-    e.preventDefault();
-    alert("📩 Lien de réinitialisation envoyé.");
-    showAuth('login');
-    return false;
-  }
+    const form = new FormData(e.target);
+    const res = await fetch("/register", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        name: form.get("name"),
+        email: form.get("email"),
+        password: form.get("password")
+      })
+    });
+    const data = await res.json();
+    alert(data.message);
+    if(res.ok){
+      // Utilise les infos renvoyées par le backend
+      localStorage.setItem("kwiksend_user", JSON.stringify(data.user));
+      window.location.href="dashboard.html";
+    }
+  });
 
-  // Sélection onglet par défaut
+  // --- Auth Login ---
+  document.getElementById("login-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        email: form.get("email"),
+        password: form.get("password")
+      })
+    });
+    const data = await res.json();
+    alert(data.message);
+    if(res.ok){
+      // Utilise les infos renvoyées par le backend
+      localStorage.setItem("kwiksend_user", JSON.stringify(data.user));
+      window.location.href="dashboard.html";
+    }
+  });
+
+  // --- Reset password (fake pour l’instant) ---
+  document.getElementById("reset-form").addEventListener("submit", e => {
+    e.preventDefault();
+    alert("📩 Un lien de réinitialisation a été envoyé à votre email.");
+    showAuth('login');
+  });
+
+  // Onglet par défaut
   showAuth('login');
 </script>
 </body>

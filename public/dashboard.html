@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KwikSend - Tableau de bord</title>
+  <meta name="description" content="Votre espace utilisateur KwikSend.">
+  <meta name="theme-color" content="#ff7a00">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🧭 Header -->
+<header>
+  <div class="container header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="transferts.html">Transferts</a></li>
+        <li><a href="dashboard.html" class="cta-nav active">Mon compte</a></li>
+        <li><a href="connexion.html" onclick="logout()">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- 👤 Dashboard -->
+<section class="hero" style="padding:3rem;">
+  <div class="hero-content" style="max-width:900px;margin:auto;">
+    <h1>Bienvenue sur votre espace KwikSend 👋</h1>
+    <p id="user-info">Chargement des informations utilisateur...</p>
+
+    <div class="card" style="margin-top:2rem;padding:1.5rem;">
+      <h3>Vos informations</h3>
+      <ul>
+        <li><strong>Nom :</strong> <span id="user-name">-</span></li>
+        <li><strong>Email :</strong> <span id="user-email">-</span></li>
+        <li><strong>ID :</strong> <span id="user-id">-</span></li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:2rem;padding:1.5rem;">
+      <h3>Actions rapides</h3>
+      <ul>
+        <li><a href="portefeuille.html" class="cta">💳 Voir mon portefeuille</a></li>
+        <li><a href="transferts.html" class="cta">📤 Effectuer un transfert</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 📝 Footer -->
+<footer>
+  <p>© 2025 KwikSend. Tous droits réservés.</p>
+</footer>
+
+<script>
+// Charger infos utilisateur depuis localStorage
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("kwiksend_user"));
+
+  if(user){
+    document.getElementById("user-info").innerText = `Bienvenue ${user.name || ""} (${user.email})`;
+    document.getElementById("user-name").innerText = user.name || "-";
+    document.getElementById("user-email").innerText = user.email || "-";
+    document.getElementById("user-id").innerText = user.id || "-";
+  } else {
+    alert("⚠️ Vous devez être connecté pour accéder à cette page.");
+    window.location.href = "connexion.html";
+  }
+});
+
+// Déconnexion
+function logout(){
+  localStorage.removeItem("kwiksend_user");
+  alert("Déconnecté ✅");
+}
+</script>
+
+</body>
+</html>
