@@ -21,9 +21,9 @@ const translations = {
     "features.africaeurope.text": "Envoyez ou recevez instantanément entre l’Afrique et l’Europe, sans tracas.",
     "features.kwiksend.title": "Transferts KwikSend ↔ KwikSend",
     "features.kwiksend.text": "Transférez gratuitement ou à petit coût entre utilisateurs KwikSend.",
-    "features.mobile.title": "Téléchargement de relevés",
-    "features.mobile.text": "Téléchargez un relevé officiel de vos transactions (justificatif administratif).",
-
+    "features.mobile.title": "📄 Téléchargement de relevés",
+    "features.mobile.text": "Téléchargez un relevé officiel de vos transactions pour vos démarches administratives.",
+    
     "advantages.title": "Pourquoi choisir KwikSend ?",
     "advantages.speed": "Rapidité : transferts instantanés",
     "advantages.security": "Sécurité : transactions protégées avec 2FA",

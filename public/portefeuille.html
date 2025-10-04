@@ -67,12 +67,14 @@
     </div>
   </div>
 
-  <!-- Boutons actions -->
+<!-- Boutons actions -->
 <form id="send-form" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
   <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
   <button type="submit">💸 Envoyer</button>
   <button type="button" onclick="openReceiveModal()">📥 Recevoir</button>
-  <button type="button" onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
+  <button type="button" onclick="location.href='card-fund.html'">💳 Alimenter</button>
+  <button type="button" onclick="location.href='card-withdraw.html'">🏧 Retirer</button>
+</form>
   <!-- ⬇️ ancien bouton Mobile Money remplacé -->
   <button type="button" onclick="openMoveFundsModal()">🔁 Alimenter / Retirer</button>
 </form>
@@ -201,5 +203,7 @@
   }
 })();
 </script>
+<!-- Appels scripts globaux -->
+<script src="app.js"></script>
 </body>
 </html>
