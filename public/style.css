@@ -309,3 +309,67 @@ input, select {
   margin: 12px auto;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+/* ================================
+ ✅ Amélioration header mobile
+================================ */
+@media (max-width: 768px) {
+  header {
+    position: relative;
+  }
+
+  .header-container {
+    flex-wrap: wrap;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    background: linear-gradient(180deg, var(--orange), var(--yellow));
+    width: 220px;
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    text-align: left;
+    padding: 1rem;
+    z-index: 999;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links a {
+    padding: 0.5rem 0;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .burger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 18px;
+    z-index: 1000;
+  }
+
+  .burger span {
+    width: 26px;
+    height: 3px;
+    background: #fff;
+    transition: all 0.3s ease;
+  }
+
+  .burger.active span:nth-child(1) {
+    transform: rotate(45deg) translateY(8px);
+  }
+  .burger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .burger.active span:nth-child(3) {
+    transform: rotate(-45deg) translateY(-8px);
+  }
+}

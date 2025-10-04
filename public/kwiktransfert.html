@@ -24,24 +24,20 @@
 
 <!-- 🧭 Header -->
 <header>
-  <div class="container header-container">
+  <div class="header-container">
     <div class="logo">Kwik<span>Send</span></div>
     <nav>
-      <ul class="nav-links">
-        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
-        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
-        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
-        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
-        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="transfert.html">Transfert</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+        <li><a href="#" onclick="logout()">Déconnexion</a></li>
       </ul>
     </nav>
-    <div class="header-actions">
-      <select id="langSwitcher" onchange="switchLang(this.value)">
-        <option value="fr">🇫🇷 FR</option>
-        <option value="en">🇬🇧 EN</option>
-      </select>
-      <button id="darkToggle">🌙</button>
-    </div>
+    <span class="burger" onclick="toggleMenu()">☰</span>
   </div>
 </header>
 
@@ -66,7 +62,7 @@
 
 <!-- 📝 Footer -->
 <footer>
-  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+  <p>© 2025 KwikSend. <span>Tous droits réservés.</span></p>
 </footer>
 
 <!-- 📜 Scripts communs -->
@@ -92,21 +88,42 @@
       return;
     }
 
-    // Simulation wallet
-    wallet.balance -= amount;
-    wallet.history.unshift({
+    // --- Gestion localStorage
+    const BAL_KEY = 'ks_balance';
+    const HIST_KEY = 'ks_history';
+    let balance = parseFloat(localStorage.getItem(BAL_KEY) || '0');
+    let history = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+
+    if (amount > balance) {
+      alert("❌ Solde insuffisant dans le portefeuille KwikSend.");
+      return;
+    }
+
+    // débit
+    balance -= amount;
+    localStorage.setItem(BAL_KEY, balance);
+
+    // historique
+    history.unshift({
       type: "Envoi P2P",
       amount: -amount,
       to: receiver,
-      date: new Date().toLocaleDateString(),
+      date: new Date().toLocaleString(),
       status: "validé"
     });
+    localStorage.setItem(HIST_KEY, JSON.stringify(history));
 
     alert(`✅ Transfert de ${amount} EUR vers ${receiver} effectué avec succès !`);
 
-    // Redirection vers portefeuille
-    window.location.href = "portefeuille.html";
+    // redirection portefeuille
+    window.location.href = "portefeuille.html?ok=1";
   });
+
+  // --- Déconnexion
+  function logout(){
+    localStorage.removeItem("kwiksend_user");
+    window.location.href = "index.html";
+  }
 </script>
 </body>
 </html>

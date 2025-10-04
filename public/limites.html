@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KwikSend — Limites</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .limit-card { background:#fff; padding:18px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.06); max-width:700px; margin:auto; }
+    .progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin:8px 0; }
+    .progress-fill { height:100%; background:var(--orange); transition:width .3s; }
+    .status-pill { display:inline-block; padding:4px 10px; border-radius:999px; font-weight:600; font-size:.85rem; }
+    .pending { background:#fff4e6; color:#b05900; border:1px solid #ffe7cc; }
+    .approved { background:#e8f8ef; color:#0a8f2f; border:1px solid #c9f0d6; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="transfert.html">Transfert</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+        <li><a href="#" onclick="logout()">Déconnexion</a></li>
+      </ul>
+    </nav>
+    <span class="burger" onclick="toggleMenu()">☰</span>
+  </div>
+</header>
+
+<main style="padding:2rem;">
+  <section class="limit-card">
+    <h2>📊 Limites d’envoi et de retrait</h2>
+    <p style="color:#666;">Vos limites actuelles. Pour augmenter vos plafonds, effectuez une demande ci-dessous.</p>
+
+    <div style="margin-top:20px;">
+      <h3>Envoi mensuel</h3>
+      <p><b id="sendUsed">1200 €</b> / <span id="sendLimit">2500 €</span></p>
+      <div class="progress-bar"><div id="sendBar" class="progress-fill" style="width:0;"></div></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <h3>Retrait mensuel</h3>
+      <p><b id="withdrawUsed">500 €</b> / <span id="withdrawLimit">2000 €</span></p>
+      <div class="progress-bar"><div id="withdrawBar" class="progress-fill" style="width:0;"></div></div>
+    </div>
+
+    <div style="margin-top:30px;">
+      <h3>Statut de votre compte :</h3>
+      <span id="limitStatus" class="status-pill">Standard</span>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button id="requestBtn">Demander augmentation</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 KwikSend. Tous droits réservés.</p>
+</footer>
+
+<script>
+(function(){
+  // Valeurs simulées
+  let sendUsed = 1200, sendLimit = 2500;
+  let withdrawUsed = 500, withdrawLimit = 2000;
+
+  const sendBar = document.getElementById('sendBar');
+  const withdrawBar = document.getElementById('withdrawBar');
+  const statusEl = document.getElementById('limitStatus');
+  const btn = document.getElementById('requestBtn');
+
+  function render(){
+    document.getElementById('sendUsed').textContent = sendUsed + " €";
+    document.getElementById('sendLimit').textContent = sendLimit + " €";
+    sendBar.style.width = Math.min((sendUsed/sendLimit)*100,100) + "%";
+
+    document.getElementById('withdrawUsed').textContent = withdrawUsed + " €";
+    document.getElementById('withdrawLimit').textContent = withdrawLimit + " €";
+    withdrawBar.style.width = Math.min((withdrawUsed/withdrawLimit)*100,100) + "%";
+
+    const st = localStorage.getItem('ks_limit_status') || 'standard';
+    if(st === 'pending'){
+      statusEl.textContent = "Demande en attente";
+      statusEl.className = 'status-pill pending';
+    } else if(st === 'approved'){
+      statusEl.textContent = "Plafonds augmentés";
+      statusEl.className = 'status-pill approved';
+      sendLimit = 5000;
+      withdrawLimit = 4000;
+    } else {
+      statusEl.textContent = "Standard";
+      statusEl.className = 'status-pill';
+    }
+  }
+
+  btn.addEventListener('click', ()=>{
+    localStorage.setItem('ks_limit_status','pending');
+    render();
+    setTimeout(()=>{
+      localStorage.setItem('ks_limit_status','approved');
+      render();
+      alert("✅ Votre demande d’augmentation a été approuvée (simulation).");
+    }, 2000);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

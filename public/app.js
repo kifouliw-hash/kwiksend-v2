@@ -225,3 +225,10 @@ function closeMoveFundsModal() {
   const modal = document.getElementById("moveFundsModal");
   if (modal) modal.style.display = "none";
 }
+function logout() {
+  localStorage.removeItem("kwiksend_user");
+  window.location.href = "index.html";
+}
+
+// ✅ Ajoute ceci tout à la fin
+document.addEventListener("DOMContentLoaded", initBurger);
