@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KwikSend — Support & Aide</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .faq-item {
+      border-bottom: 1px solid #eee;
+      padding: 1rem 0;
+      cursor: pointer;
+    }
+    .faq-item h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-answer {
+      display: none;
+      margin-top: 0.5rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    .contact-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+      max-width: 700px;
+      margin: 2rem auto;
+    }
+    .contact-card input, .contact-card textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main style="padding:1.5rem;">
+  <section style="max-width:700px;margin:auto;">
+    <h2>❓ Foire aux questions (FAQ)</h2>
+    <div id="faqList">
+      <div class="faq-item">
+        <h3>💸 Comment envoyer de l’argent ? <span>+</span></h3>
+        <div class="faq-answer">Connectez-vous à votre compte, puis allez dans “Transfert Afrique ↔ Europe” ou “KwikSend ↔ KwikSend”. Entrez le montant et validez.</div>
+      </div>
+      <div class="faq-item">
+        <h3>🏦 Comment retirer mes fonds ? <span>+</span></h3>
+        <div class="faq-answer">Vous pouvez retirer via IBAN, carte bancaire ou Mobile Money depuis la section “Portefeuille → Alimenter / Retirer”.</div>
+      </div>
+      <div class="faq-item">
+        <h3>📄 Comment obtenir mon relevé ? <span>+</span></h3>
+        <div class="faq-answer">Dans “Relevés”, cliquez sur “Télécharger mon relevé PDF”. Un document officiel simulé sera généré automatiquement.</div>
+      </div>
+      <div class="faq-item">
+        <h3>🔐 Est-ce que mes données sont sécurisées ? <span>+</span></h3>
+        <div class="faq-answer">Oui. KwikSend chiffre vos données localement et ne partage jamais vos informations personnelles.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-card">
+    <h2>📬 Nous contacter</h2>
+    <p style="color:#666;">Besoin d’aide ? Remplissez ce formulaire et notre équipe vous répondra rapidement (simulation).</p>
+
+    <form id="contactForm">
+      <input type="text" id="name" placeholder="Votre nom" required>
+      <input type="email" id="email" placeholder="Votre e-mail" required>
+      <textarea id="message" rows="5" placeholder="Votre message..." required></textarea>
+      <button type="submit">Envoyer le message</button>
+    </form>
+
+    <p id="contactStatus" style="margin-top:10px;color:#0a8f2f;display:none;">✅ Message envoyé (simulation)</p>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 KwikSend. Tous droits réservés.</p>
+</footer>
+
+<script>
+(function(){
+  // --- FAQ toggle ---
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    item.addEventListener('click', ()=>{
+      const ans = item.querySelector('.faq-answer');
+      const open = ans.style.display === 'block';
+      document.querySelectorAll('.faq-answer').forEach(a=>a.style.display='none');
+      document.querySelectorAll('.faq-item span').forEach(s=>s.textContent='+');
+      ans.style.display = open ? 'none' : 'block';
+      item.querySelector('span').textContent = open ? '+' : '–';
+    });
+  });
+
+  // --- Contact simulation ---
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('contactStatus');
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if(!name || !email || !message) return alert("Merci de remplir tous les champs.");
+
+    // simulation enregistrement local
+    const msgs = JSON.parse(localStorage.getItem('ks_support_msgs') || '[]');
+    msgs.push({ name, email, message, date:new Date().toLocaleString() });
+    localStorage.setItem('ks_support_msgs', JSON.stringify(msgs));
+
+    form.reset();
+    status.style.display = 'block';
+    setTimeout(()=> status.style.display='none', 2500);
+  });
+})();
+</script>
+</body>
+</html>

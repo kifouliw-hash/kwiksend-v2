@@ -68,13 +68,39 @@
   </div>
 
   <!-- Boutons actions -->
-  <form id="send-form" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
-    <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
-    <button type="submit">💸 Envoyer</button>
-    <button type="button" onclick="openReceiveModal()">📥 Recevoir</button>
-    <button type="button" onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
-    <button type="button" onclick="location.href='mobile.html'">📲 Mobile Money</button>
-  </form>
+<form id="send-form" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
+  <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
+  <button type="submit">💸 Envoyer</button>
+  <button type="button" onclick="openReceiveModal()">📥 Recevoir</button>
+  <button type="button" onclick="location.href='retrait.html'">🏦 Retrait IBAN</button>
+  <!-- ⬇️ ancien bouton Mobile Money remplacé -->
+  <button type="button" onclick="openMoveFundsModal()">🔁 Alimenter / Retirer</button>
+</form>
+
+<!-- Modal Alimenter / Retirer -->
+<div id="moveFundsModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
+  <div style="background:white;padding:2rem;border-radius:12px;max-width:420px;text-align:center;">
+    <h2>🔁 Alimenter / Retirer</h2>
+
+    <p>Choisissez une action :</p>
+    <div style="margin:1rem 0;">
+      <label><input type="radio" name="moveAction" value="fund" checked> Alimenter</label>
+      <label style="margin-left:1rem;"><input type="radio" name="moveAction" value="withdraw"> Retirer</label>
+    </div>
+
+    <p>Méthode :</p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin:1rem 0;">
+      <button type="button" class="methodBtn" data-method="card">💳 Carte bancaire</button>
+      <button type="button" class="methodBtn" data-method="mobile">📱 Mobile Money</button>
+      <button type="button" class="methodBtn" data-method="iban">🏦 IBAN</button>
+    </div>
+
+    <button id="confirmMove" style="margin-top:1rem;padding:0.6rem 1.2rem;border-radius:8px;background:#ff7a00;color:#fff;border:none;cursor:pointer;" disabled>Continuer</button>
+    <br>
+    <button style="margin-top:1rem;" onclick="closeMoveFundsModal()">❌ Fermer</button>
+  </div>
+</div>
+
 
   <!-- Modal Recevoir -->
   <div id="receiveModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">

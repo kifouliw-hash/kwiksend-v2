@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KwikSend — Vérification KYC</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* mini-styles spécifiques KYC (si tu veux les garder dans style.css replace them) */
+    .kyc-card { background:#fff;padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.06); max-width:720px;margin:auto; }
+    .dropzone { border:2px dashed #eee;padding:18px;border-radius:10px;text-align:center;cursor:pointer; }
+    .dropzone.drag { border-color:var(--orange); background:#fff8f2; }
+    .thumb { margin-top:12px; display:flex; gap:8px; align-items:center; }
+    .thumb img { width:96px;height:64px;object-fit:cover;border-radius:6px;border:1px solid #ddd; }
+    .status-pill { display:inline-block;padding:6px 10px;border-radius:999px;font-weight:600;font-size:.9rem; }
+    .status-pending { background:#fff4e6;color:#b05900;border:1px solid #ffe7cc; }
+    .status-verified { background:#e8f8ef;color:#0a8f2f;border:1px solid #c9f0d6; }
+    .loader-small { width:28px;height:28px;border-radius:50%;border:4px solid rgba(0,0,0,.08);border-top-color:var(--orange);animation:spin .9s linear infinite; display:inline-block;vertical-align:middle; }
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+  </div>
+</header>
+
+<main style="padding:2rem;">
+  <section class="kyc-card" aria-labelledby="kycTitle">
+    <h2 id="kycTitle">📄 Vérification d'identité (KYC) — Simulation</h2>
+    <p style="color:#666;">Pour l'instant c'est une simulation : téléversez une pièce d'identité (image). Le statut sera enregistré localement.</p>
+
+    <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;">
+      <div style="flex:1;min-width:260px;">
+        <label><b>Informations personnelles</b></label>
+        <div style="display:grid;gap:8px;margin-top:8px;">
+          <input id="inpFullName" placeholder="Nom complet" />
+          <input id="inpDob" type="date" placeholder="Date de naissance" />
+          <input id="inpAddress" placeholder="Adresse (ville, pays)" />
+        </div>
+      </div>
+
+      <div style="flex:1;min-width:260px;">
+        <label><b>Pièce d'identité</b></label>
+
+        <div id="dropzone" class="dropzone" tabindex="0">
+          <div id="dzText">🔽 Glisser-déposer ou cliquer pour choisir un fichier (JPG/PNG, max 5MB)</div>
+          <input id="fileInput" type="file" accept="image/*" style="display:none" />
+        </div>
+
+        <div id="preview" class="thumb" aria-live="polite"></div>
+
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+          <button id="submitKyc" class="btn btn-accent">Soumettre (simulation)</button>
+          <button id="clearKyc" class="btn" style="background:#f2f2f2;color:#222">Annuler</button>
+          <div id="kycLoader" style="display:none;margin-left:8px;"><span class="loader-small"></span></div>
+        </div>
+
+        <p style="margin-top:10px;color:#666;font-size:.9rem;">Après soumission, le statut sera enregistré localement (simulation).</p>
+      </div>
+    </div>
+
+    <hr style="margin:16px 0;border:none;border-top:1px solid #f0f0f0" />
+
+    <div>
+      <b>Statut KYC actuel :</b>
+      <span id="kycStatusWrap" style="margin-left:8px;">
+        <span id="kycStatusPill" class="status-pill status-pending">Non soumis</span>
+      </span>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  // keys
+  const KYC_KEY = 'ks_kyc_status';
+  const KYC_DATA = 'ks_kyc_data';
+
+  // elements
+  const fileInput = document.getElementById('fileInput');
+  const dropzone = document.getElementById('dropzone');
+  const preview = document.getElementById('preview');
+  const submitBtn = document.getElementById('submitKyc');
+  const clearBtn = document.getElementById('clearKyc');
+  const loader = document.getElementById('kycLoader');
+  const statusPill = document.getElementById('kycStatusPill');
+
+  // load existing state
+  function loadState(){
+    const st = localStorage.getItem(KYC_KEY) || 'not_submitted';
+    renderStatus(st);
+    const data = JSON.parse(localStorage.getItem(KYC_DATA) || 'null');
+    if(data && data.filename){
+      showPreviewDataURL(data.dataUrl, data.filename);
+    }
+  }
+
+  function renderStatus(st){
+    if(st === 'verified'){
+      statusPill.textContent = 'Vérifié';
+      statusPill.className = 'status-pill status-verified';
+    } else if(st === 'pending'){
+      statusPill.textContent = 'En attente';
+      statusPill.className = 'status-pill status-pending';
+    } else if(st === 'rejected'){
+      statusPill.textContent = 'Rejeté';
+      statusPill.className = 'status-pill status-pending';
+    } else {
+      statusPill.textContent = 'Non soumis';
+      statusPill.className = 'status-pill status-pending';
+    }
+    // also trigger account badge update via localStorage (account page listens)
+    localStorage.setItem('ks_kyc_status', st);
+  }
+
+  function showPreviewDataURL(dataUrl, name){
+    preview.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = dataUrl;
+    img.alt = name || 'preview';
+    preview.appendChild(img);
+    const nm = document.createElement('div');
+    nm.style.fontSize = '.9rem';
+    nm.style.color = '#333';
+    nm.textContent = name;
+    preview.appendChild(nm);
+  }
+
+  // dropzone behaviour
+  dropzone.addEventListener('click', ()=> fileInput.click());
+  dropzone.addEventListener('dragover', (e)=>{ e.preventDefault(); dropzone.classList.add('drag'); });
+  dropzone.addEventListener('dragleave', ()=> dropzone.classList.remove('drag'));
+  dropzone.addEventListener('drop', (e)=> {
+    e.preventDefault(); dropzone.classList.remove('drag');
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) handleFile(f);
+  });
+
+  fileInput.addEventListener('change', (e)=> {
+    const f = e.target.files[0];
+    if(f) handleFile(f);
+  });
+
+  function handleFile(file){
+    if(!file.type.startsWith('image/')) return alert('Veuillez choisir une image (JPG/PNG).');
+    if(file.size > 5*1024*1024) return alert('Fichier trop volumineux (max 5MB).');
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      showPreviewDataURL(dataUrl, file.name);
+      // store temp in sessionStorage only (for demo)
+      sessionStorage.setItem('kyc_file_name', file.name);
+      sessionStorage.setItem('kyc_file_data', dataUrl);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // submit (simulation)
+  submitBtn.addEventListener('click', ()=>{
+    const fullName = document.getElementById('inpFullName').value.trim();
+    if(!fullName) return alert('Veuillez entrer votre nom complet.');
+    const fileData = sessionStorage.getItem('kyc_file_data');
+    if(!fileData) return alert('Veuillez téléverser une image de votre pièce.');
+
+    // show loader
+    loader.style.display = 'inline-block';
+    submitBtn.disabled = true;
+
+    // simulate upload + verification (2s -> pending then 2s -> verified)
+    renderStatus('pending');
+
+    // save submitted data (simulate server store) in localStorage
+    const payload = {
+      name: fullName,
+      dob: document.getElementById('inpDob').value || '',
+      address: document.getElementById('inpAddress').value || '',
+      filename: sessionStorage.getItem('kyc_file_name') || 'doc.jpg',
+      dataUrl: sessionStorage.getItem('kyc_file_data') || ''
+    };
+    localStorage.setItem(KYC_DATA, JSON.stringify(payload));
+
+    setTimeout(()=>{
+      // simulate final verification result (here we auto-verify for demo)
+      renderStatus('verified');
+      loader.style.display = 'none';
+      submitBtn.disabled = false;
+      alert('✅ Document soumis et vérifié (simulation).');
+      // also clear session temp
+      sessionStorage.removeItem('kyc_file_name');
+      sessionStorage.removeItem('kyc_file_data');
+    }, 1600);
+  });
+
+  clearBtn.addEventListener('click', ()=>{
+    sessionStorage.removeItem('kyc_file_name');
+    sessionStorage.removeItem('kyc_file_data');
+    preview.innerHTML = '';
+    document.getElementById('inpFullName').value='';
+    document.getElementById('inpDob').value='';
+    document.getElementById('inpAddress').value='';
+    renderStatus('not_submitted');
+  });
+
+  // init
+  loadState();
+})();
+</script>
+</body>
+</html>

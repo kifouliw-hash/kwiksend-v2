@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KwikSend — Retrait sur carte</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><div class="logo">Kwik<span>Send</span></div></header>
+
+  <main style="max-width:680px;margin:40px auto;padding:20px;text-align:center;">
+    <h1>🏧 Retrait — Vers carte (simulation)</h1>
+    <p>Saisissez le montant et la carte (fake). Le retrait est simulé.</p>
+
+    <form id="withdrawForm" style="margin-top:18px;display:flex;flex-direction:column;gap:10px;">
+      <input id="destCard" type="text" placeholder="Numéro de carte destinataire (fake)" required />
+      <input id="amount" type="number" placeholder="Montant (€)" min="0.1" step="0.01" required />
+      <button type="submit" class="btn">Valider le retrait (simulation)</button>
+    </form>
+
+    <p id="msg" style="color:green;margin-top:12px"></p>
+    <p style="margin-top:18px"><a href="portefeuille.html">← Retour au portefeuille</a></p>
+  </main>
+
+<script>
+(() => {
+  const BAL_KEY='ks_balance', HIST_KEY='ks_history';
+  const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
+  const setBal = v => localStorage.setItem(BAL_KEY, String(v));
+  const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+  const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
+
+  document.getElementById('withdrawForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const amount = parseFloat(document.getElementById('amount').value);
+    if(!(amount>0)) return alert('Montant invalide');
+    const bal = getBal();
+    if(amount > bal) return alert('Solde insuffisant');
+    const pushLimit = 3000;
+    if(amount > pushLimit) return alert('Montant supérieur à la limite de retrait sur carte (simulation).');
+
+    const newBal = bal - amount;
+    setBal(newBal);
+    const hist = getHist();
+    hist.unshift({ date: new Date().toLocaleString(), type: 'Retrait (Carte)', amount: amount.toFixed(2), method: 'Carte', status: 'Réussi' });
+    setHist(hist);
+    document.getElementById('msg').textContent = '✅ Retrait simulé. Redirection...';
+    setTimeout(()=> window.location.href = 'portefeuille.html?ok=1', 900);
+  });
+})();
+</script>
+</body>
+</html>

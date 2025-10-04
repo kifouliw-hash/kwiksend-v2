@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KwikSend — Vérifier relevé</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">Kwik<span>Send</span></div>
+    </div>
+  </header>
+
+  <main style="max-width:760px;margin:60px auto;padding:20px;text-align:center;">
+    <h1>🔎 Vérification du relevé</h1>
+    <div id="result" style="margin-top:20px;padding:1.2rem;border-radius:10px;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,0.06);"></div>
+    <p style="color:#666;margin-top:12px;">Ce service vérifie localement si le hash du relevé a été enregistré (simulation).</p>
+  </main>
+
+<script>
+const HASH_STORE_KEY = 'ks_releve_hashes';
+
+function shortHash(h){ return h ? (h.slice(0,8) + '…' + h.slice(-6)) : ''; }
+
+function renderResultFound(meta, hash) {
+  const el = document.getElementById('result');
+  const date = new Date(meta.createdAt).toLocaleString();
+  el.innerHTML = `
+    <h2 style="color:green">✅ Relevé authentique (simulation)</h2>
+    <p><strong>Hash :</strong> ${shortHash(hash)}</p>
+    <p><strong>Transactions enregistrées :</strong> ${meta.count || '—'}</p>
+    <p><strong>Enregistré le :</strong> ${date}</p>
+    <p style="margin-top:12px;"><a href="releves.html">← Retour aux relevés</a></p>
+  `;
+}
+
+function renderResultNotFound(hash) {
+  const el = document.getElementById('result');
+  el.innerHTML = `
+    <h2 style="color:#b00020">❌ Relevé non trouvé</h2>
+    <p>Le hash <code>${shortHash(hash)}</code> n'est pas enregistré dans la simulation locale.</p>
+    <p style="margin-top:12px;"><a href="releves.html">← Retour aux relevés</a></p>
+  `;
+}
+
+document.addEventListener('DOMContentLoaded', ()=> {
+  const params = new URLSearchParams(location.search);
+  const h = params.get('h') || '';
+  if (!h) {
+    document.getElementById('result').innerHTML = '<h3>Aucun hash fourni dans l’URL.</h3><p>Scannez le QR du relevé pour être redirigé ici.</p>';
+    return;
+  }
+
+  const store = JSON.parse(localStorage.getItem(HASH_STORE_KEY) || '[]');
+  const found = store.find(s => s.hash === h);
+  if (found) renderResultFound(found, h);
+  else renderResultNotFound(h);
+});
+</script>
+</body>
+</html>

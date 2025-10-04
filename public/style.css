@@ -187,6 +187,58 @@ input, select {
   width: 100%;
 }
 
+/* --- variantes --- */
+.btn { background: #eee; color: var(--text-dark); font-weight: 600; }
+.btn-accent { background: var(--orange); color: #fff; }
+.btn.primary { background: var(--green-cta); color: #fff; }
+
+/* ================================
+ 💬 Modales
+================================ */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.open { display: flex; }
+
+.modal-card {
+  background: #fff;
+  padding: 1.8rem;
+  border-radius: 14px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.method-grid {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.method {
+  border: 1px solid #eee;
+  background: #fff;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.method.active {
+  background: #fff2e8;
+  border-color: var(--orange);
+}
+
 /* ================================
  📱 Responsive + Burger
 ================================ */
@@ -235,16 +287,25 @@ input, select {
     display: flex;
   }
 }
-/* Centrage du bloc Avantages */
-#avantages, .advantages {
-  text-align: center;
-}
-#avantages ul, .advantages ul {
-  display: inline-block;
-  text-align: left;
-  margin: 0 auto;
-}
-/* cartes cliquables + micro-hover */
+
+/* ================================
+ ⚙️ Divers
+================================ */
+#avantages, .advantages { text-align: center; }
+#avantages ul, .advantages ul { display: inline-block; text-align: left; margin: 0 auto; }
+
 .card-link { text-decoration: none; color: inherit; }
 .card-link .card { transition: transform .15s ease; cursor: pointer; }
 .card-link .card:hover { transform: translateY(-2px); }
+
+/* --- Loader --- */
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 5px solid rgba(0,0,0,0.08);
+  border-top-color: var(--orange);
+  animation: spin .9s linear infinite;
+  margin: 12px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

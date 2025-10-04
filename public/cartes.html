@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KwikSend — Gérer vos cartes</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .card-list { list-style:none; padding:0; margin:20px 0; }
+    .card-item { background:#fff; padding:15px; margin-bottom:12px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.06); display:flex; justify-content:space-between; align-items:center; }
+    .card-info { font-size:.95rem; }
+    .badge { padding:4px 8px; border-radius:999px; font-size:.8rem; font-weight:600; }
+    .active { background:#e8f8ef; color:#0a8f2f; border:1px solid #c9f0d6; }
+    .btn-remove { background:#eee; color:#333; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:.8rem; }
+    .btn-remove:hover { background:#ffdddd; color:#900; }
+    form { background:#fff; padding:15px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+    form input { margin-bottom:10px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main style="padding:1.5rem; max-width:700px; margin:auto;">
+  <h2>💳 Gérer vos cartes bancaires</h2>
+  <p style="color:#666;">Ajoutez, supprimez ou définissez votre carte principale.</p>
+
+  <ul id="cardList" class="card-list"></ul>
+
+  <h3>➕ Ajouter une nouvelle carte</h3>
+  <form id="addCardForm">
+    <input type="text" id="cardHolder" placeholder="Nom du titulaire" required />
+    <input type="text" id="cardNumber" placeholder="Numéro de carte (16 chiffres)" maxlength="16" required />
+    <input type="month" id="cardExpiry" required />
+    <input type="text" id="cardCvc" placeholder="CVC" maxlength="4" required />
+    <button type="submit">Ajouter la carte</button>
+  </form>
+</main>
+
+<footer>
+  <p>© 2025 KwikSend. Tous droits réservés.</p>
+</footer>
+
+<script>
+(function(){
+  const CARD_KEY = 'ks_cards';
+  const listEl = document.getElementById('cardList');
+  const form = document.getElementById('addCardForm');
+
+  function loadCards(){
+    return JSON.parse(localStorage.getItem(CARD_KEY) || '[]');
+  }
+  function saveCards(cards){
+    localStorage.setItem(CARD_KEY, JSON.stringify(cards));
+  }
+
+  function render(){
+    const cards = loadCards();
+    listEl.innerHTML = '';
+    if(cards.length === 0){
+      listEl.innerHTML = '<li style="color:#666;">Aucune carte enregistrée.</li>';
+      return;
+    }
+    cards.forEach((c, idx)=>{
+      const li = document.createElement('li');
+      li.className = 'card-item';
+
+      const info = document.createElement('div');
+      info.className = 'card-info';
+      info.innerHTML = `
+        <b>${c.holder}</b><br>
+        **** **** **** ${c.number.slice(-4)}<br>
+        Exp: ${c.expiry}
+      `;
+      li.appendChild(info);
+
+      if(idx === 0){
+        const badge = document.createElement('span');
+        badge.className = 'badge active';
+        badge.textContent = 'Active';
+        li.appendChild(badge);
+      }
+
+      const btn = document.createElement('button');
+      btn.className = 'btn-remove';
+      btn.textContent = 'Supprimer';
+      btn.onclick = ()=>{
+        const updated = cards.filter((_,i)=>i!==idx);
+        saveCards(updated);
+        render();
+      };
+      li.appendChild(btn);
+
+      listEl.appendChild(li);
+    });
+  }
+
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const holder = document.getElementById('cardHolder').value.trim();
+    const number = document.getElementById('cardNumber').value.trim();
+    const expiry = document.getElementById('cardExpiry').value;
+    const cvc = document.getElementById('cardCvc').value.trim();
+    if(number.length !== 16 || isNaN(number)) return alert("Numéro invalide.");
+    if(cvc.length < 3) return alert("CVC invalide.");
+    const newCard = { holder, number, expiry, cvc };
+    const cards = loadCards();
+    cards.unshift(newCard); // ajoute en haut
+    saveCards(cards);
+    form.reset();
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

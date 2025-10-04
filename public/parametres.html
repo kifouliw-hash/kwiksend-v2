@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KwikSend — Paramètres</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .settings-section {
+      background:#fff; padding:20px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.06);
+      margin-bottom:20px; max-width:700px; margin:auto;
+    }
+    .settings-section h3 { margin-bottom:10px; color:var(--orange); }
+    .toggle {
+      appearance:none; width:45px; height:22px; background:#ccc; border-radius:50px;
+      position:relative; outline:none; cursor:pointer; transition:.3s;
+    }
+    .toggle:checked { background:var(--orange); }
+    .toggle:checked::before { left:25px; }
+    .toggle::before {
+      content:''; position:absolute; top:3px; left:3px; width:16px; height:16px;
+      background:#fff; border-radius:50%; transition:.3s;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main style="padding:1.5rem;">
+  <h2>⚙️ Paramètres du compte</h2>
+
+  <!-- Thème -->
+  <section class="settings-section">
+    <h3>🎨 Thème</h3>
+    <p>Choisissez votre mode d’affichage préféré.</p>
+    <label>
+      <input type="checkbox" id="themeToggle" class="toggle"> Mode sombre
+    </label>
+  </section>
+
+  <!-- Langue -->
+  <section class="settings-section">
+    <h3>🌍 Langue</h3>
+    <p>Sélectionnez la langue d’affichage de l’interface.</p>
+    <select id="langSelect" style="padding:8px;border-radius:6px;border:1px solid #ccc;">
+      <option value="fr">Français 🇫🇷</option>
+      <option value="en">English 🇬🇧</option>
+    </select>
+  </section>
+
+  <!-- Sécurité -->
+  <section class="settings-section">
+    <h3>🔐 Sécurité</h3>
+    <p>Protégez votre compte.</p>
+    <button id="changePwdBtn">Modifier le mot de passe</button>
+    <br><br>
+    <label><input type="checkbox" id="twofaToggle" class="toggle"> Activer la vérification 2FA (simulation)</label>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2025 KwikSend. Tous droits réservés.</p>
+</footer>
+
+<script>
+(function(){
+  const themeToggle = document.getElementById('themeToggle');
+  const langSelect = document.getElementById('langSelect');
+  const twofaToggle = document.getElementById('twofaToggle');
+
+  // Charger préférences existantes
+  const theme = localStorage.getItem('ks_theme') || 'light';
+  const lang = localStorage.getItem('lang') || 'fr';
+  const twofa = localStorage.getItem('ks_2fa') === 'true';
+
+  if(theme === 'dark'){
+    document.body.classList.add('dark');
+    themeToggle.checked = true;
+  }
+  langSelect.value = lang;
+  twofaToggle.checked = twofa;
+
+  // Changement de thème
+  themeToggle.addEventListener('change', ()=>{
+    const dark = themeToggle.checked;
+    if(dark){
+      document.body.classList.add('dark');
+      localStorage.setItem('ks_theme','dark');
+    } else {
+      document.body.classList.remove('dark');
+      localStorage.setItem('ks_theme','light');
+    }
+  });
+
+  // Langue
+  langSelect.addEventListener('change', ()=>{
+    localStorage.setItem('lang', langSelect.value);
+    alert('🌍 Langue changée. Recharger la page pour appliquer.');
+  });
+
+  // 2FA (simulation)
+  twofaToggle.addEventListener('change', ()=>{
+    localStorage.setItem('ks_2fa', twofaToggle.checked);
+    if(twofaToggle.checked){
+      alert('🔐 Vérification 2FA activée (simulation).');
+    } else {
+      alert('2FA désactivée.');
+    }
+  });
+
+  // Changement mot de passe (simulation)
+  document.getElementById('changePwdBtn').addEventListener('click', ()=>{
+    const newPwd = prompt('Entrez un nouveau mot de passe (simulation) :');
+    if(newPwd && newPwd.length >= 6){
+      localStorage.setItem('ks_password','******');
+      alert('✅ Mot de passe modifié (simulation).');
+    } else {
+      alert('Mot de passe trop court.');
+    }
+  });
+})();
+</script>
+</body>
+</html>

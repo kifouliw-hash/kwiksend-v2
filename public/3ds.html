@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>3D-Secure — Simulation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main style="max-width:600px;margin:60px auto;padding:20px;text-align:center;">
+    <h1>🔒 3D-Secure (simulation)</h1>
+    <p>Simulation d’authentification bancaire. Cliquez pour valider.</p>
+    <div style="margin:20px 0;">
+      <button id="finish3ds" class="btn btn-accent">Valider 3D-Secure</button>
+    </div>
+    <p style="color:#666;font-size:.9rem">Retour automatique vers la page d’origine après validation.</p>
+  </main>
+
+<script>
+document.getElementById('finish3ds').addEventListener('click', ()=>{
+  const params = new URLSearchParams(location.search);
+  const ret = params.get('return') || 'card-fund.html';
+  const sep = ret.includes('?') ? '&' : '?';
+  window.location.href = `${ret}${sep}3ds=ok`;
+});
+</script>
+</body>
+</html>
