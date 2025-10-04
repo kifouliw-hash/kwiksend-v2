@@ -128,8 +128,8 @@
     <a class="card-link" href="kwiktransfert.html">
       <div class="card">⚡ Transferts instantanés KwikSend</div>
     </a>
-    <a class="card-link" href="mobile.html">
-      <div class="card">📱 Mobile Money intégré</div>
+    <a class="card-link" href="releves.html">
+      <div class="card">📄 Relevés officiels</div>
     </a>
   </div>
 </section>
@@ -154,24 +154,24 @@
 <script>
   // Récupération infos utilisateur
   const user = JSON.parse(localStorage.getItem("kwiksend_user"));
-  if(user){
-    document.getElementById("welcome-user").textContent = user.name;
+  if (user && user.name) {
     document.getElementById("welcome-title").textContent = `Bienvenue ${user.name} 👋`;
   } else {
-    window.location.href = "index.html"; // si pas connecté
+    document.getElementById("welcome-title").textContent = "Bienvenue sur votre espace KwikSend 👋";
   }
 
   // Déconnexion
-  function logout(){
+  function logout() {
     localStorage.removeItem("kwiksend_user");
     window.location.href = "index.html";
   }
 
   // ✅ Burger toggle
-  function toggleMenu(){
+  function toggleMenu() {
     document.querySelector("nav ul").classList.toggle("active");
   }
 </script>
+
 <!-- Appels scripts globaux -->
 <script src="app.js"></script>
 </body>

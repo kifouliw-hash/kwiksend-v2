@@ -34,17 +34,17 @@
       <span></span>
     </div>
 
-<nav>
-  <ul class="nav-links" id="nav-menu">
-    <li><a href="dashboard.html">Accueil</a></li>
-    <li><a href="portefeuille.html">Portefeuille</a></li>
-    <li><a href="transfert.html">Transfert</a></li>
-    <li><a href="kwiktransfert.html">KwikTransfert</a></li>
-    <li><a href="releves.html">Relevés</a></li>
-    <li><a href="profile.html">Compte</a></li>
-    <li><a href="#" onclick="logout()">Déconnexion</a></li>
-  </ul>
-</nav>
+    <nav>
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="transfert.html">Transfert</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+        <li><a href="#" onclick="logout()">Déconnexion</a></li>
+      </ul>
+    </nav>
 
     <div class="header-actions">
       <select id="langSwitcher" onchange="switchLang(this.value)">
@@ -84,13 +84,11 @@
       <p data-i18n="features.kwiksend.text">Gratuit ou à petit coût.</p>
     </div>
 
-<!-- ✅ Nouvelle fonctionnalité : Téléchargement de relevés -->
-<div class="card clickable" onclick="location.href='releves.html'">
-  <h3 data-i18n="features.releve.title">📄 Téléchargement de relevés</h3>
-  <p data-i18n="features.releve.text">
-    Téléchargez un relevé officiel de vos transactions pour vos démarches.
-  </p>
-</div>
+    <!-- ✅ Nouvelle fonctionnalité : Relevés officiels -->
+    <div class="card clickable" onclick="location.href='releves.html'">
+      <h3 data-i18n="features.releve.title">📄 Relevés officiels</h3>
+      <p data-i18n="features.releve.text">Téléchargez un relevé certifié de vos transactions pour vos démarches.</p>
+    </div>
   </div>
 </section>
 
@@ -101,7 +99,7 @@
     <div class="card">⚡ Rapidité : transferts instantanés</div>
     <div class="card">🔒 Sécurité : transactions protégées</div>
     <div class="card">🌍 Accessibilité : Afrique & Europe</div>
-    <div class="card">💳 Flexibilité : Mobile Money & IBAN</div>
+    <div class="card">💳 Flexibilité : multiples moyens de paiement</div>
   </div>
 </section>
 
@@ -117,10 +115,20 @@
 </footer>
 
 <!-- 📜 Scripts -->
-<script src="script.js"></script>
+<script>
+  // ✅ Burger toggle
+  function toggleMenu() {
+    document.getElementById("nav-menu").classList.toggle("open");
+  }
+
+  // ✅ Déconnexion
+  function logout() {
+    localStorage.removeItem("kwiksend_user");
+    window.location.href = "index.html";
+  }
+</script>
+
 <script src="translate.js"></script>
-<script src="app.js"></script>
-<!-- Appels scripts globaux -->
 <script src="app.js"></script>
 </body>
 </html>

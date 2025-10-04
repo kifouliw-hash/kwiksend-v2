@@ -48,7 +48,7 @@
     <label>au :</label><input type="date" id="endDate" />
     <button onclick="filterTransactions()">Appliquer</button>
     <button onclick="resetFilter()">Réinitialiser</button>
-    <button onclick="downloadPDF()" style="margin-left:auto;">🧾 Télécharger PDF</button>
+    <button id="downloadPDF" style="margin-left:auto;">🧾 Télécharger PDF</button>
   </section>
 
   <!-- Tableau transactions -->
@@ -81,9 +81,9 @@
 </footer>
 
 <script>
-/* ---------- Helpers storage ---------- */
+/* ---------- Helpers ---------- */
 const HIST_KEY = 'ks_history';
-const HASH_STORE_KEY = 'ks_releve_hashes'; // simulation store of hashes
+const HASH_STORE_KEY = 'ks_releve_hashes';
 
 function getHist() {
   return JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
@@ -121,7 +121,6 @@ function filterTransactions() {
   if (end) hist = hist.filter(tx => new Date(tx.date) <= new Date(end));
   renderReleve(hist);
 }
-
 function resetFilter() {
   document.getElementById("startDate").value = "";
   document.getElementById("endDate").value = "";
@@ -136,33 +135,28 @@ async function sha256Hex(str) {
   return Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-/* ---------- PDF export + QR + stamp/signature ---------- */
+/* ---------- PDF export ---------- */
 async function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p', 'pt', 'a4');
   const hist = getHist();
 
-  // canonical string for hashing
   const canonical = JSON.stringify(hist.map(tx => ({
     date: tx.date, type: tx.type, amount: tx.amount, method: tx.method, name: tx.to || tx.from, motif: tx.motif, status: tx.status
   })));
   const hash = await sha256Hex(canonical);
 
-  // Save hash to localStorage (simulation of server-side registry)
   const known = JSON.parse(localStorage.getItem(HASH_STORE_KEY) || '[]');
   known.push({ hash, createdAt: Date.now(), count: hist.length });
   localStorage.setItem(HASH_STORE_KEY, JSON.stringify(known));
 
-  // Header
   doc.setFontSize(16);
-  doc.setTextColor(40);
   doc.text("KwikSend — Relevé de transactions", 40, 48);
   doc.setFontSize(10);
   doc.text(`Nom : KwikSend User`, 40, 66);
   doc.text(`Email : user@kwiksend.com`, 40, 80);
   doc.text(`Période : 01/09/2025 - 04/10/2025`, 40, 94);
 
-  // Table rows
   const rows = hist.map(tx => [
     tx.date || '-', tx.type || '-', tx.amount || '0', tx.method || '-', tx.to || tx.from || '-', tx.motif || '-', tx.status || '-'
   ]);
@@ -175,9 +169,8 @@ async function downloadPDF() {
     headStyles: { fillColor: [255, 122, 0] }
   });
 
-  // Attempt to add stamp.png and signature.png if exist (place at bottom-right)
+  // Stamp
   try {
-    // helper: fetch as dataURL
     const fileToDataUrl = async (url) => {
       const r = await fetch(url);
       if (!r.ok) throw new Error('no file');
@@ -188,42 +181,26 @@ async function downloadPDF() {
         fr.readAsDataURL(blob);
       });
     };
-
     const pageH = doc.internal.pageSize.getHeight();
     const pageW = doc.internal.pageSize.getWidth();
 
-    // stamp
     const stampUrl = await fileToDataUrl('stamp.png').catch(()=>null);
     if (stampUrl) {
       const stampW = 110, stampH = 110;
       doc.addImage(stampUrl, 'PNG', pageW - stampW - 40, pageH - stampH - 80, stampW, stampH);
     }
+  } catch(e){}
 
-    // signature
-    const signUrl = await fileToDataUrl('signature.png').catch(()=>null);
-    if (signUrl) {
-      const sigW = 140, sigH = 50;
-      doc.addImage(signUrl, 'PNG', pageW - sigW - 40, pageH - sigH - 200, sigW, sigH);
-    }
-  } catch (e) {
-    // ignore missing images
-    console.warn('Stamp/sign not added:', e);
-  }
-
-  // QR pointing to verify page with hash
   const verifyUrl = `${location.origin}/verify_releve.html?h=${hash}`;
   const qrDataUrl = await QRCode.toDataURL(verifyUrl, { margin: 1, width: 120 });
-
   const lastY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 140;
   doc.addImage(qrDataUrl, 'PNG', 40, lastY + 20, 90, 90);
   doc.setFontSize(8);
   doc.text(`Vérifier : ${verifyUrl}`, 140, lastY + 40, { maxWidth: 340 });
 
-  // Put the short hash and full hash (small) at bottom
   doc.setFontSize(8);
   doc.text(`SHA256: ${hash}`, 40, doc.internal.pageSize.getHeight() - 30);
 
-  // Save PDF
   doc.save("KwikSend_Releve.pdf");
 }
 
@@ -236,68 +213,9 @@ function logout() {
 /* ---------- Init ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   renderReleve(getHist());
+  document.getElementById("downloadPDF").addEventListener("click", downloadPDF);
 });
 </script>
-<!-- Appels scripts globaux -->
 <script src="app.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-(async function(){
-  const { jsPDF } = window.jspdf;
-
-  document.getElementById("downloadPDF").addEventListener("click", () => {
-    const doc = new jsPDF();
-    const dateNow = new Date().toLocaleDateString('fr-FR');
-
-    // En-tête
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.text("Relevé officiel de transactions", 20, 20);
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.text(`Nom du titulaire : ${localStorage.getItem("kwiksend_user") || "Utilisateur KwikSend"}`, 20, 30);
-    doc.text(`Date d'émission : ${dateNow}`, 20, 36);
-    doc.line(20, 40, 190, 40);
-
-    // Données de simulation
-    const data = JSON.parse(localStorage.getItem("ks_history") || "[]");
-    let y = 50;
-
-    if (data.length === 0) {
-      doc.text("Aucune transaction enregistrée.", 20, y);
-    } else {
-      doc.setFont("helvetica", "bold");
-      doc.text("Type", 20, y);
-      doc.text("Montant (€)", 60, y);
-      doc.text("Moyen", 100, y);
-      doc.text("Date", 140, y);
-      doc.text("Motif", 170, y, { align: "right" });
-      y += 6;
-      doc.setFont("helvetica", "normal");
-
-      data.forEach(tx => {
-        doc.text(tx.type || "-", 20, y);
-        doc.text(String(tx.amount || "-"), 60, y);
-        doc.text(tx.method || "-", 100, y);
-        doc.text(tx.date || "-", 140, y);
-        doc.text(tx.motif || "-", 190, y, { align: "right" });
-        y += 6;
-      });
-    }
-
-    // Tampon officiel uniquement
-const stamp = new Image();
-stamp.src = "stamp.png";
-
-stamp.onload = () => {
-  doc.addImage(stamp, "PNG", 20, 250, 40, 40); // position et taille du tampon
-  doc.setFontSize(10);
-  doc.text("Tampon officiel KwikSend", 20, 295);
-  doc.save("Releve_KwikSend.pdf");
-};
-    };
-  });
-})();
-</script>
 </body>
 </html>

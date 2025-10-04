@@ -7,8 +7,26 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header><div class="logo">Kwik<span>Send</span></div></header>
+  <!-- 🧭 Header -->
+  <header>
+    <div class="header-container">
+      <div class="logo">Kwik<span>Send</span></div>
+      <nav>
+        <ul class="nav-links" id="nav-menu">
+          <li><a href="dashboard.html">Accueil</a></li>
+          <li><a href="portefeuille.html">Portefeuille</a></li>
+          <li><a href="transfert.html">Transfert</a></li>
+          <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+          <li><a href="releves.html">Relevés</a></li>
+          <li><a href="profile.html">Compte</a></li>
+          <li><a href="#" onclick="logout()">Déconnexion</a></li>
+        </ul>
+      </nav>
+      <span class="burger" onclick="toggleMenu()">☰</span>
+    </div>
+  </header>
 
+  <!-- 💳 Formulaire -->
   <main style="max-width:680px;margin:40px auto;padding:20px;text-align:center;">
     <h1>💳 Alimenter — Carte bancaire (simulation)</h1>
     <p>Entrez des infos fictives et le montant pour simuler l’alimentation.</p>
@@ -25,64 +43,74 @@
     <p style="margin-top:18px"><a href="portefeuille.html">← Retour au portefeuille</a></p>
   </main>
 
-<script>
-(() => {
-  const BAL_KEY='ks_balance', HIST_KEY='ks_history';
+  <!-- 📜 Script principal -->
+  <script>
+  (() => {
+    const BAL_KEY='ks_balance', HIST_KEY='ks_history';
 
-  const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
-  const setBal = v => localStorage.setItem(BAL_KEY, String(v));
-  const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
-  const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
+    const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
+    const setBal = v => localStorage.setItem(BAL_KEY, String(v));
+    const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+    const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
 
-  // basic Luhn check (optional but useful)
-  function luhnCheck(num){
-    const s = String(num).replace(/\D/g,'').split('').reverse().map(Number);
-    let sum = 0;
-    for (let i=0;i<s.length;i++){
-      let v = s[i];
-      if(i % 2 === 1){ v *= 2; if(v>9) v -= 9; }
-      sum += v;
-    }
-    return sum % 10 === 0;
-  }
-
-  const form = document.getElementById('fundForm');
-  form.addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById('amount').value);
-    const card = document.getElementById('cardNumber').value.trim();
-    const exp = document.getElementById('cardExpiry').value.trim();
-    const cvv = document.getElementById('cardCvv').value.trim();
-
-    if(!(amount>0)) return alert('Montant invalide');
-    if(card.length < 12 || !luhnCheck(card)) {
-      if(!confirm("Numéro de carte invalide (simulation). Continuer quand même ?")) return;
+    // ✅ Vérification Luhn basique (simu)
+    function luhnCheck(num){
+      const s = String(num).replace(/\D/g,'').split('').reverse().map(Number);
+      let sum = 0;
+      for (let i=0;i<s.length;i++){
+        let v = s[i];
+        if(i % 2 === 1){ v *= 2; if(v>9) v -= 9; }
+        sum += v;
+      }
+      return sum % 10 === 0;
     }
 
-    // save temp pending payment then redirect to 3DS simulation
-    sessionStorage.setItem('ks_pending', JSON.stringify({
-      type: 'Alimentation (Carte)',
-      amount: amount,
-      method: 'Carte',
-      ts: Date.now()
-    }));
-    window.location.href = `3ds.html?return=${encodeURIComponent('card-fund.html')}`;
-  });
+    const form = document.getElementById('fundForm');
+    form.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const card = document.getElementById('cardNumber').value.trim();
+      const exp = document.getElementById('cardExpiry').value.trim();
+      const cvv = document.getElementById('cardCvv').value.trim();
 
-  // finalize if returned from 3DS
-  const params = new URLSearchParams(location.search);
-  if(params.get('3ds') === 'ok' && sessionStorage.getItem('ks_pending')){
-    const pending = JSON.parse(sessionStorage.getItem('ks_pending'));
-    const newBal = getBal() + Number(pending.amount);
-    setBal(newBal);
-    const hist = getHist();
-    hist.unshift({ date: new Date().toLocaleString(), type: pending.type, amount: (Number(pending.amount)).toFixed(2), method: pending.method, status: 'Réussi' });
-    setHist(hist);
-    sessionStorage.removeItem('ks_pending');
-    document.getElementById('msg').textContent = '✅ Paiement validé (3DS). Redirection...';
-    setTimeout(()=> window.location.href = 'portefeuille.html?ok=1', 900);
-  }
-})();
-</script>
+      if(!(amount>0)) return alert('Montant invalide');
+      if(card.length < 12 || !luhnCheck(card)) {
+        if(!confirm("Numéro de carte invalide (simulation). Continuer quand même ?")) return;
+      }
+
+      // 💾 Enregistre une transaction temporaire et redirige vers la page 3DS
+      sessionStorage.setItem('ks_pending', JSON.stringify({
+        type: 'Alimentation (Carte)',
+        amount: amount,
+        method: 'Carte',
+        ts: Date.now()
+      }));
+      window.location.href = `3ds.html?return=${encodeURIComponent('card-fund.html')}`;
+    });
+
+    // 🔄 Retour de la page 3DS
+    const params = new URLSearchParams(location.search);
+    if(params.get('3ds') === 'ok' && sessionStorage.getItem('ks_pending')){
+      const pending = JSON.parse(sessionStorage.getItem('ks_pending'));
+      const newBal = getBal() + Number(pending.amount);
+      setBal(newBal);
+      const hist = getHist();
+      hist.unshift({
+        date: new Date().toLocaleString(),
+        type: pending.type,
+        amount: (Number(pending.amount)).toFixed(2),
+        method: pending.method,
+        status: 'Réussi'
+      });
+      setHist(hist);
+      sessionStorage.removeItem('ks_pending');
+      document.getElementById('msg').textContent = '✅ Paiement validé (3DS). Redirection...';
+      setTimeout(()=> window.location.href = 'portefeuille.html?ok=1', 1000);
+    }
+  })();
+  </script>
+
+  <!-- 🔗 Script global -->
+  <script src="app.js"></script>
 </body>
 </html>

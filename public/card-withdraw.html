@@ -5,50 +5,98 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>KwikSend — Retrait sur carte</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #fdf8f3;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+    }
+    main {
+      max-width: 680px;
+      margin: 60px auto;
+      padding: 20px;
+      text-align: center;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+    input, button {
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      background: #ff7a00;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #ff9b33;
+    }
+  </style>
 </head>
 <body>
   <header><div class="logo">Kwik<span>Send</span></div></header>
 
-  <main style="max-width:680px;margin:40px auto;padding:20px;text-align:center;">
+  <main>
     <h1>🏧 Retrait — Vers carte (simulation)</h1>
-    <p>Saisissez le montant et la carte (fake). Le retrait est simulé.</p>
+    <p>Indiquez le numéro de carte et le montant à retirer. Ce processus est une simulation (aucun transfert réel).</p>
 
     <form id="withdrawForm" style="margin-top:18px;display:flex;flex-direction:column;gap:10px;">
-      <input id="destCard" type="text" placeholder="Numéro de carte destinataire (fake)" required />
+      <input id="destCard" type="text" placeholder="Numéro de carte destinataire (ex: 4242 4242 4242 4242)" required />
       <input id="amount" type="number" placeholder="Montant (€)" min="0.1" step="0.01" required />
-      <button type="submit" class="btn">Valider le retrait (simulation)</button>
+      <button type="submit" class="btn btn-accent">Valider le retrait</button>
     </form>
 
     <p id="msg" style="color:green;margin-top:12px"></p>
     <p style="margin-top:18px"><a href="portefeuille.html">← Retour au portefeuille</a></p>
   </main>
 
-<script>
-(() => {
-  const BAL_KEY='ks_balance', HIST_KEY='ks_history';
-  const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
-  const setBal = v => localStorage.setItem(BAL_KEY, String(v));
-  const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
-  const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
+  <script>
+  (() => {
+    const BAL_KEY = 'ks_balance';
+    const HIST_KEY = 'ks_history';
 
-  document.getElementById('withdrawForm').addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById('amount').value);
-    if(!(amount>0)) return alert('Montant invalide');
-    const bal = getBal();
-    if(amount > bal) return alert('Solde insuffisant');
-    const pushLimit = 3000;
-    if(amount > pushLimit) return alert('Montant supérieur à la limite de retrait sur carte (simulation).');
+    const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
+    const setBal = v => localStorage.setItem(BAL_KEY, String(v));
+    const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+    const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
 
-    const newBal = bal - amount;
-    setBal(newBal);
-    const hist = getHist();
-    hist.unshift({ date: new Date().toLocaleString(), type: 'Retrait (Carte)', amount: amount.toFixed(2), method: 'Carte', status: 'Réussi' });
-    setHist(hist);
-    document.getElementById('msg').textContent = '✅ Retrait simulé. Redirection...';
-    setTimeout(()=> window.location.href = 'portefeuille.html?ok=1', 900);
-  });
-})();
-</script>
+    // ✅ Gestion du retrait
+    document.getElementById('withdrawForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const destCard = document.getElementById('destCard').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+
+      if (!destCard) return alert('Veuillez entrer un numéro de carte.');
+      if (!(amount > 0)) return alert('Montant invalide.');
+      const bal = getBal();
+      if (amount > bal) return alert('Solde insuffisant.');
+      if (amount > 3000) return alert('Limite de retrait sur carte dépassée (max 3 000 €).');
+
+      // 🧾 Mise à jour du solde et historique
+      const newBal = bal - amount;
+      setBal(newBal);
+
+      const hist = getHist();
+      hist.unshift({
+        date: new Date().toLocaleString(),
+        type: 'Retrait (Carte)',
+        amount: amount.toFixed(2),
+        method: 'Carte',
+        status: 'Réussi'
+      });
+      setHist(hist);
+
+      // ✅ Message de confirmation + redirection
+      document.getElementById('msg').textContent = '✅ Retrait sur carte simulé avec succès. Redirection...';
+      setTimeout(() => window.location.href = 'portefeuille.html?ok=1', 1000);
+    });
+  })();
+  </script>
 </body>
 </html>

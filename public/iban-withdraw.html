@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KwikSend — Retrait IBAN</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #fdf8f3;
+      color: #333;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    main {
+      max-width: 680px;
+      margin: 60px auto;
+      padding: 20px;
+      text-align: center;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+    input, button {
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+    button {
+      background: #ff7a00;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #ff9b33;
+    }
+  </style>
+</head>
+<body>
+  <header><div class="logo">Kwik<span>Send</span></div></header>
+
+  <main>
+    <h1>🏦 Retrait — Virement IBAN (simulation)</h1>
+    <p>Saisissez l’IBAN destinataire et le montant à retirer. (Simulation 3D Secure)</p>
+
+    <form id="ibanWithdraw" style="margin-top:18px;display:flex;flex-direction:column;gap:12px;">
+      <input id="iban" type="text" placeholder="IBAN destinataire (ex: FR76XXXX...)" required />
+      <input id="amount" type="number" placeholder="Montant (€)" min="0.1" step="0.01" required />
+      <button type="submit" class="btn btn-accent">Valider la demande</button>
+    </form>
+
+    <p id="msg" style="color:green;margin-top:12px"></p>
+    <p style="margin-top:18px"><a href="portefeuille.html">← Retour au portefeuille</a></p>
+  </main>
+
+  <script>
+  (() => {
+    const BAL_KEY='ks_balance', HIST_KEY='ks_history';
+    const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
+    const setBal = v => localStorage.setItem(BAL_KEY, String(v));
+    const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+    const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
+
+    // Soumission du formulaire
+    document.getElementById('ibanWithdraw').addEventListener('submit',(e)=>{
+      e.preventDefault();
+      const iban = document.getElementById('iban').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+
+      if(!iban) return alert('Veuillez saisir un IBAN valide.');
+      if(!(amount > 0)) return alert('Montant invalide.');
+
+      const bal = getBal();
+      if(amount > bal) return alert('Solde insuffisant.');
+
+      // Simulation 3D Secure
+      sessionStorage.setItem('ks_pending', JSON.stringify({
+        type: `Retrait IBAN vers ${iban}`,
+        amount: amount,
+        method: 'IBAN',
+        ts: Date.now()
+      }));
+
+      window.location.href = `3ds.html?return=${encodeURIComponent('iban-withdraw.html')}`;
+    });
+
+    // ✅ Retour après 3DS simulation
+    const params = new URLSearchParams(location.search);
+    if(params.get('3ds') === 'ok' && sessionStorage.getItem('ks_pending')){
+      const pending = JSON.parse(sessionStorage.getItem('ks_pending'));
+      const newBal = getBal() - Number(pending.amount);
+      setBal(newBal);
+
+      const hist = getHist();
+      hist.unshift({
+        date: new Date().toLocaleString(),
+        type: pending.type,
+        amount: (Number(pending.amount)).toFixed(2),
+        method: pending.method,
+        status: 'En cours'
+      });
+      setHist(hist);
+
+      sessionStorage.removeItem('ks_pending');
+      document.getElementById('msg').textContent = '✅ Retrait IBAN simulé. Redirection...';
+      setTimeout(()=> window.location.href = 'portefeuille.html?ok=1', 1200);
+    }
+  })();
+  </script>
+</body>
+</html>
