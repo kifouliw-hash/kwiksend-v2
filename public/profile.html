@@ -7,16 +7,44 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .settings-list { list-style:none; padding:0; margin:0; }
+
     .settings-item {
-      display:flex; justify-content:space-between; align-items:center;
-      padding:1rem; border-bottom:1px solid #eee; cursor:pointer;
+      display:flex; 
+      justify-content:space-between; 
+      align-items:center;
+      padding:1rem; 
+      border-bottom:1px solid #eee; 
+      cursor:pointer;
+      transition: background 0.2s ease;
     }
     .settings-item:hover { background:#fafafa; }
+
     .settings-left { display:flex; gap:12px; align-items:center; }
     .settings-icon { font-size:1.2rem; }
+
+    /* ✅ Badge KYC */
     .kyc-badge-inline {
-      margin-left:10px; font-size:.85rem; font-weight:700;
-      padding:4px 8px; border-radius:999px;
+      margin-left:10px; 
+      font-size:.85rem; 
+      font-weight:700;
+      padding:4px 8px; 
+      border-radius:999px;
+    }
+
+    /* ✅ Liens élégants */
+    .settings-item a {
+      text-decoration: none; 
+      color: inherit; 
+      display: flex; 
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      transition: color .2s ease, transform .1s ease;
+    }
+    .settings-item a:hover {
+      color: var(--orange); 
+      font-weight: 600;
+      transform: translateX(3px);
     }
   </style>
 </head>
@@ -49,47 +77,48 @@
       </div>
       <span id="kycBadge" class="kyc-badge-inline">Non soumis</span>
     </li>
+
     <li class="settings-item">
-  <a href="releves.html" class="settings-left">
-    <span class="settings-icon">📜</span>
-    <span>Historique des transferts</span>
-  </a>
-</li>
+      <a href="releves.html" class="settings-left">
+        <span class="settings-icon">📜</span>
+        <span>Historique des transferts</span>
+      </a>
+    </li>
 
-<li class="settings-item">
-  <a href="limites.html" class="settings-left">
-    <span class="settings-icon">🏦</span>
-    <span>Limites</span>
-  </a>
-</li>
+    <li class="settings-item">
+      <a href="limites.html" class="settings-left">
+        <span class="settings-icon">🏦</span>
+        <span>Limites</span>
+      </a>
+    </li>
 
-<li class="settings-item">
-  <a href="cartes.html" class="settings-left">
-    <span class="settings-icon">💳</span>
-    <span>Gérer vos cartes</span>
-  </a>
-</li>
+    <li class="settings-item">
+      <a href="cartes.html" class="settings-left">
+        <span class="settings-icon">💳</span>
+        <span>Gérer vos cartes</span>
+      </a>
+    </li>
 
-<li class="settings-item">
-  <a href="parametres.html" class="settings-left">
-    <span class="settings-icon">🔒</span>
-    <span>Paramètres</span>
-  </a>
-</li>
+    <li class="settings-item">
+      <a href="parametres.html" class="settings-left">
+        <span class="settings-icon">🔒</span>
+        <span>Paramètres</span>
+      </a>
+    </li>
 
-<li class="settings-item">
-  <a href="support.html" class="settings-left">
-    <span class="settings-icon">❓</span>
-    <span>Support</span>
-  </a>
-</li>
+    <li class="settings-item">
+      <a href="support.html" class="settings-left">
+        <span class="settings-icon">❓</span>
+        <span>Support</span>
+      </a>
+    </li>
 
-<li class="settings-item">
-  <a href="mentions.html" class="settings-left">
-    <span class="settings-icon">ℹ️</span>
-    <span>Mentions légales</span>
-  </a>
-</li>
+    <li class="settings-item">
+      <a href="mentions.html" class="settings-left">
+        <span class="settings-icon">ℹ️</span>
+        <span>Mentions légales</span>
+      </a>
+    </li>
   </ul>
 </main>
 
@@ -124,7 +153,6 @@
   window.addEventListener('storage', (e)=> { if(e.key === 'ks_kyc_status') renderKycBadge(); });
 })();
 </script>
-<!-- Appels scripts globaux -->
 <script src="app.js"></script>
 </body>
 </html>
