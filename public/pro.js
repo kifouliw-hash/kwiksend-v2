@@ -92,6 +92,7 @@ function renderTx(){
   const pending = txHistory.filter(t=> t.status === 'pending').length + offlineQueue.length;
   pendingCountEl.textContent = pending;
   queueBanner.innerHTML = offlineQueue.length ? `<div class="offline">Transactions offline en attente : ${offlineQueue.length}</div>` : '';
+});
 }
 
 function logSync(msg){
