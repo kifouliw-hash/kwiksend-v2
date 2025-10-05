@@ -71,28 +71,43 @@ function renderBalances(){
   proBalanceEl.textContent = €(proBalance);
   clientBalanceEl.textContent = €(clientBalance);
 }
-function renderTx(){
+function renderTx() {
   txTableBody.innerHTML = '';
-  txHistory.slice().reverse().forEach(tx=>{
+  txHistory.slice().reverse().forEach(tx => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${new Date(tx.date).toLocaleString()}</td>
+    tr.innerHTML = `
+      <td>${new Date(tx.date).toLocaleString()}</td>
       <td>${tx.type}</td>
       <td>${tx.detail || ''}</td>
       <td>${tx.amount < 0 ? '-' : ''}${€(Math.abs(tx.amount))}</td>
-      <td>${tx.status}</td>`;
+      <td>${tx.status}</td>
+    `;
     txTableBody.appendChild(tr);
   });
-  // dashboard totals
-  const last30 = txHistory.filter(t=>{
-    const d = new Date(t.date);
-    return (Date.now() - d.getTime()) < 30*24*3600*1000 && t.type === 'reception' && t.status === 'ok';
-  }).reduce((s,t)=> s + t.amount, 0);
+
+  // ---------- Dashboard totals ----------
+  const last30 = txHistory
+    .filter(t => {
+      const d = new Date(t.date);
+      return (
+        Date.now() - d.getTime() < 30 * 24 * 3600 * 1000 &&
+        t.type === 'reception' &&
+        t.status === 'ok'
+      );
+    })
+    .reduce((s, t) => s + t.amount, 0);
+
   total30El.textContent = €(last30);
-  // pending
-  const pending = txHistory.filter(t=> t.status === 'pending').length + offlineQueue.length;
+
+  // ---------- Pending transactions ----------
+  const pending =
+    txHistory.filter(t => t.status === 'pending').length +
+    offlineQueue.length;
   pendingCountEl.textContent = pending;
-  queueBanner.innerHTML = offlineQueue.length ? `<div class="offline">Transactions offline en attente : ${offlineQueue.length}</div>` : '';
-});
+
+  queueBanner.innerHTML = offlineQueue.length
+    ? `<div class="offline">Transactions offline en attente : ${offlineQueue.length}</div>`
+    : '';
 }
 
 function logSync(msg){
