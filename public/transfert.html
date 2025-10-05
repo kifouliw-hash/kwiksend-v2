@@ -24,19 +24,20 @@
 
 <!-- 🧭 Header -->
 <header>
-  <div class="container header-container">
+  <div class="header-container">
     <div class="logo">Kwik<span>Send</span></div>
-<nav>
-  <ul class="nav-links" id="nav-menu">
-    <li><a href="dashboard.html">Accueil</a></li>
-    <li><a href="portefeuille.html">Portefeuille</a></li>
-    <li><a href="transfert.html">Transfert</a></li>
-    <li><a href="kwiktransfert.html">KwikTransfert</a></li>
-    <li><a href="releves.html">Relevés</a></li>
-    <li><a href="profile.html">Compte</a></li>
-    <li><a href="#" onclick="logout()">Déconnexion</a></li>
-  </ul>
-</nav>
+    <nav>
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="transfert.html">Transfert</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+        <li><a href="#" onclick="logout()">Déconnexion</a></li>
+      </ul>
+    </nav>
+    <span class="burger" onclick="toggleMenu()">☰</span>
   </div>
 </header>
 
@@ -194,5 +195,7 @@
     window.location.href = "index.html";
   }
 </script>
+<!-- Appels scripts globaux -->
+<script src="app.js"></script>
 </body>
 </html>

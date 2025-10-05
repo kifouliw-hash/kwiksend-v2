@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KwikSend — Espace Pro</title>
+  <!-- utilise ton style.css existant ; les classes ici reprennent un style simple -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Styles additionnels minimalistes si nécessaire */
+    .pro-container { max-width:1100px; margin:24px auto; padding:18px; background:#fff; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,.06); }
+    .pro-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; }
+    .balance { font-size:1.6rem; font-weight:700; }
+    .btn { background:var(--orange,#ff7a00); color:#fff; padding:10px 14px; border-radius:8px; cursor:pointer; border:none; }
+    .grid { display:grid; grid-template-columns: 1fr 380px; gap:18px; }
+    .card { background:#fafafa; padding:12px; border-radius:8px; }
+    .small { font-size:.9rem; color:#555; }
+    .list { max-height:300px; overflow:auto; }
+    table { width:100%; border-collapse:collapse; }
+    th,td { padding:8px; text-align:left; border-bottom:1px solid #eee; }
+    .muted { color:#777; font-size:.9rem; }
+    .qr-canvas { background:#fff; border:1px solid #e5e5e5; display:block; margin:8px 0; border-radius:6px; }
+    .offline { color:#b34700; font-weight:700; }
+    .green { color: #0a8f2f; font-weight:700; }
+    .actions { display:flex; gap:8px; flex-wrap:wrap; }
+    @media(max-width:880px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+    <li><a href="pro.html">Espace Pro</a></li>
+  <div class="pro-container">
+    <div class="pro-head">
+      <div>
+        <h1>KwikSend — Espace Pro</h1>
+        <div class="small">Tableau de bord commerçant</div>
+      </div>
+      <div style="text-align:right">
+        <div class="small">Solde portefeuille Pro</div>
+        <div id="pro-balance" class="balance">0.00 €</div>
+        <div class="small muted">Compte : <span id="merchant-name">Mon Commerce</span></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Colonne principale -->
+      <div>
+        <!-- Actions -->
+        <div class="card" style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong>Actions rapides</strong>
+            <div class="small muted">Statut réseau : <span id="net-status" class="green">En ligne</span></div>
+          </div>
+          <div style="margin-top:12px" class="actions">
+            <button class="btn" id="receive-btn">Recevoir un paiement</button>
+            <button class="btn" id="transfer-btn">Transférer</button>
+            <button class="btn" id="export-btn">Télécharger relevé (CSV)</button>
+            <button class="btn" id="clear-queue-btn" style="background:#666">Vider queue offline</button>
+          </div>
+          <div style="margin-top:10px" class="small muted">Note : le mode hors-ligne enregistre les transactions localement et les synchronise automatiquement quand la connexion revient.</div>
+        </div>
+
+        <!-- Receive modal (inline) -->
+        <div id="receive-section" class="card" style="display:none; margin-bottom:12px;">
+          <strong>Générer demande de paiement</strong>
+          <div style="margin-top:10px">
+            <label class="small">Montant (€)</label><br>
+            <input id="req-amount" type="number" min="0.01" step="0.01" style="padding:8px;width:160px;">
+            <label class="small" style="margin-left:12px">Motif</label><br>
+            <input id="req-note" type="text" placeholder="Ex: Vente - savon" style="padding:8px;width:60%;">
+          </div>
+          <div style="margin-top:10px;">
+            <button class="btn" id="gen-link-btn">Générer lien & QR</button>
+            <button class="btn" id="close-receive" style="background:#777">Fermer</button>
+          </div>
+
+          <div id="generated-area" style="margin-top:12px; display:none;">
+            <div class="small">Lien de paiement :</div>
+            <div><input id="pay-link" readonly style="width:100%;padding:8px;"></div>
+            <canvas id="qr-canvas" class="qr-canvas" width="220" height="220"></canvas>
+            <div style="margin-top:8px;">
+              <button class="btn" id="simulate-client-pay">Simuler paiement (client)</button>
+              <button class="btn" id="download-qr" style="background:#444">Télécharger QR</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transfer section -->
+        <div id="transfer-section" class="card" style="display:none; margin-bottom:12px;">
+          <strong>Transférer depuis portefeuille Pro</strong>
+          <div style="margin-top:10px;">
+            <label class="small">Type de transfert</label><br>
+            <select id="transfer-type" style="padding:8px;width:60%;">
+              <option value="iban">Virement IBAN</option>
+              <option value="mobile">Mobile Money (OM / Wave / MTN / Moov)</option>
+              <option value="kwik">Vers un autre KwikSend</option>
+            </select>
+          </div>
+
+          <div id="transfer-form" style="margin-top:10px;">
+            <!-- dynamic form -->
+          </div>
+
+          <div style="margin-top:10px;">
+            <button class="btn" id="do-transfer">Envoyer</button>
+            <button class="btn" id="close-transfer" style="background:#777">Fermer</button>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="card">
+          <strong>Historique des transactions</strong>
+          <div class="small muted" style="margin-top:6px;">Les transactions synchronisées et en attente s'affichent ici.</div>
+          <div style="margin-top:8px" id="queue-banner"></div>
+          <div style="margin-top:8px" class="list">
+            <table id="tx-table">
+              <thead>
+                <tr><th>Date</th><th>Type</th><th>Détails</th><th>Montant</th><th>Statut</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne droite -->
+      <aside>
+        <div class="card">
+          <strong>Tableau de bord</strong>
+          <div style="margin-top:10px">
+            <div class="small">Total reçu (30j)</div>
+            <div id="total-30" style="font-weight:700; margin-top:6px">0.00 €</div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="small">Transactions en attente</div>
+            <div id="pending-count" style="font-weight:700; margin-top:6px">0</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <strong>Simulateur client (pour test)</strong>
+          <div class="small muted">Un wallet demo permet de tester le paiement d’un client.</div>
+          <div style="margin-top:10px">
+            <div class="small">Solde client</div>
+            <div id="client-balance" style="font-weight:700">100.00 €</div>
+            <button class="btn" id="topup-client" style="margin-top:8px">Recharger client +50€</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <strong>Statut synchronisation</strong>
+          <div id="sync-log" class="small muted" style="margin-top:8px; max-height:120px; overflow:auto;"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="pro.js"></script>
+</body>
+</html>
