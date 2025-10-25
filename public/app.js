@@ -209,11 +209,6 @@ function initBurger() {
   }
 }
 
-function logout() {
-  localStorage.removeItem("kwiksend_user");
-  window.location.href = "index.html";
-}
-
 // ==============================
 // 🔁 Modale “Alimenter / Retirer”
 // ==============================
@@ -225,10 +220,31 @@ function closeMoveFundsModal() {
   const modal = document.getElementById("moveFundsModal");
   if (modal) modal.style.display = "none";
 }
-function logout() {
-  localStorage.removeItem("kwiksend_user");
-  window.location.href = "index.html";
-}
+
 
 // ✅ Ajoute ceci tout à la fin
 document.addEventListener("DOMContentLoaded", initBurger);
+// ==============================
+// 🔐 Bascule Connexion / Déconnexion
+// ==============================
+document.addEventListener("DOMContentLoaded", () => {
+  const authLink = document.getElementById("auth-link");
+  const user = localStorage.getItem("kwiksend_user");
+
+  if (!authLink) return;
+
+  if (user) {
+    // utilisateur connecté
+    authLink.textContent = "Déconnexion";
+    authLink.href = "#";
+    authLink.addEventListener("click", e => {
+      e.preventDefault();
+      localStorage.removeItem("kwiksend_user");
+      window.location.href = "index.html";
+    });
+  } else {
+    // utilisateur non connecté
+    authLink.textContent = "Connexion";
+    authLink.href = "connexion.html";
+  }
+});

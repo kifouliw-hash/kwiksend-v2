@@ -42,7 +42,7 @@
         <li><a href="kwiktransfert.html">KwikTransfert</a></li>
         <li><a href="releves.html">Relevés</a></li>
         <li><a href="profile.html">Compte</a></li>
-        <li><a href="#" onclick="logout()">Déconnexion</a></li>
+        <li><a id="auth-link" href="connexion.html">Connexion</a></li>
       </ul>
     </nav>
 
@@ -59,13 +59,14 @@
 <!-- 🌍 Hero -->
 <section class="hero" id="accueil">
   <div class="hero-content">
-    <h1 data-i18n="hero.title">Votre argent partout tout de suite 🌍</h1>
+    <h1 data-i18n="hero.title">Votre argent, partout, instantanément 🌍</h1>
     <p data-i18n="hero.subtitle">
-      La nouvelle façon d’envoyer et de recevoir de l’argent entre l’Afrique et l’Europe.
+      La nouvelle façon d’envoyer et recevoir de l’argent entre l’Afrique et l’Europe.
     </p>
-    <a href="attente.html" class="cta" data-i18n="hero.cta">Rejoindre la liste d’attente</a>
+    <a href="register.html" class="cta" data-i18n="hero.cta">Créer un compte gratuit</a>
   </div>
 </section>
+
 
 <!-- ✨ Fonctionnalités -->
 <section class="features" id="fonctionnalites">
@@ -122,11 +123,6 @@
     document.getElementById("nav-menu").classList.toggle("open");
   }
 
-  // ✅ Déconnexion
-  function logout() {
-    localStorage.removeItem("kwiksend_user");
-    window.location.href = "index.html";
-  }
 </script>
 
 <script src="translate.js"></script>
