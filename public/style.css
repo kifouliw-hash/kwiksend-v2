@@ -390,3 +390,19 @@ input, select {
   box-shadow: 0 4px 10px rgba(255, 122, 0, 0.3);
   background: linear-gradient(90deg, #ff8a1f, #ffd633);
 }
+.hero .cta {
+  display: inline-block;
+  margin: 0.5rem 1rem;
+  padding: 0.9rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  background: #ff8a00;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.hero .cta:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
