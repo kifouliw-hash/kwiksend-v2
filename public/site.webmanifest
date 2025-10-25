@@ -1,7 +1,7 @@
 {
   "name": "KwikSend",
   "short_name": "KwikSend",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ff7a00",
