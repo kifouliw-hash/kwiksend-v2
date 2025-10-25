@@ -161,12 +161,12 @@
       return;
     }
 
-    // ✅ Personnalise le message de bienvenue
+    // ✅ Message de bienvenue avec nom complet
     const welcomeTitle = document.getElementById("welcome-title");
     if (user.name) {
       welcomeTitle.textContent = `Bienvenue ${user.name} 👋`;
-    } else if (user.email) {
-      welcomeTitle.textContent = `Bienvenue ${user.email.split("@")[0]} 👋`;
+    } else if (user.firstName && user.lastName) {
+      welcomeTitle.textContent = `Bienvenue ${user.firstName} ${user.lastName} 👋`;
     } else {
       welcomeTitle.textContent = "Bienvenue sur votre espace KwikSend 👋";
     }
