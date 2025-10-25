@@ -135,5 +135,15 @@
       .catch(err => console.log("Erreur SW:", err));
   }
 </script>
+<script>
+  // 🚀 Redirection auto si déjà connecté
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = localStorage.getItem("kwiksend_user");
+    if (user) {
+      console.log("🔁 Utilisateur connecté détecté — redirection vers le tableau de bord");
+      window.location.href = "dashboard.html";
+    }
+  });
+</script>
 </body>
 </html>

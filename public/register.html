@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KwikSend – Créer un compte</title>
+
+  <!-- Icônes & styles -->
+  <link rel="icon" type="image/png" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      background: linear-gradient(180deg, #ff9a00, #ff7a00);
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: #fff;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .register-box {
+      background: #fff;
+      color: #333;
+      border-radius: 16px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #ff7a00;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.9rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      margin-top: 1rem;
+      background: #ff7a00;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    button:hover {
+      background: #ff9a33;
+    }
+
+    a {
+      color: #ff7a00;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    footer {
+      margin-top: 2rem;
+      color: #fff;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-box">
+    <h1>Créer un compte</h1>
+    <p>Rejoignez KwikSend et commencez vos transferts en toute simplicité.</p>
+
+    <form id="register-form">
+      <input type="text" id="fullname" placeholder="Nom complet" required>
+      <input type="email" id="email" placeholder="Adresse e-mail" required>
+      <input type="password" id="password" placeholder="Mot de passe" required>
+      <button type="submit">Créer mon compte</button>
+    </form>
+
+    <p style="margin-top:1rem;">Déjà un compte ? <a href="connexion.html">Se connecter</a></p>
+  </div>
+
+  <footer>© 2025 KwikSend. Tous droits réservés.</footer>
+
+  <script>
+    document.getElementById("register-form").addEventListener("submit", e => {
+      e.preventDefault();
+      const user = {
+        name: document.getElementById("fullname").value,
+        email: document.getElementById("email").value
+      };
+      // Simule une création de compte
+      localStorage.setItem("kwiksend_user", JSON.stringify(user));
+      alert("🎉 Compte créé avec succès !");
+      window.location.href = "dashboard.html";
+    });
+  </script>
+</body>
+</html>

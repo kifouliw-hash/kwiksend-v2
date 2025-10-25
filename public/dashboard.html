@@ -152,21 +152,34 @@
 
 <!-- Scripts -->
 <script>
-  // Récupération infos utilisateur
-  const user = JSON.parse(localStorage.getItem("kwiksend_user"));
-  if (user && user.name) {
-    document.getElementById("welcome-title").textContent = `Bienvenue ${user.name} 👋`;
-  } else {
-    document.getElementById("welcome-title").textContent = "Bienvenue sur votre espace KwikSend 👋";
-  }
+  // 🚫 Protection d'accès : redirige si non connecté
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("kwiksend_user"));
+    if (!user) {
+      alert("⚠️ Vous devez être connecté pour accéder à votre tableau de bord.");
+      window.location.href = "connexion.html";
+      return;
+    }
 
-  // Déconnexion
+    // ✅ Personnalise le message de bienvenue
+    const welcomeTitle = document.getElementById("welcome-title");
+    if (user.name) {
+      welcomeTitle.textContent = `Bienvenue ${user.name} 👋`;
+    } else if (user.email) {
+      welcomeTitle.textContent = `Bienvenue ${user.email.split("@")[0]} 👋`;
+    } else {
+      welcomeTitle.textContent = "Bienvenue sur votre espace KwikSend 👋";
+    }
+  });
+
+  // ✅ Déconnexion harmonisée
   function logout() {
     localStorage.removeItem("kwiksend_user");
-    window.location.href = "index.html";
+    alert("👋 Vous avez été déconnecté.");
+    window.location.href = "connexion.html";
   }
 
-  // ✅ Burger toggle
+  // ✅ Burger toggle (mobile)
   function toggleMenu() {
     document.querySelector("nav ul").classList.toggle("active");
   }

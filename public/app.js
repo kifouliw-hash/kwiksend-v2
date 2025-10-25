@@ -222,10 +222,13 @@ function closeMoveFundsModal() {
 }
 
 
-// ✅ Ajoute ceci tout à la fin
-document.addEventListener("DOMContentLoaded", initBurger);
 // ==============================
-// 🔐 Bascule Connexion / Déconnexion
+// ✅ Initialisation du menu burger
+// ==============================
+document.addEventListener("DOMContentLoaded", initBurger);
+
+// ==============================
+// 🔐 Bascule Connexion / Déconnexion + fonction logout globale
 // ==============================
 document.addEventListener("DOMContentLoaded", () => {
   const authLink = document.getElementById("auth-link");
@@ -234,17 +237,26 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!authLink) return;
 
   if (user) {
-    // utilisateur connecté
+    // Utilisateur connecté → afficher "Déconnexion"
     authLink.textContent = "Déconnexion";
     authLink.href = "#";
     authLink.addEventListener("click", e => {
       e.preventDefault();
-      localStorage.removeItem("kwiksend_user");
-      window.location.href = "index.html";
+      logout(); // ✅ on appelle directement la fonction globale
     });
   } else {
-    // utilisateur non connecté
+    // Non connecté → afficher "Connexion"
     authLink.textContent = "Connexion";
     authLink.href = "connexion.html";
   }
 });
+
+// ==============================
+// 🚪 Déconnexion (fonction globale)
+// ==============================
+function logout() {
+  localStorage.removeItem("kwiksend_user");
+  alert("👋 Vous avez été déconnecté.");
+  window.location.href = "connexion.html";
+}
+
