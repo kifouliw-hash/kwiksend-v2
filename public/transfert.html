@@ -1,24 +1,174 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>KwikSend - Transferts Afrique ↔ Europe</title>
-  <meta name="description" content="Envoyez de l’argent entre l’Afrique et l’Europe avec KwikSend, rapidement et en toute sécurité.">
-  <meta name="theme-color" content="#ff7a00">
-
-  <!-- Favicon & icônes -->
+  <meta name="description" content="Transférez directement entre Afrique et Europe avec KwikSend.">
+  <meta name="theme-color" content="#FF8A00">
+  
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-
-  <!-- Manifest PWA -->
   <link rel="manifest" href="site.webmanifest">
-
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* ════════════════════════════════════════════════════════════ */
+    /* 🎨 STYLES SUPPLÉMENTAIRES POUR TRANSFERT DIRECT              */
+    /* ════════════════════════════════════════════════════════════ */
+    
+    :root {
+      --orange: #FF8A00;
+      --green: #00B87C;
+      --purple: #8B5CF6;
+      --dark: #0A0F1C;
+    }
+    
+    /* Toggle Direction */
+    .direction-toggle {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+    
+    .toggle-btn {
+      padding: 0.8rem 1.8rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: var(--dark);
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .toggle-btn.active {
+      background: linear-gradient(135deg, var(--orange), var(--green));
+      color: white;
+      border-color: var(--orange);
+      box-shadow: 0 8px 25px rgba(255, 138, 0, 0.3);
+    }
+    
+    /* Grille opérateurs */
+    .operator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .operator-btn {
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    
+    .operator-btn:hover {
+      border-color: var(--orange);
+      background: rgba(255, 138, 0, 0.05);
+    }
+    
+    .operator-btn.selected {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.15), rgba(0, 184, 124, 0.15));
+      border: 2px solid var(--orange);
+      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.2);
+    }
+    
+    .operator-icon {
+      font-size: 1.8rem;
+    }
+    
+    /* Simulation Box */
+    .simulation-box {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.08), rgba(0, 184, 124, 0.08));
+      border: 2px solid rgba(255, 138, 0, 0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .simulation-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+    }
+    
+    .simulation-row:last-child {
+      border-bottom: none;
+    }
+    
+    .simulation-label {
+      color: #B0B3C2;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .simulation-value {
+      font-weight: 700;
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
+    
+    .simulation-value.highlight {
+      background: linear-gradient(90deg, var(--orange), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Formulaires supplémentaires */
+    .form-hidden {
+      display: none;
+    }
+    
+    .fees-detail {
+      background: rgba(139, 92, 246, 0.05);
+      border-left: 4px solid var(--purple);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: var(--dark);
+    }
+    
+    .alert {
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      animation: slideDown 0.3s ease;
+    }
+    
+    .alert-error {
+      background: rgba(255, 0, 0, 0.1);
+      border-left: 4px solid #FF0000;
+      color: #C00000;
+    }
+    
+    .alert-success {
+      background: rgba(0, 184, 124, 0.1);
+      border-left: 4px solid var(--green);
+      color: var(--green);
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
@@ -43,36 +193,142 @@
 
 <!-- 🌐 Transferts -->
 <section class="hero" style="padding:2rem 1rem;">
-  <div class="hero-content" style="max-width:600px;margin:auto;">
-    <h1>🌍 Transferts Afrique ↔ Europe</h1>
-    <p>Envoyez de l’argent facilement et instantanément.</p>
+  <div class="hero-content" style="max-width:650px;margin:auto;">
+    <h1 style="font-size:2.2rem;margin-bottom:0.5rem;background:linear-gradient(135deg,#FF8A00,#00B87C,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+      🌍 Transfert Direct
+    </h1>
+    <p style="color:#B0B3C2;">Envoyez ou recevez instantanément entre Afrique et Europe</p>
 
-    <!-- Formulaire -->
-    <form id="transferForm" style="display:flex;flex-direction:column;gap:1rem;margin-top:2rem;">
-      <!-- Destination -->
-      <label for="destination">Destination :</label>
-      <select id="destination" required>
-        <option value="afrique">🌍 Afrique (Mobile Money)</option>
-        <option value="europe">🇪🇺 Europe (IBAN)</option>
-      </select>
+    <!-- ALERT -->
+    <div id="alert" style="display:none;"></div>
 
-      <!-- Source -->
-      <label for="source">Source des fonds :</label>
-      <select id="source" required>
-        <option value="wallet">💼 Portefeuille KwikSend</option>
-        <option value="cb">💳 Carte bancaire</option>
-      </select>
+    <!-- DIRECTION TOGGLE -->
+    <div class="direction-toggle">
+      <button class="toggle-btn active" data-direction="send" onclick="switchDirection('send')" type="button">
+        💸 Envoyer
+      </button>
+      <button class="toggle-btn" data-direction="receive" onclick="switchDirection('receive')" type="button">
+        📥 Recevoir
+      </button>
+    </div>
 
-      <!-- Champs dynamiques -->
-      <div id="dynamicField"></div>
+    <!-- FORM SEND (visible par défaut) -->
+    <form id="formSend" class="form-section" style="display:block;">
+      
+      <!-- DESTINATION -->
+      <div style="margin-bottom:1.5rem;">
+        <label style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">🌐 Vers où ?</label>
+        <select id="destinationSend" onchange="updateOperators()" style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;width:100%;font-size:1rem;">
+          <option value="africa">🌍 Afrique (Mobile Money)</option>
+          <option value="europe">🇪🇺 Europe (IBAN)</option>
+        </select>
+      </div>
 
-      <!-- Montant -->
-      <label for="amount">Montant :</label>
-      <input type="number" id="amount" placeholder="Ex: 100" required min="1">
+      <!-- OPERATOR (Afrique uniquement) -->
+      <div id="operatorSectionSend" style="display:none;margin-bottom:1.5rem;">
+        <label style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">📱 Opérateur</label>
+        <div class="operator-grid" id="operatorGridSend">
+          <!-- Dynamique -->
+        </div>
+      </div>
 
-      <!-- Bouton -->
-      <button type="submit" class="cta">Envoyer</button>
+      <!-- RECEIVER -->
+      <div style="margin-bottom:1.5rem;">
+        <label id="receiverLabel" style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">📞 Numéro ou IBAN</label>
+        <input type="text" id="receiverSend" placeholder="Ex: 0700000000" required style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;width:100%;font-size:1rem;transition:all 0.3s;">
+      </div>
+
+      <!-- AMOUNT -->
+      <div style="margin-bottom:1.5rem;">
+        <label style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">💰 Montant</label>
+        <div style="display:flex;gap:0.5rem;">
+          <input type="number" id="amountSend" placeholder="100" min="1" step="0.01" required style="flex:1;padding:1rem;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;">
+          <select id="currencySend" onchange="updateSimulation()" style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;">
+            <option value="EUR">EUR</option>
+            <option value="FCFA">FCFA</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SIMULATION BOX -->
+      <div class="simulation-box">
+        <div class="simulation-row">
+          <span class="simulation-label">Montant :</span>
+          <span class="simulation-value" id="simAmount">0.00 EUR</span>
+        </div>
+        <div class="simulation-row">
+          <span class="simulation-label">Frais :</span>
+          <span class="simulation-value" id="simFees" style="color:#FF6B6B;">-1.50 EUR</span>
+        </div>
+        <div class="simulation-row">
+          <span class="simulation-label">Montant reçu :</span>
+          <span class="simulation-value highlight" id="simReceived">98.50 EUR</span>
+        </div>
+      </div>
+
+      <!-- FEES DETAIL -->
+      <div class="fees-detail">
+        ⚡ <strong>Frais fixes 1.5€</strong> + <strong>0.9%</strong> de commission. Transfert instantané (24h max).
+      </div>
+
+      <!-- BUTTON -->
+      <button type="submit" style="width:100%;padding:1.2rem;background:linear-gradient(135deg,#FF8A00,#00B87C);color:white;border:none;border-radius:12px;font-weight:700;font-size:1.05rem;cursor:pointer;box-shadow:0 8px 25px rgba(255,138,0,0.3);transition:all 0.3s;">
+        ✨ Envoyer maintenant
+      </button>
     </form>
+
+    <!-- FORM RECEIVE (caché par défaut) -->
+    <form id="formReceive" class="form-section form-hidden" style="display:none;">
+      
+      <!-- SOURCE -->
+      <div style="margin-bottom:1.5rem;">
+        <label style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">🌐 D'où ?</label>
+        <select id="sourceReceive" onchange="updateOperatorsReceive()" style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;width:100%;font-size:1rem;">
+          <option value="africa">🌍 Afrique (Mobile Money)</option>
+          <option value="europe">🇪🇺 Europe (IBAN)</option>
+        </select>
+      </div>
+
+      <!-- OPERATOR RECEIVE -->
+      <div id="operatorSectionReceive" style="display:none;margin-bottom:1.5rem;">
+        <label style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">📱 Opérateur de l'expéditeur</label>
+        <div class="operator-grid" id="operatorGridReceive">
+          <!-- Dynamique -->
+        </div>
+      </div>
+
+      <!-- SENDER -->
+      <div style="margin-bottom:1.5rem;">
+        <label id="senderLabel" style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">👤 Numéro ou IBAN de l'expéditeur</label>
+        <input type="text" id="senderReceive" placeholder="Ex: 0700000000" required style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;width:100%;font-size:1rem;">
+      </div>
+
+      <!-- AMOUNT EXPECTED -->
+      <div style="margin-bottom:1.5rem;">
+        <label style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">💰 Montant attendu</label>
+        <div style="display:flex;gap:0.5rem;">
+          <input type="number" id="amountReceive" placeholder="100" min="1" step="0.01" required style="flex:1;padding:1rem;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;">
+          <select id="currencyReceive" onchange="updateSimulationReceive()" style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;">
+            <option value="EUR">EUR</option>
+            <option value="FCFA">FCFA</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SIMULATION BOX RECEIVE -->
+      <div class="simulation-box">
+        <div class="simulation-row">
+          <span class="simulation-label">Montant à recevoir :</span>
+          <span class="simulation-value highlight" id="simReceiveAmount">0.00 EUR</span>
+        </div>
+      </div>
+
+      <!-- BUTTON -->
+      <button type="submit" style="width:100%;padding:1.2rem;background:linear-gradient(135deg,#FF8A00,#00B87C);color:white;border:none;border-radius:12px;font-weight:700;font-size:1.05rem;cursor:pointer;box-shadow:0 8px 25px rgba(255,138,0,0.3);transition:all 0.3s;">
+        ✅ Confirmer réception
+      </button>
+    </form>
+
   </div>
 </section>
 
@@ -86,110 +342,265 @@
 <script src="translate.js"></script>
 <script src="app.js"></script>
 
-<!-- 📲 Logique transfert -->
+<!-- 📲 Logique transfert DIRECT -->
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(console.error);
   }
 
-  const destinationEl = document.getElementById("destination");
-  const dynamicField = document.getElementById("dynamicField");
-  const form = document.getElementById("transferForm");
+  // ======================================
+  // 🎮 CONFIGURATION
+  // ======================================
+  const OPERATORS = {
+    africa: [
+      { name: 'Orange Money', code: 'OM', emoji: '🟠' },
+      { name: 'MTN Money', code: 'MTN', emoji: '🟡' },
+      { name: 'Wave', code: 'WAVE', emoji: '🔵' },
+      { name: 'Moov Money', code: 'MOOV', emoji: '🟢' }
+    ]
+  };
 
-  // --- Adapter le champ selon la destination (IBAN ou Mobile Money)
-  function updateDynamicField() {
-    const dest = destinationEl.value;
-    if (dest === "afrique") {
-      dynamicField.innerHTML = `
-        <label for="receiver">Numéro Mobile Money :</label>
-        <input type="text" id="receiver" placeholder="Ex: 0700000000" required>
-      `;
+  const FEES = {
+    fixed: 1.50,
+    percent: 0.009
+  };
+
+  const CONVERSION_RATE = 650; // 1 EUR = 650 FCFA
+
+  // ======================================
+  // 🎯 STATE
+  // ======================================
+  let currentDirection = 'send';
+  let selectedOperator = null;
+  let selectedOperatorReceive = null;
+
+  // ======================================
+  // 🔄 TOGGLE DIRECTION
+  // ======================================
+  function switchDirection(direction) {
+    currentDirection = direction;
+    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-direction="${direction}"]`).classList.add('active');
+
+    if (direction === 'send') {
+      document.getElementById('formSend').style.display = 'block';
+      document.getElementById('formReceive').style.display = 'none';
     } else {
-      dynamicField.innerHTML = `
-        <label for="receiver">IBAN destinataire :</label>
-        <input type="text" id="receiver" placeholder="FR76 3000 6000 ..." required>
-      `;
+      document.getElementById('formSend').style.display = 'none';
+      document.getElementById('formReceive').style.display = 'block';
     }
   }
-  destinationEl.addEventListener("change", updateDynamicField);
-  updateDynamicField();
 
-  // --- Adapter les sources selon la destination
-  function updateSourceOptions() {
-    const dest = document.getElementById("destination").value;
-    const source = document.getElementById("source");
+  // ======================================
+  // 📱 UPDATE OPERATORS (SEND)
+  // ======================================
+  function updateOperators() {
+    const dest = document.getElementById('destinationSend').value;
+    const operatorSection = document.getElementById('operatorSectionSend');
+    const grid = document.getElementById('operatorGridSend');
 
-    source.innerHTML = ""; // reset options
-
-    if (dest === "afrique") {
-      source.innerHTML += `<option value="wallet">💼 Portefeuille KwikSend</option>`;
-      source.innerHTML += `<option value="cb">💳 Carte bancaire</option>`;
+    if (dest === 'africa') {
+      operatorSection.style.display = 'block';
+      grid.innerHTML = OPERATORS.africa.map(op => `
+        <button type="button" class="operator-btn" data-operator="${op.code}" onclick="selectOperator('${op.code}', 'send')">
+          <div class="operator-icon">${op.emoji}</div>
+          <div>${op.name}</div>
+        </button>
+      `).join('');
+      document.getElementById('receiverLabel').textContent = '📞 Numéro Mobile Money';
+      document.getElementById('receiverSend').placeholder = 'Ex: 0700000000';
     } else {
-      source.innerHTML += `<option value="wallet">💼 Portefeuille KwikSend</option>`;
-      source.innerHTML += `<option value="mobile">📲 Mobile Money (OM, Wave…)</option>`;
+      operatorSection.style.display = 'none';
+      document.getElementById('receiverLabel').textContent = '🏦 IBAN';
+      document.getElementById('receiverSend').placeholder = 'Ex: FR7630006000...';
     }
   }
-  document.getElementById("destination").addEventListener("change", updateSourceOptions);
-  updateSourceOptions();
 
-  // --- Gestion du formulaire de transfert
-  form.addEventListener("submit", (e) => {
+  // ======================================
+  // 📱 UPDATE OPERATORS (RECEIVE)
+  // ======================================
+  function updateOperatorsReceive() {
+    const source = document.getElementById('sourceReceive').value;
+    const operatorSection = document.getElementById('operatorSectionReceive');
+    const grid = document.getElementById('operatorGridReceive');
+
+    if (source === 'africa') {
+      operatorSection.style.display = 'block';
+      grid.innerHTML = OPERATORS.africa.map(op => `
+        <button type="button" class="operator-btn" data-operator="${op.code}" onclick="selectOperator('${op.code}', 'receive')">
+          <div class="operator-icon">${op.emoji}</div>
+          <div>${op.name}</div>
+        </button>
+      `).join('');
+      document.getElementById('senderLabel').textContent = '👤 Numéro Mobile Money';
+      document.getElementById('senderReceive').placeholder = 'Ex: 0700000000';
+    } else {
+      operatorSection.style.display = 'none';
+      document.getElementById('senderLabel').textContent = '🏦 IBAN';
+      document.getElementById('senderReceive').placeholder = 'Ex: FR7630006000...';
+    }
+  }
+
+  // ======================================
+  // ✨ SELECT OPERATOR
+  // ======================================
+  function selectOperator(code, type) {
+    if (type === 'send') {
+      selectedOperator = code;
+      document.querySelectorAll('#operatorGridSend .operator-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.operator === code);
+      });
+    } else {
+      selectedOperatorReceive = code;
+      document.querySelectorAll('#operatorGridReceive .operator-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.operator === code);
+      });
+    }
+    updateSimulation();
+  }
+
+  // ======================================
+  // 💰 SIMULATION (SEND)
+  // ======================================
+  function updateSimulation() {
+    const amount = parseFloat(document.getElementById('amountSend').value) || 0;
+    const currency = document.getElementById('currencySend').value;
+
+    let amountEUR = amount;
+    if (currency === 'FCFA') {
+      amountEUR = amount / CONVERSION_RATE;
+    }
+
+    const fees = FEES.fixed + (amountEUR * FEES.percent);
+    const received = amountEUR - fees;
+
+    document.getElementById('simAmount').textContent = amount.toFixed(2) + ' ' + currency;
+    document.getElementById('simFees').textContent = '-' + fees.toFixed(2) + ' EUR';
+    document.getElementById('simReceived').textContent = received.toFixed(2) + ' EUR';
+  }
+
+  // ======================================
+  // 💰 SIMULATION (RECEIVE)
+  // ======================================
+  function updateSimulationReceive() {
+    const amount = parseFloat(document.getElementById('amountReceive').value) || 0;
+    const currency = document.getElementById('currencyReceive').value;
+
+    let display = amount.toFixed(2) + ' ' + currency;
+    document.getElementById('simReceiveAmount').textContent = display;
+  }
+
+  // ======================================
+  // 📤 SUBMIT SEND
+  // ======================================
+  document.getElementById('formSend').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const dest = destinationEl.value;
-    const source = document.getElementById("source").value;
-    const amount = parseFloat(document.getElementById("amount").value);
-    const receiver = document.getElementById("receiver").value;
 
-    if (isNaN(amount) || amount <= 0) {
-      alert("⚠️ Veuillez saisir un montant valide.");
-      return;
+    const dest = document.getElementById('destinationSend').value;
+    const receiver = document.getElementById('receiverSend').value.trim();
+    const amount = parseFloat(document.getElementById('amountSend').value);
+    const currency = document.getElementById('currencySend').value;
+
+    // Validation
+    if (!receiver) return showAlert('Veuillez entrer un numéro ou IBAN', 'error');
+    if (dest === 'africa' && !selectedOperator) return showAlert('Sélectionnez un opérateur', 'error');
+    if (amount <= 0) return showAlert('Montant invalide', 'error');
+
+    // Enregistrer dans l'historique
+    saveDirectTransfer({
+      type: 'Envoi Direct',
+      destination: dest,
+      operator: selectedOperator,
+      receiver,
+      amount: currency === 'EUR' ? amount : amount / CONVERSION_RATE,
+      currency: 'EUR',
+      status: 'En attente de validation'
+    });
+
+    showAlert(`✅ Transfert lancé ! Redirection en cours...`, 'success');
+    
+    setTimeout(() => {
+      window.location.href = 'portefeuille.html?ok=1';
+    }, 2000);
+  });
+
+  // ======================================
+  // 📥 SUBMIT RECEIVE
+  // ======================================
+  document.getElementById('formReceive').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const source = document.getElementById('sourceReceive').value;
+    const sender = document.getElementById('senderReceive').value.trim();
+    const amount = parseFloat(document.getElementById('amountReceive').value);
+    const currency = document.getElementById('currencyReceive').value;
+
+    // Validation
+    if (!sender) return showAlert('Veuillez entrer un numéro ou IBAN', 'error');
+    if (source === 'africa' && !selectedOperatorReceive) return showAlert('Sélectionnez un opérateur', 'error');
+    if (amount <= 0) return showAlert('Montant invalide', 'error');
+
+    // Enregistrer
+    saveDirectTransfer({
+      type: 'Réception Direct',
+      source,
+      operator: selectedOperatorReceive,
+      sender,
+      amount: currency === 'EUR' ? amount : amount / CONVERSION_RATE,
+      currency: 'EUR',
+      status: 'En attente'
+    });
+
+    showAlert(`✅ Transfert en attente ! Confirmez au guichet.`, 'success');
+    
+    setTimeout(() => {
+      document.getElementById('formReceive').reset();
+      switchDirection('send');
+    }, 2000);
+  });
+
+  // ======================================
+  // 🔔 SHOW ALERT
+  // ======================================
+  function showAlert(message, type) {
+    const alertEl = document.getElementById('alert');
+    alertEl.className = `alert alert-${type}`;
+    alertEl.textContent = message;
+    alertEl.style.display = 'block';
+
+    if (type === 'success') {
+      setTimeout(() => {
+        alertEl.style.display = 'none';
+      }, 4000);
     }
+  }
 
-    // --- Gestion portefeuille simulé
-    const BAL_KEY = 'ks_balance';
-    const HIST_KEY = 'ks_history';
-    let balance = parseFloat(localStorage.getItem(BAL_KEY) || '0');
+  // ======================================
+  // 💾 SAVE TO HISTORY
+  // ======================================
+  function saveDirectTransfer(transfer) {
+    const HIST_KEY = 'ks_direct_transfers';
     let history = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
 
-    if (source === "wallet") {
-      if (amount > balance) {
-        alert("❌ Solde insuffisant dans le portefeuille KwikSend.");
-        return;
-      }
-      balance -= amount;
-      localStorage.setItem(BAL_KEY, balance);
+    history.unshift({
+      date: new Date().toLocaleString(),
+      ...transfer
+    });
 
-      history.unshift({
-        date: new Date().toLocaleString(),
-        type: "Envoi",
-        amount: -amount,
-        to: receiver,
-        status: "validé"
-      });
-      localStorage.setItem(HIST_KEY, JSON.stringify(history));
+    localStorage.setItem(HIST_KEY, JSON.stringify(history));
+  }
 
-      alert(`✅ Transfert de ${amount} EUR vers ${receiver} (${dest}) effectué avec succès.`);
-
-    } else if (source === "cb") {
-      alert(`💳 Paiement de ${amount} EUR par carte bancaire vers ${receiver} (${dest}) simulé.`);
-    } else if (source === "mobile") {
-      alert(`📲 Paiement de ${amount} EUR par Mobile Money vers ${receiver} (${dest}) simulé.`);
-    }
-
-    // Redirection avec succès
-    sessionStorage.removeItem("ks_amount");
-    window.location.href = "portefeuille.html?ok=1";
+  // ======================================
+  // 🚀 INIT
+  // ======================================
+  document.addEventListener('DOMContentLoaded', () => {
+    updateOperators();
+    updateOperatorsReceive();
   });
 
-  // --- Préremplissage montant depuis portefeuille
-  document.addEventListener("DOMContentLoaded", () => {
-    const saved = sessionStorage.getItem('ks_amount');
-    if(saved){
-      document.getElementById('amount').value = saved;
-    }
-  });
-
-  // --- Déconnexion
+  // ======================================
+  // 🚪 LOGOUT (GARDE L'ANCIENNE)
+  // ======================================
   function logout(){
     localStorage.removeItem("kwiksend_user");
     window.location.href = "index.html";
