@@ -11,7 +11,176 @@
   <link rel="manifest" href="site.webmanifest">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ✨ Styles pour la modal améliorée */
+    /* 🎨 Animations et couleurs vives */
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    body {
+      background: linear-gradient(-45deg, #fef5e7, #fff8f2, #ffe7cc, #fff4e6);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+    }
+
+    .wallet {
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 💳 Carte virtuelle KwikSend */
+    .virtual-card {
+      background: linear-gradient(135deg, #ff7a00 0%, #ffcc00 100%);
+      padding: 2rem;
+      border-radius: 20px;
+      color: white;
+      box-shadow: 0 10px 30px rgba(255, 122, 0, 0.4);
+      max-width: 400px;
+      margin: 2rem auto;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .virtual-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(255, 122, 0, 0.5);
+    }
+
+    .virtual-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .card-logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 2rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .card-logo span {
+      color: #ffeb3b;
+    }
+
+    .card-chip {
+      width: 50px;
+      height: 40px;
+      background: linear-gradient(135deg, #ffd700, #ffeb3b);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .card-number {
+      font-size: 1.3rem;
+      letter-spacing: 3px;
+      margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .card-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    /* 💰 Soldes avec sélecteur */
+    .balance-selector {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .currency-btn {
+      padding: 0.6rem 1.5rem;
+      border: 2px solid #ddd;
+      background: white;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .currency-btn.active {
+      background: linear-gradient(90deg, #ff7a00, #ffcc00);
+      color: white;
+      border-color: #ff7a00;
+      transform: scale(1.05);
+    }
+
+    /* 🎨 Boutons action modernes */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .action-btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 15px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .btn-send {
+      background: linear-gradient(135deg, #4CAF50, #8BC34A);
+      color: white;
+    }
+
+    .btn-receive {
+      background: linear-gradient(135deg, #2196F3, #03A9F4);
+      color: white;
+    }
+
+    .btn-move {
+      background: linear-gradient(135deg, #ff7a00, #ffcc00);
+      color: white;
+    }
+
+    /* 📊 Historique moderne */
+    .transaction-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+    }
+
+    .transaction-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(255, 122, 0, 0.2);
+    }
+
+    /* Modal styles améliorés */
     .action-choice {
       flex: 1;
       padding: 1rem;
@@ -73,46 +242,76 @@
 
 <!-- 💼 Portefeuille -->
 <section class="wallet" style="padding:3rem 1rem;max-width:900px;margin:auto;">
-  <h1 style="text-align:center;margin-bottom:2rem;">💼 Mon Portefeuille</h1>
+  <h1 style="text-align:center;margin-bottom:2rem;font-size:2.5rem;background:linear-gradient(90deg,#ff7a00,#ffcc00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">💼 Mon Portefeuille</h1>
 
-  <!-- Solde -->
-  <div class="balances" style="display:flex;justify-content:space-around;margin-bottom:2rem;">
-    <div class="card" style="flex:1;margin:0 1rem;text-align:center;">
-      <h3>EUR</h3>
-      <p id="wallet-balance">0 €</p>
-    </div>
-    <div class="card" style="flex:1;margin:0 1rem;text-align:center;">
-      <h3>FCFA</h3>
-      <p id="wallet-balance-fcfa">0 FCFA</p>
-    </div>
+  <!-- Sélecteur de devise -->
+  <div class="balance-selector">
+    <button class="currency-btn active" onclick="switchCurrency('EUR')">EUR (€)</button>
+    <button class="currency-btn" onclick="switchCurrency('FCFA')">FCFA</button>
   </div>
 
-  <!-- Carte virtuelle -->
+  <!-- Solde principal -->
+  <div style="text-align:center;margin-bottom:2rem;">
+    <div style="font-size:3rem;font-weight:900;color:#ff7a00;" id="main-balance">500.00 €</div>
+    <div style="color:#666;font-size:0.9rem;" id="secondary-balance">≈ 325,000 FCFA</div>
+  </div>
+
+  <!-- Carte virtuelle KwikSend -->
   <div class="virtual-card">
+    <div class="card-logo">Kwik<span>Send</span></div>
     <div class="card-chip"></div>
-    <div class="card-number">**** **** **** 1250</div>
+    <div class="card-number">•••• •••• •••• 1250</div>
     <div class="card-info">
       <span id="cardUser">KwikSend User</span>
       <span>12/28</span>
     </div>
   </div>
 
-  <!-- Actions principales -->
-  <form id="send-form" style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
-    <input type="number" id="amount" placeholder="Entrez un montant" style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;min-width:150px;" />
-    <button type="submit">💸 Envoyer</button>
-    <button type="button" onclick="openReceiveModal()">📥 Recevoir</button>
-    <button type="button" onclick="openMoveFundsModal()">🔁 Alimenter / Retirer</button>
-  </form>
+  <!-- Boutons d'action -->
+  <div class="action-buttons">
+    <button class="action-btn btn-send" onclick="openSendModal()">💸 Envoyer</button>
+    <button class="action-btn btn-receive" onclick="openReceiveModal()">📥 Recevoir</button>
+    <button class="action-btn btn-move" onclick="openMoveFundsModal()">🔁 Alimenter / Retirer</button>
+  </div>
 
-  <!-- ✨ Modal Alimenter / Retirer (VERSION AMÉLIORÉE) -->
-  <div id="moveFundsModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999;">
+  <!-- 💸 Modal Envoyer (NOUVELLE) -->
+  <div id="sendModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999;">
+    <div style="background:white;padding:2.5rem;border-radius:16px;max-width:450px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+      <h2 style="margin-bottom:1rem;color:#4CAF50;">💸 Envoyer de l'argent</h2>
+      <p style="color:#666;margin-bottom:1.5rem;">Entrez le montant à envoyer :</p>
+      
+      <input 
+        type="number" 
+        id="sendAmount" 
+        placeholder="Ex: 50" 
+        min="1" 
+        step="0.01"
+        style="width:100%;padding:1rem;border:2px solid #ddd;border-radius:10px;font-size:1.1rem;text-align:center;margin-bottom:1rem;"
+      />
+      
+      <button 
+        onclick="confirmSend()" 
+        style="width:100%;padding:1rem;background:linear-gradient(135deg,#4CAF50,#8BC34A);color:white;border:none;border-radius:10px;font-weight:600;font-size:1rem;cursor:pointer;margin-bottom:0.5rem;"
+      >
+        Continuer
+      </button>
+      
+      <button 
+        onclick="closeSendModal()" 
+        style="width:100%;padding:0.8rem;background:#f0f0f0;color:#333;border:none;border-radius:10px;cursor:pointer;font-weight:600;"
+      >
+        ❌ Annuler
+      </button>
+    </div>
+  </div>
+
+  <!-- ✨ Modal Alimenter / Retirer -->
+  <div id="moveFundsModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999;">
     <div style="background:white;padding:2rem;border-radius:16px;max-width:500px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
       
       <h2 style="margin-bottom:0.5rem;">🔁 Alimenter / Retirer</h2>
       <p style="color:#666;margin-bottom:1.5rem;font-size:0.95rem;">Choisissez une action puis une méthode</p>
       
-      <!-- Choix Action (Alimenter / Retirer) -->
       <div style="margin:1.5rem 0;display:flex;gap:1rem;justify-content:center;">
         <label class="action-choice">
           <input type="radio" name="moveAction" value="fund" checked>
@@ -127,7 +326,6 @@
         </label>
       </div>
 
-      <!-- Méthodes (redirection directe au clic) -->
       <p style="font-weight:600;margin-bottom:1rem;color:#333;">Méthode :</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.5rem;">
         
@@ -147,36 +345,108 @@
         </button>
       </div>
 
-      <button onclick="closeMoveFundsModal()" style="width:100%;padding:0.9rem;background:#f0f0f0;color:#333;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:0.2s;">
+      <button onclick="closeMoveFundsModal()" style="width:100%;padding:0.9rem;background:#f0f0f0;color:#333;border:none;border-radius:10px;cursor:pointer;font-weight:600;">
         ❌ Fermer
       </button>
     </div>
   </div>
 
-  <!-- Modal Recevoir -->
-  <div id="receiveModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
-    <div style="background:white;padding:2rem;border-radius:12px;max-width:400px;text-align:center;">
-      <h2>📥 Recevoir de l'argent</h2>
-      <canvas id="qrcode"></canvas>
-      <p>Mon lien KwikSend :</p>
-      <a href="https://kwiksend.com/user123" target="_blank">https://kwiksend.com/user123</a>
-      <div style="margin-top:1rem;">
-        <button onclick="shareWhatsApp()">📲 WhatsApp</button>
-        <button onclick="shareEmail()">📧 Email</button>
+  <!-- 📥 Modal Recevoir (AMÉLIORÉE) -->
+  <div id="receiveModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:9999;">
+    <div style="background:white;padding:2.5rem;border-radius:16px;max-width:480px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+      
+      <h2 style="margin-bottom:1rem;color:#2196F3;">📥 Recevoir de l'argent</h2>
+      
+      <!-- Étape 1 : Saisie du montant -->
+      <div id="amountStep">
+        <p style="color:#666;margin-bottom:1rem;">Entrez le montant à recevoir :</p>
+        <input 
+          type="number" 
+          id="receiveAmount" 
+          placeholder="Ex: 50" 
+          min="1" 
+          step="0.01"
+          style="width:100%;padding:1rem;border:2px solid #ddd;border-radius:10px;font-size:1.1rem;text-align:center;margin-bottom:1rem;"
+        />
+        <button 
+          onclick="generatePaymentLink()" 
+          style="width:100%;padding:1rem;background:linear-gradient(135deg,#2196F3,#03A9F4);color:white;border:none;border-radius:10px;font-weight:600;font-size:1rem;cursor:pointer;"
+        >
+          Générer le lien de paiement
+        </button>
       </div>
-      <button style="margin-top:1rem;" onclick="closeReceiveModal()">❌ Fermer</button>
+
+      <!-- Étape 2 : QR Code + Lien -->
+      <div id="paymentLinkStep" style="display:none;">
+        
+        <div style="background:#f9f9f9;padding:1.5rem;border-radius:12px;margin-bottom:1.5rem;">
+          <canvas id="qrcode" style="margin:0 auto;display:block;"></canvas>
+          <p style="margin-top:1rem;color:#666;font-size:0.9rem;">Scannez pour payer</p>
+        </div>
+
+        <div style="background:#e3f2fd;border:2px solid #2196F3;border-radius:10px;padding:1rem;margin-bottom:1.5rem;">
+          <p style="color:#666;font-size:0.9rem;margin-bottom:0.3rem;">Montant</p>
+          <p id="displayAmount" style="font-size:1.8rem;font-weight:700;color:#2196F3;margin:0;">0 €</p>
+        </div>
+
+        <p style="font-weight:600;margin-bottom:0.5rem;color:#333;">Mon lien KwikSend :</p>
+        <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:1.5rem;">
+          <input 
+            type="text" 
+            id="paymentLink" 
+            readonly 
+            style="flex:1;padding:0.8rem;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;background:#f9f9f9;"
+          />
+          <button 
+            onclick="copyPaymentLink()"
+            title="Copier"
+            style="padding:0.8rem 1rem;background:#2196F3;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1.2rem;"
+          >
+            📋
+          </button>
+        </div>
+
+        <div style="display:flex;gap:1rem;margin-bottom:1rem;">
+          <button 
+            onclick="shareWhatsApp()" 
+            style="flex:1;padding:0.9rem;background:#25D366;color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;"
+          >
+            📲 WhatsApp
+          </button>
+          <button 
+            onclick="shareEmail()" 
+            style="flex:1;padding:0.9rem;background:#EA4335;color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;"
+          >
+            📧 Email
+          </button>
+        </div>
+
+        <button 
+          onclick="resetReceiveModal()"
+          style="width:100%;padding:0.8rem;background:#f0f0f0;color:#333;border:none;border-radius:10px;cursor:pointer;font-weight:600;margin-bottom:0.5rem;"
+        >
+          🔄 Nouvelle demande
+        </button>
+      </div>
+
+      <button 
+        onclick="closeReceiveModal()" 
+        style="width:100%;padding:0.8rem;background:#f0f0f0;color:#333;border:none;border-radius:10px;cursor:pointer;font-weight:600;"
+      >
+        ❌ Fermer
+      </button>
     </div>
   </div>
 
   <!-- Historique -->
   <section style="margin-top:3rem;">
-    <h2>📊 Historique des transactions</h2>
-    <ul id="wallet-history" style="list-style:none;padding:0;margin-top:1rem;"></ul>
+    <h2 style="margin-bottom:1rem;">📊 Historique des transactions</h2>
+    <div id="wallet-history"></div>
   </section>
 </section>
 
 <!-- 📝 Footer -->
-<footer>
+<footer style="text-align:center;padding:2rem;color:#666;">
   <p>© 2025 KwikSend. <span>Tous droits réservés.</span></p>
 </footer>
 
@@ -193,65 +463,191 @@
 
   if(localStorage.getItem(BAL_KEY)===null){ setBal(500); setHist([]); }
 
-  const balanceEl = document.getElementById("wallet-balance");
-  const balanceFcfaEl = document.getElementById("wallet-balance-fcfa");
-  const historyEl = document.getElementById("wallet-history");
-  const cardUser = document.getElementById("cardUser");
+  let currentCurrency = 'EUR';
+  const conversionRate = 650;
 
   const user = JSON.parse(localStorage.getItem("kwiksend_user") || "{}");
-  if(user.name) cardUser.textContent = user.name;
+  if(user.name) document.getElementById("cardUser").textContent = user.name;
 
   function renderWallet(){
     const bal = getBal();
-    balanceEl.textContent = bal.toLocaleString('fr-FR') + " €";
-    balanceFcfaEl.textContent = (bal*650).toLocaleString('fr-FR') + " FCFA";
+    const mainBal = document.getElementById("main-balance");
+    const secBal = document.getElementById("secondary-balance");
+    
+    if(currentCurrency === 'EUR'){
+      mainBal.textContent = bal.toLocaleString('fr-FR', {minimumFractionDigits:2}) + " €";
+      secBal.textContent = "≈ " + (bal*conversionRate).toLocaleString('fr-FR') + " FCFA";
+    } else {
+      const fcfa = bal * conversionRate;
+      mainBal.textContent = fcfa.toLocaleString('fr-FR') + " FCFA";
+      secBal.textContent = "≈ " + bal.toLocaleString('fr-FR', {minimumFractionDigits:2}) + " €";
+    }
+    
     const hist = getHist();
-    historyEl.innerHTML = hist.length 
-      ? hist.map(tx => `<li>${tx.date} — ${tx.type} : ${tx.amount} € <b>${tx.status||""}</b></li>`).join("")
-      : "<li>Aucun mouvement</li>";
+    const histEl = document.getElementById("wallet-history");
+    histEl.innerHTML = hist.length 
+      ? hist.map(tx => `
+        <div class="transaction-item">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-weight:600;">${tx.type}</div>
+              <div style="font-size:0.85rem;color:#666;">${tx.date}</div>
+            </div>
+            <div style="font-size:1.1rem;font-weight:700;color:${tx.amount > 0 ? '#4CAF50' : '#f44336'};">
+              ${tx.amount} €
+            </div>
+          </div>
+        </div>
+      `).join("")
+      : '<div style="text-align:center;padding:2rem;color:#999;">Aucune transaction</div>';
   }
+
   renderWallet();
 
-  document.getElementById("send-form").addEventListener("submit", e=>{
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById("amount").value);
-    if(!(amount>0)) return alert("Montant invalide");
-    if(amount>getBal()) return alert("Solde insuffisant");
+  // 💱 Changement de devise
+  window.switchCurrency = (curr) => {
+    currentCurrency = curr;
+    document.querySelectorAll('.currency-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    renderWallet();
+  };
+
+  // 💸 Modal Envoyer
+  window.openSendModal = () => {
+    document.getElementById("sendModal").style.display = "flex";
+    document.getElementById("sendAmount").value = "";
+    document.getElementById("sendAmount").focus();
+  };
+
+  window.closeSendModal = () => {
+    document.getElementById("sendModal").style.display = "none";
+  };
+
+  window.confirmSend = () => {
+    const amount = parseFloat(document.getElementById("sendAmount").value);
+    if(!amount || amount <= 0) return alert("⚠️ Montant invalide");
+    if(amount > getBal()) return alert("❌ Solde insuffisant");
     sessionStorage.setItem("ks_amount", String(amount));
-    window.location.href="transfert.html";
-  });
+    window.location.href = "transfert.html";
+  };
 
-  // ✅ QR Modal
-  window.openReceiveModal=()=>{document.getElementById("receiveModal").style.display="flex";QRCode.toCanvas(document.getElementById("qrcode"), "https://kwiksend.com/user123");}
-  window.closeReceiveModal=()=>{document.getElementById("receiveModal").style.display="none";}
-  window.shareWhatsApp=()=>{window.open("https://wa.me/?text=Voici mon lien KwikSend : https://kwiksend.com/user123");}
-  window.shareEmail=()=>{window.location.href="mailto:?subject=Mon lien KwikSend&body=Voici mon lien KwikSend : https://kwiksend.com/user123";}
+  // 📥 Modal Recevoir
+  let currentAmount = 0;
+  let currentPaymentLink = "";
 
-  // ✨ NOUVELLE LOGIQUE : Alimenter / Retirer avec redirection directe
-  window.openMoveFundsModal=()=>{document.getElementById("moveFundsModal").style.display="flex";}
-  window.closeMoveFundsModal=()=>{document.getElementById("moveFundsModal").style.display="none";}
-  
-  // 🎯 Redirection immédiate au clic sur une méthode
+  window.openReceiveModal = () => {
+    document.getElementById("receiveModal").style.display = "flex";
+    document.getElementById("amountStep").style.display = "block";
+    document.getElementById("paymentLinkStep").style.display = "none";
+    document.getElementById("receiveAmount").value = "";
+    document.getElementById("receiveAmount").focus();
+  };
+
+  window.closeReceiveModal = () => {
+    document.getElementById("receiveModal").style.display = "none";
+  };
+
+  window.resetReceiveModal = () => {
+    document.getElementById("amountStep").style.display = "block";
+    document.getElementById("paymentLinkStep").style.display = "none";
+    document.getElementById("receiveAmount").value = "";
+  };
+
+  window.generatePaymentLink = () => {
+    const amount = parseFloat(document.getElementById("receiveAmount").value);
+    if(!amount || amount <= 0) return alert("⚠️ Montant invalide");
+
+    currentAmount = amount;
+    const userId = user.email ? user.email.split("@")[0] : "user123";
+    currentPaymentLink = `https://kwiksend.com/pay/${userId}?amount=${amount}`;
+    
+    document.getElementById("displayAmount").textContent = amount.toLocaleString('fr-FR') + " €";
+    document.getElementById("paymentLink").value = currentPaymentLink;
+    
+    QRCode.toCanvas(document.getElementById("qrcode"), currentPaymentLink, { 
+      width: 200,
+      color: { dark: "#2196F3", light: "#ffffff" }
+    });
+    
+    document.getElementById("amountStep").style.display = "none";
+    document.getElementById("paymentLinkStep").style.display = "block";
+  };
+
+  window.copyPaymentLink = () => {
+    navigator.clipboard.writeText(currentPaymentLink).then(() => {
+      const btn = event.target;
+      btn.textContent = "✅";
+      btn.style.background = "#0a8f2f";
+      setTimeout(() => {
+        btn.textContent = "📋";
+        btn.style.background = "#2196F3";
+      }, 1500);
+    });
+  };
+
+  window.shareWhatsApp = () => {
+    const msg = encodeURIComponent(`💰 Paiement KwikSend\n\nMontant : ${currentAmount} €\n\n${currentPaymentLink}`);
+    window.open(`https://wa.me/?text=${msg}`, "_blank");
+  };
+
+  window.shareEmail = () => {
+    const subj = encodeURIComponent("Demande de paiement KwikSend");
+    const body = encodeURIComponent(`Montant : ${currentAmount} €\nLien : ${currentPaymentLink}`);
+    window.location.href = `mailto:?subject=${subj}&body=${body}`;
+  };
+
+  // 🔁 Modal Alimenter/Retirer
+  window.openMoveFundsModal = () => {
+    document.getElementById("moveFundsModal").style.display = "flex";
+  };
+
+  window.closeMoveFundsModal = () => {
+    document.getElementById("moveFundsModal").style.display = "none";
+  };
+
   document.querySelectorAll(".methodBtn").forEach(btn => {
     btn.addEventListener("click", () => {
       const action = document.querySelector("input[name='moveAction']:checked").value;
       const method = btn.dataset.method;
       
-      // Redirection selon action + méthode
-      if (action === "fund") {
-        if (method === "card") window.location.href = "card-fund.html";
-        else if (method === "mobile") window.location.href = "mobile-fund.html";
-        else if (method === "iban") window.location.href = "iban-fund.html";
+      if(action === "fund"){
+        if(method === "card") window.location.href = "card-fund.html";
+        else if(method === "mobile") window.location.href = "mobile-fund.html";
+        else if(method === "iban") window.location.href = "iban-fund.html";
       } else {
-        if (method === "card") window.location.href = "card-withdraw.html";
-        else if (method === "mobile") window.location.href = "mobile-withdraw.html";
-        else if (method === "iban") window.location.href = "iban-withdraw.html";
+        if(method === "card") window.location.href = "card-withdraw.html";
+        else if(method === "mobile") window.location.href = "mobile-withdraw.html";
+        else if(method === "iban") window.location.href = "iban-withdraw.html";
       }
     });
   });
 
+  // ⌨️ Enter pour validation
+  document.getElementById("sendAmount").addEventListener("keypress", (e) => {
+    if(e.key === "Enter") confirmSend();
+  });
+
+  document.getElementById("receiveAmount").addEventListener("keypress", (e) => {
+    if(e.key === "Enter") generatePaymentLink();
+  });
+
   // ✅ Déconnexion
-  window.logout=function(){localStorage.removeItem("kwiksend_user");window.location.href="index.html";}
+  window.logout = function(){
+    localStorage.removeItem("kwiksend_user");
+    window.location.href = "index.html";
+  };
+
+  // 🔄 Mise à jour automatique depuis l'URL (retour d'une transaction)
+  const urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.get('ok') === '1'){
+    renderWallet();
+    // Notification toast (optionnel)
+    const toast = document.createElement('div');
+    toast.textContent = '✅ Transaction effectuée avec succès !';
+    toast.style.cssText = 'position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#4CAF50,#8BC34A);color:white;padding:1rem 2rem;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:99999;animation:slideIn 0.3s ease;';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
 })();
 </script>
 <script src="app.js"></script>
