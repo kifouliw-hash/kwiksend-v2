@@ -4,12 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KwikSend - Portefeuille</title>
-  <meta name="description" content="Votre portefeuille KwikSend : consultez vos soldes, envoyez et recevez de l’argent en toute simplicité.">
+  <meta name="description" content="Votre portefeuille KwikSend : consultez vos soldes, envoyez et recevez de l'argent en toute simplicité.">
   <meta name="theme-color" content="#ff7a00">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ✨ Styles pour la modal améliorée */
+    .action-choice {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .action-choice:hover {
+      border-color: #ffcc00;
+      background: #fffbf5;
+    }
+    .action-choice input[type="radio"] {
+      display: none;
+    }
+    .action-choice:has(input:checked) {
+      border-color: #ff7a00;
+      background: #fff8f2;
+    }
+    .methodBtn {
+      padding: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .methodBtn:hover {
+      border-color: #ff7a00;
+      background: #fff8f2;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(255, 122, 0, 0.2);
+    }
+  </style>
 </head>
 <body>
 
@@ -66,31 +105,58 @@
     <button type="button" onclick="openMoveFundsModal()">🔁 Alimenter / Retirer</button>
   </form>
 
-  <!-- Modal Alimenter / Retirer -->
-  <div id="moveFundsModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
-    <div style="background:white;padding:2rem;border-radius:12px;max-width:420px;text-align:center;">
-      <h2>🔁 Alimenter / Retirer</h2>
-      <p>Choisissez une action :</p>
-      <div style="margin:1rem 0;">
-        <label><input type="radio" name="moveAction" value="fund" checked> Alimenter</label>
-        <label style="margin-left:1rem;"><input type="radio" name="moveAction" value="withdraw"> Retirer</label>
+  <!-- ✨ Modal Alimenter / Retirer (VERSION AMÉLIORÉE) -->
+  <div id="moveFundsModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999;">
+    <div style="background:white;padding:2rem;border-radius:16px;max-width:500px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+      
+      <h2 style="margin-bottom:0.5rem;">🔁 Alimenter / Retirer</h2>
+      <p style="color:#666;margin-bottom:1.5rem;font-size:0.95rem;">Choisissez une action puis une méthode</p>
+      
+      <!-- Choix Action (Alimenter / Retirer) -->
+      <div style="margin:1.5rem 0;display:flex;gap:1rem;justify-content:center;">
+        <label class="action-choice">
+          <input type="radio" name="moveAction" value="fund" checked>
+          <div style="font-size:2rem;margin-bottom:0.5rem;">📥</div>
+          <div style="font-weight:600;">Alimenter</div>
+        </label>
+        
+        <label class="action-choice">
+          <input type="radio" name="moveAction" value="withdraw">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">📤</div>
+          <div style="font-weight:600;">Retirer</div>
+        </label>
       </div>
-      <p>Méthode :</p>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin:1rem 0;">
-        <button type="button" class="methodBtn" data-method="card">💳 Carte bancaire</button>
-        <button type="button" class="methodBtn" data-method="mobile">📱 Mobile Money</button>
-        <button type="button" class="methodBtn" data-method="iban">🏦 IBAN</button>
+
+      <!-- Méthodes (redirection directe au clic) -->
+      <p style="font-weight:600;margin-bottom:1rem;color:#333;">Méthode :</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.5rem;">
+        
+        <button type="button" class="methodBtn" data-method="card">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">💳</div>
+          Carte bancaire
+        </button>
+        
+        <button type="button" class="methodBtn" data-method="mobile">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">📱</div>
+          Mobile Money
+        </button>
+        
+        <button type="button" class="methodBtn" data-method="iban">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">🏦</div>
+          IBAN
+        </button>
       </div>
-      <button id="confirmMove" style="margin-top:1rem;padding:0.6rem 1.2rem;border-radius:8px;background:#ff7a00;color:#fff;border:none;cursor:pointer;" disabled>Continuer</button>
-      <br>
-      <button style="margin-top:1rem;" onclick="closeMoveFundsModal()">❌ Fermer</button>
+
+      <button onclick="closeMoveFundsModal()" style="width:100%;padding:0.9rem;background:#f0f0f0;color:#333;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:0.2s;">
+        ❌ Fermer
+      </button>
     </div>
   </div>
 
   <!-- Modal Recevoir -->
   <div id="receiveModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
     <div style="background:white;padding:2rem;border-radius:12px;max-width:400px;text-align:center;">
-      <h2>📥 Recevoir de l’argent</h2>
+      <h2>📥 Recevoir de l'argent</h2>
       <canvas id="qrcode"></canvas>
       <p>Mon lien KwikSend :</p>
       <a href="https://kwiksend.com/user123" target="_blank">https://kwiksend.com/user123</a>
@@ -161,25 +227,27 @@
   window.shareWhatsApp=()=>{window.open("https://wa.me/?text=Voici mon lien KwikSend : https://kwiksend.com/user123");}
   window.shareEmail=()=>{window.location.href="mailto:?subject=Mon lien KwikSend&body=Voici mon lien KwikSend : https://kwiksend.com/user123";}
 
-  // ✅ Alimenter / Retirer Modal
+  // ✨ NOUVELLE LOGIQUE : Alimenter / Retirer avec redirection directe
   window.openMoveFundsModal=()=>{document.getElementById("moveFundsModal").style.display="flex";}
   window.closeMoveFundsModal=()=>{document.getElementById("moveFundsModal").style.display="none";}
-  const confirmBtn = document.getElementById("confirmMove");
-  let selectedMethod = null;
-  document.querySelectorAll(".methodBtn").forEach(btn=>{
-    btn.addEventListener("click", ()=>{selectedMethod = btn.dataset.method; confirmBtn.disabled=false;});
-  });
-  confirmBtn.addEventListener("click", ()=>{
-    const action = document.querySelector("input[name='moveAction']:checked").value;
-    if(action==="fund"){
-      if(selectedMethod==="card") location.href="card-fund.html";
-      if(selectedMethod==="mobile") location.href="mobile-fund.html";
-      if(selectedMethod==="iban") location.href="iban-fund.html";
-    }else{
-      if(selectedMethod==="card") location.href="card-withdraw.html";
-      if(selectedMethod==="mobile") location.href="mobile-withdraw.html";
-      if(selectedMethod==="iban") location.href="iban-withdraw.html";
-    }
+  
+  // 🎯 Redirection immédiate au clic sur une méthode
+  document.querySelectorAll(".methodBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const action = document.querySelector("input[name='moveAction']:checked").value;
+      const method = btn.dataset.method;
+      
+      // Redirection selon action + méthode
+      if (action === "fund") {
+        if (method === "card") window.location.href = "card-fund.html";
+        else if (method === "mobile") window.location.href = "mobile-fund.html";
+        else if (method === "iban") window.location.href = "iban-fund.html";
+      } else {
+        if (method === "card") window.location.href = "card-withdraw.html";
+        else if (method === "mobile") window.location.href = "mobile-withdraw.html";
+        else if (method === "iban") window.location.href = "iban-withdraw.html";
+      }
+    });
   });
 
   // ✅ Déconnexion
