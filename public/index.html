@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>KwikSend - Accueil</title>
-  <meta name="description" content="KwikSend — transferts rapides et sécurisés entre l’Afrique et l’Europe.">
+  <title>KwikSend - Transferts d'argent rapides et sécurisés</title>
+  <meta name="description" content="KwikSend — transferts rapides et sécurisés entre l'Afrique et l'Europe.">
   <meta name="theme-color" content="#ff7a00">
 
   <!-- Favicon & icônes -->
@@ -17,15 +17,529 @@
   <!-- Manifest PWA -->
   <link rel="manifest" href="site.webmanifest">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    /* ========================================
+       🎨 ANIMATIONS
+    ======================================== */
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 15s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    /* ========================================
+       🧭 HEADER MODERNE
+    ======================================== */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      animation: slideDown 0.6s ease;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+      letter-spacing: -1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    #langSwitcher, #darkToggle {
+      border: none;
+      padding: 0.5rem 0.8rem;
+      border-radius: 10px;
+      cursor: pointer;
+      background: rgba(255, 138, 0, 0.1);
+      color: #FF8A00;
+      font-weight: 600;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    #langSwitcher:hover, #darkToggle:hover {
+      background: rgba(255, 138, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .burger span {
+      width: 26px;
+      height: 3px;
+      background: #FF8A00;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+
+    .burger.active span:nth-child(1) {
+      transform: rotate(45deg) translateY(8px);
+    }
+
+    .burger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .burger.active span:nth-child(3) {
+      transform: rotate(-45deg) translateY(-8px);
+    }
+
+    /* ========================================
+       🌍 HERO SECTION - VERSION MODERNE
+    ======================================== */
+    .hero {
+      background: linear-gradient(135deg, #FF8A00, #FFA500, #00B87C);
+      color: white;
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: slideDown 0.6s ease 0.2s both;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      font-weight: 900;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: slideDown 0.6s ease 0.3s both;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 2.5rem;
+      opacity: 0.95;
+      line-height: 1.6;
+      animation: slideDown 0.6s ease 0.4s both;
+    }
+
+    .cta {
+      background: white;
+      color: #FF8A00;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 1.2rem 3rem;
+      border-radius: 50px;
+      display: inline-block;
+      transition: all 0.3s;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 138, 0, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      color: #00B87C;
+    }
+
+    .cta:hover::before {
+      left: 100%;
+    }
+
+    /* ========================================
+       ✨ FEATURES SECTION - GRILLE MODERNE
+    ======================================== */
+    .features {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slideDown 0.6s ease;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 1.1rem;
+      margin-bottom: 3rem;
+      animation: slideDown 0.6s ease 0.1s both;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 6px 20px rgba(10, 15, 28, 0.08);
+      position: relative;
+      overflow: hidden;
+      animation: slideInLeft 0.4s ease both;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.2s; }
+    .feature-card:nth-child(2) { animation-delay: 0.3s; }
+    .feature-card:nth-child(3) { animation-delay: 0.4s; }
+    .feature-card:nth-child(4) { animation-delay: 0.5s; }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      transition: left 0.5s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 40px rgba(255, 138, 0, 0.2);
+      border-color: rgba(255, 138, 0, 0.3);
+    }
+
+    .feature-card:hover::before {
+      left: 0;
+    }
+
+    .feature-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .feature-card:nth-child(2) .feature-icon {
+      animation-delay: 0.3s;
+    }
+
+    .feature-card:nth-child(3) .feature-icon {
+      animation-delay: 0.6s;
+    }
+
+    .feature-card:nth-child(4) .feature-icon {
+      animation-delay: 0.9s;
+    }
+
+    .feature-card h3 {
+      font-size: 1.4rem;
+      color: #0A0F1C;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .feature-card p {
+      color: #666;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* ========================================
+       🌟 ADVANTAGES SECTION
+    ======================================== */
+    .advantages {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.05), rgba(0, 184, 124, 0.05));
+      padding: 4rem 2rem;
+      margin: 3rem 0;
+      animation: slideDown 0.6s ease 0.6s both;
+    }
+
+    .advantages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 2rem auto 0;
+    }
+
+    .advantage-item {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 138, 0, 0.1);
+    }
+
+    .advantage-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255, 138, 0, 0.15);
+    }
+
+    .advantage-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .advantage-text {
+      font-weight: 600;
+      color: #0A0F1C;
+      font-size: 1.1rem;
+    }
+
+    /* ========================================
+       ℹ️ ABOUT SECTION
+    ======================================== */
+    .about {
+      text-align: center;
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      animation: slideDown 0.6s ease 0.7s both;
+    }
+
+    .about h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .about p {
+      font-size: 1.2rem;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    /* ========================================
+       📝 FOOTER
+    ======================================== */
+    footer {
+      background: #0A0F1C;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: #FF8A00;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* ========================================
+       📱 RESPONSIVE
+    ======================================== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 10px;
+        width: 200px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a::after {
+        display: none;
+      }
+
+      .burger {
+        display: flex;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .features-grid,
+      .advantages-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+      }
+    }
+
+    /* ========================================
+       🎨 LOADING STATE
+    ======================================== */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 138, 0, 0.2);
+      border-top-color: #FF8A00;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
 
 <!-- 🧭 Header -->
 <header>
-  <div class="container header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+  <div class="header-container">
+    <div class="logo">KwikSend</div>
 
     <!-- 🍔 Burger -->
     <div class="burger" onclick="toggleMenu()">
@@ -56,77 +570,128 @@
   </div>
 </header>
 
-<!-- 🌍 Hero -->
+<!-- 🌍 Hero Section -->
 <section class="hero" id="accueil">
   <div class="hero-content">
     <h1 data-i18n="hero.title">Votre argent, partout, instantanément 🌍</h1>
     <p data-i18n="hero.subtitle">
-      La nouvelle façon d’envoyer et recevoir de l’argent entre l’Afrique et l’Europe.
+      La nouvelle façon d'envoyer et recevoir de l'argent entre l'Afrique et l'Europe.
     </p>
     <a href="register.html" class="cta" data-i18n="hero.cta">Créer un compte gratuit</a>
   </div>
 </section>
 
-
 <!-- ✨ Fonctionnalités -->
 <section class="features" id="fonctionnalites">
-  <h2 data-i18n="features.title">Ce que vous pouvez faire avec KwikSend</h2>
+  <h2 class="section-title" data-i18n="features.title">Ce que vous pouvez faire avec KwikSend</h2>
+  <p class="section-subtitle">Des solutions complètes pour tous vos besoins de transfert</p>
+  
   <div class="features-grid">
-    <div class="card clickable" onclick="location.href='portefeuille.html'">
-      <h3 data-i18n="features.wallet.title">💰 Portefeuille numérique</h3>
-      <p data-i18n="features.wallet.text">Gérez votre argent en CFA et en EUR.</p>
+    <div class="feature-card" onclick="location.href='portefeuille.html'">
+      <div class="feature-icon">💳</div>
+      <h3 data-i18n="features.wallet.title">Portefeuille numérique</h3>
+      <p data-i18n="features.wallet.text">Gérez votre argent en CFA et en EUR facilement.</p>
     </div>
 
-    <div class="card clickable" onclick="location.href='transfert.html'">
-      <h3 data-i18n="features.africaeurope.title">🌐 Transferts Afrique ↔ Europe</h3>
-      <p data-i18n="features.africaeurope.text">Envoyez ou recevez instantanément.</p>
+    <div class="feature-card" onclick="location.href='transfert.html'">
+      <div class="feature-icon">🌐</div>
+      <h3 data-i18n="features.africaeurope.title">Transferts Afrique ↔ Europe</h3>
+      <p data-i18n="features.africaeurope.text">Envoyez ou recevez instantanément et en toute sécurité.</p>
     </div>
 
-    <div class="card clickable" onclick="location.href='kwiktransfert.html'">
-      <h3 data-i18n="features.kwiksend.title">👥 Transferts KwikSend ↔ KwikSend</h3>
-      <p data-i18n="features.kwiksend.text">Gratuit ou à petit coût.</p>
+    <div class="feature-card" onclick="location.href='kwiktransfert.html'">
+      <div class="feature-icon">⚡</div>
+      <h3 data-i18n="features.kwiksend.title">Transferts KwikSend ↔ KwikSend</h3>
+      <p data-i18n="features.kwiksend.text">Gratuit ou à petit coût entre utilisateurs.</p>
     </div>
 
-    <div class="card clickable" onclick="location.href='releves.html'">
-      <h3 data-i18n="features.releve.title">📄 Relevés officiels</h3>
-      <p data-i18n="features.releve.text">Téléchargez un relevé certifié de vos transactions pour vos démarches.</p>
+    <div class="feature-card" onclick="location.href='releves.html'">
+      <div class="feature-icon">📄</div>
+      <h3 data-i18n="features.releve.title">Relevés officiels</h3>
+      <p data-i18n="features.releve.text">Téléchargez vos documents certifiés pour vos démarches.</p>
     </div>
   </div>
 </section>
 
 <!-- 🌟 Avantages -->
 <section class="advantages" id="avantages">
-  <h2 data-i18n="advantages.title">Pourquoi choisir KwikSend ?</h2>
-  <div class="features-grid">
-    <div class="card">⚡ Rapidité : transferts instantanés</div>
-    <div class="card">🔒 Sécurité : transactions protégées</div>
-    <div class="card">🌍 Accessibilité : Afrique & Europe</div>
-    <div class="card">💳 Flexibilité : multiples moyens de paiement</div>
+  <h2 class="section-title" data-i18n="advantages.title">Pourquoi choisir KwikSend ?</h2>
+  <p class="section-subtitle">Les raisons qui font de nous le meilleur choix</p>
+  
+  <div class="advantages-grid">
+    <div class="advantage-item">
+      <span class="advantage-icon">⚡</span>
+      <div class="advantage-text">Rapidité : transferts instantanés</div>
+    </div>
+    
+    <div class="advantage-item">
+      <span class="advantage-icon">🔒</span>
+      <div class="advantage-text">Sécurité : transactions protégées</div>
+    </div>
+    
+    <div class="advantage-item">
+      <span class="advantage-icon">🌍</span>
+      <div class="advantage-text">Accessibilité : Afrique & Europe</div>
+    </div>
+    
+    <div class="advantage-item">
+      <span class="advantage-icon">💳</span>
+      <div class="advantage-text">Flexibilité : multiples moyens de paiement</div>
+    </div>
   </div>
 </section>
 
 <!-- ℹ️ À propos -->
 <section class="about" id="apropos">
-  <h2 data-i18n="about.title">À propos</h2>
-  <p data-i18n="about.text">KwikSend connecte l’Afrique et l’Europe avec rapidité et sécurité.</p>
+  <h2 data-i18n="about.title">À propos de KwikSend</h2>
+  <p data-i18n="about.text">
+    KwikSend connecte l'Afrique et l'Europe avec rapidité, sécurité et transparence. 
+    Notre mission est de faciliter les transferts d'argent pour tous, partout et à tout moment.
+  </p>
 </section>
 
 <!-- 📝 Footer -->
 <footer>
-  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span> | <a href="mentions.html">Mentions légales</a></p>
 </footer>
 
 <!-- 📜 Scripts -->
 <script>
   // ✅ Burger toggle
   function toggleMenu() {
-    document.getElementById("nav-menu").classList.toggle("open");
+    const menu = document.getElementById("nav-menu");
+    const burger = document.querySelector(".burger");
+    menu.classList.toggle("open");
+    burger.classList.toggle("active");
   }
 
+  // ✅ Dark Mode
+  const darkToggle = document.getElementById("darkToggle");
+  darkToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    darkToggle.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+  });
+
+  // ✅ Restaurer le thème
+  window.addEventListener("load", () => {
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+      darkToggle.textContent = "☀️";
+    }
+  });
+
+  // ✅ Langue
+  function switchLang(lang) {
+    localStorage.setItem("lang", lang);
+    // La fonction applyTranslations() sera définie dans translate.js
+  }
 </script>
 
 <script src="translate.js"></script>
 <script src="app.js"></script>
+
+<!-- 📲 Service Worker -->
 <script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
@@ -135,8 +700,9 @@
       .catch(err => console.log("Erreur SW:", err));
   }
 </script>
+
+<!-- 🚀 Redirection automatique si connecté -->
 <script>
-  // 🚀 Redirection auto si déjà connecté
   document.addEventListener("DOMContentLoaded", () => {
     const user = localStorage.getItem("kwiksend_user");
     if (user) {
@@ -145,5 +711,6 @@
     }
   });
 </script>
+
 </body>
 </html>
