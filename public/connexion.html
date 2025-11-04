@@ -5,208 +5,596 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>KwikSend – Connexion</title>
-  <meta name="description" content="Connectez-vous à KwikSend pour envoyer et recevoir de l’argent entre l’Afrique et l’Europe.">
+  <meta name="description" content="Connectez-vous à KwikSend pour envoyer et recevoir de l'argent entre l'Afrique et l'Europe.">
   <meta name="theme-color" content="#ff7a00">
 
   <!-- Icônes -->
   <link rel="icon" type="image/png" href="favicon-32x32.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
 
-  <!-- Style principal -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
     body {
-      background: linear-gradient(180deg, #ff9a00, #ff7a00);
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      color: #fff;
-      text-align: center;
+      background: linear-gradient(135deg, #FF8A00, #FFA500, #00B87C, #00D48F);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow: hidden;
     }
 
+    /* Cercles décoratifs flottants */
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    body::before {
+      width: 300px;
+      height: 300px;
+      background: white;
+      top: -100px;
+      left: -100px;
+    }
+
+    body::after {
+      width: 400px;
+      height: 400px;
+      background: white;
+      bottom: -150px;
+      right: -150px;
+      animation-delay: 3s;
+    }
+
+    /* Logo KwikSend */
+    .logo-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: slideUp 0.6s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-text {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      letter-spacing: -1px;
+    }
+
+    .logo-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+
+    /* Boîte d'authentification */
     .auth-box {
-      background: #fff;
-      color: #333;
-      border-radius: 16px;
-      padding: 2rem;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 2.5rem;
       width: 90%;
-      max-width: 420px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.6s ease 0.2s both;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255, 255, 255, 0.5);
     }
 
-    h1 {
-      color: #ff7a00;
-      margin-bottom: 1rem;
+    .auth-title {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Onglets modernes */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      background: rgba(255, 138, 0, 0.08);
+      padding: 0.4rem;
+      border-radius: 16px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      color: #666;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .tab-btn:hover::before {
+      left: 100%;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #FF8A00, #00B87C);
+      color: white;
+      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.3);
+    }
+
+    /* Formulaires */
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: #999;
+      pointer-events: none;
     }
 
     input {
       width: 100%;
-      padding: 0.9rem;
-      margin: 0.5rem 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      padding: 1rem 1rem 1rem 3rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
       font-size: 1rem;
+      transition: all 0.3s;
+      background: white;
+      color: #0A0F1C;
+      font-family: inherit;
     }
 
-    button {
+    input:focus {
+      outline: none;
+      border-color: #FF8A00;
+      box-shadow: 0 0 0 4px rgba(255, 138, 0, 0.1);
+    }
+
+    input::placeholder {
+      color: #B0B3C2;
+    }
+
+    /* Boutons */
+    .submit-btn {
       width: 100%;
-      padding: 1rem;
-      margin-top: 1rem;
-      background: #ff7a00;
-      color: #fff;
-      font-weight: 600;
+      padding: 1.1rem;
+      margin-top: 0.5rem;
+      background: linear-gradient(135deg, #FF8A00, #00B87C);
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: 0.25s;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
     }
 
-    button:hover {
-      background: #ff9a33;
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
     }
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: .5rem;
-      margin-bottom: 1rem;
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(255, 138, 0, 0.4);
     }
 
-    .tabs button {
-      flex: 1;
-      background: #ffe7cc;
-      color: #ff7a00;
-      border: none;
-      padding: .8rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.25s;
+    .submit-btn:hover::before {
+      width: 400px;
+      height: 400px;
     }
 
-    .tabs button.active {
-      background: #ff7a00;
-      color: #fff;
+    .submit-btn:active {
+      transform: translateY(0);
     }
 
+    /* Liens */
     .links {
-      margin-top: 1rem;
-      font-size: .9rem;
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
     }
 
     .links a {
-      color: #ff7a00;
+      color: #FF8A00;
       font-weight: 600;
       text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
     }
 
+    .links a:hover {
+      color: #00B87C;
+      gap: 0.5rem;
+    }
+
+    /* Footer */
     footer {
       margin-top: 2rem;
-      color: #fff;
-      font-size: .9rem;
-      opacity: 0.8;
+      color: white;
+      font-size: 0.9rem;
+      text-align: center;
+      opacity: 0.9;
+      animation: slideUp 0.6s ease 0.4s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Messages d'info */
+    .info-message {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(255, 138, 0, 0.1));
+      border-left: 4px solid #8B5CF6;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #666;
+      text-align: left;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .auth-box {
+        padding: 2rem 1.5rem;
+      }
+
+      .logo-text {
+        font-size: 2rem;
+      }
+
+      .auth-title {
+        font-size: 1.5rem;
+      }
+
+      .tabs {
+        flex-direction: column;
+      }
+
+      .tab-btn {
+        padding: 0.9rem;
+      }
+    }
+
+    /* Animation de chargement */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 0.5rem;
     }
   </style>
 </head>
 <body>
 
-  <div class="auth-box">
-    <h1 id="auth-title">Connexion</h1>
+  <!-- Logo KwikSend -->
+  <div class="logo-header">
+    <div class="logo-text">KwikSend</div>
+    <div class="logo-subtitle">Vos transferts, simplifiés</div>
+  </div>
 
+  <!-- Boîte d'authentification -->
+  <div class="auth-box">
+    <h1 class="auth-title" id="auth-title">Connexion</h1>
+
+    <!-- Onglets -->
     <div class="tabs">
-      <button id="tab-login" class="active" onclick="showAuth('login')">Connexion</button>
-      <button id="tab-signup" onclick="showAuth('signup')">Créer un compte</button>
-      <button id="tab-reset" onclick="showAuth('reset')">Mot de passe</button>
+      <button id="tab-login" class="tab-btn active" onclick="showAuth('login')">
+        🔐 Connexion
+      </button>
+      <button id="tab-signup" class="tab-btn" onclick="showAuth('signup')">
+        ✨ Inscription
+      </button>
+      <button id="tab-reset" class="tab-btn" onclick="showAuth('reset')">
+        🔑 Mot de passe
+      </button>
     </div>
 
-    <!-- Connexion -->
-    <form id="login-form" style="display:flex;flex-direction:column;gap:.8rem;">
-      <input type="email" name="email" placeholder="Adresse e-mail" required>
-      <input type="password" name="password" placeholder="Mot de passe" required>
-      <button type="submit">Se connecter</button>
+    <!-- Formulaire Connexion -->
+    <form id="login-form" class="auth-form">
+      <div class="form-group">
+        <span class="form-icon">📧</span>
+        <input type="email" name="email" placeholder="Adresse e-mail" required>
+      </div>
+      <div class="form-group">
+        <span class="form-icon">🔒</span>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+      </div>
+      <button type="submit" class="submit-btn">
+        Se connecter
+      </button>
     </form>
 
-    <!-- Inscription -->
-    <form id="signup-form" style="display:none;flex-direction:column;gap:.8rem;">
-      <input type="text" name="name" placeholder="Nom complet" required>
-      <input type="email" name="email" placeholder="Adresse e-mail" required>
-      <input type="password" name="password" placeholder="Mot de passe" required>
-      <button type="submit">Créer mon compte</button>
+    <!-- Formulaire Inscription -->
+    <form id="signup-form" class="auth-form" style="display:none;">
+      <div class="form-group">
+        <span class="form-icon">👤</span>
+        <input type="text" name="name" placeholder="Nom complet" required>
+      </div>
+      <div class="form-group">
+        <span class="form-icon">📧</span>
+        <input type="email" name="email" placeholder="Adresse e-mail" required>
+      </div>
+      <div class="form-group">
+        <span class="form-icon">🔒</span>
+        <input type="password" name="password" placeholder="Mot de passe" required minlength="6">
+      </div>
+      <button type="submit" class="submit-btn">
+        Créer mon compte
+      </button>
+      <div class="info-message">
+        <strong>💡 Note :</strong> Votre mot de passe doit contenir au moins 6 caractères.
+      </div>
     </form>
 
-    <!-- Réinitialisation -->
-    <form id="reset-form" style="display:none;flex-direction:column;gap:.8rem;">
-      <input type="email" name="email" placeholder="Adresse e-mail" required>
-      <button type="submit">Envoyer le lien</button>
+    <!-- Formulaire Réinitialisation -->
+    <form id="reset-form" class="auth-form" style="display:none;">
+      <div class="form-group">
+        <span class="form-icon">📧</span>
+        <input type="email" name="email" placeholder="Adresse e-mail" required>
+      </div>
+      <button type="submit" class="submit-btn">
+        Envoyer le lien
+      </button>
+      <div class="info-message">
+        <strong>📬 Info :</strong> Un lien de réinitialisation sera envoyé à votre adresse e-mail.
+      </div>
     </form>
 
+    <!-- Liens -->
     <div class="links">
-      <a href="index.html">⬅ Retour à l’accueil</a>
+      <a href="index.html">← Retour à l'accueil</a>
     </div>
   </div>
 
+  <!-- Footer -->
   <footer>© 2025 KwikSend. Tous droits réservés.</footer>
 
+  <!-- Scripts -->
   <script>
+    /* ========================================
+       🔄 GESTION DES ONGLETS
+    ======================================== */
     function showAuth(type) {
-      document.getElementById("auth-title").textContent =
-        type === "login" ? "Connexion" :
-        type === "signup" ? "Créer un compte" :
-        "Réinitialisation du mot de passe";
+      // Mise à jour du titre
+      const titles = {
+        login: "Connexion",
+        signup: "Créer un compte",
+        reset: "Réinitialisation"
+      };
+      
+      document.getElementById("auth-title").textContent = titles[type];
 
-      ["login-form", "signup-form", "reset-form"].forEach(id =>
-        document.getElementById(id).style.display = "none"
-      );
+      // Masquer tous les formulaires
+      ["login-form", "signup-form", "reset-form"].forEach(id => {
+        document.getElementById(id).style.display = "none";
+      });
+
+      // Afficher le formulaire sélectionné
       document.getElementById(type + "-form").style.display = "flex";
 
-      // Gère les boutons actifs
-      document.querySelectorAll(".tabs button").forEach(btn => btn.classList.remove("active"));
+      // Gérer les onglets actifs
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.remove("active");
+      });
       document.getElementById("tab-" + type).classList.add("active");
     }
 
-    // --- Inscription ---
+    /* ========================================
+       ✅ INSCRIPTION
+    ======================================== */
     document.getElementById("signup-form").addEventListener("submit", e => {
       e.preventDefault();
-      const form = new FormData(e.target);
-      const user = {
-        name: form.get("name"),
-        email: form.get("email"),
-      };
-      localStorage.setItem("kwiksend_user", JSON.stringify(user));
-      alert("🎉 Compte créé avec succès !");
-      window.location.href = "dashboard.html";
+      
+      const submitBtn = e.target.querySelector('.submit-btn');
+      const originalText = submitBtn.innerHTML;
+      
+      // Animation de chargement
+      submitBtn.innerHTML = 'Création en cours<span class="loading"></span>';
+      submitBtn.disabled = true;
+      
+      setTimeout(() => {
+        const form = new FormData(e.target);
+        const user = {
+          name: form.get("name"),
+          email: form.get("email"),
+        };
+        
+        localStorage.setItem("kwiksend_user", JSON.stringify(user));
+        
+        // Notification de succès
+        showNotification("🎉 Compte créé avec succès !");
+        
+        // Redirection
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1000);
+      }, 1500);
     });
 
-    // --- Connexion ---
+    /* ========================================
+       🔐 CONNEXION
+    ======================================== */
     document.getElementById("login-form").addEventListener("submit", e => {
       e.preventDefault();
-      const form = new FormData(e.target);
-      const user = { email: form.get("email") };
-      localStorage.setItem("kwiksend_user", JSON.stringify(user));
-      alert("✅ Connexion réussie !");
-      window.location.href = "dashboard.html";
+      
+      const submitBtn = e.target.querySelector('.submit-btn');
+      const originalText = submitBtn.innerHTML;
+      
+      // Animation de chargement
+      submitBtn.innerHTML = 'Connexion en cours<span class="loading"></span>';
+      submitBtn.disabled = true;
+      
+      setTimeout(() => {
+        const form = new FormData(e.target);
+        const user = { 
+          email: form.get("email"),
+          name: form.get("email").split('@')[0] // Extraction du nom depuis l'email
+        };
+        
+        localStorage.setItem("kwiksend_user", JSON.stringify(user));
+        
+        // Notification de succès
+        showNotification("✅ Connexion réussie !");
+        
+        // Redirection
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1000);
+      }, 1500);
     });
 
-    // --- Réinitialisation (simulation) ---
+    /* ========================================
+       🔑 RÉINITIALISATION
+    ======================================== */
     document.getElementById("reset-form").addEventListener("submit", e => {
       e.preventDefault();
-      alert("📩 Un lien de réinitialisation a été envoyé à votre adresse e-mail.");
-      showAuth("login");
+      
+      const submitBtn = e.target.querySelector('.submit-btn');
+      const originalText = submitBtn.innerHTML;
+      
+      // Animation de chargement
+      submitBtn.innerHTML = 'Envoi en cours<span class="loading"></span>';
+      submitBtn.disabled = true;
+      
+      setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        // Notification
+        showNotification("📩 Un lien de réinitialisation a été envoyé à votre adresse e-mail.");
+        
+        // Retour à la connexion
+        setTimeout(() => {
+          showAuth("login");
+        }, 2000);
+      }, 1500);
+    });
+
+    /* ========================================
+       💬 NOTIFICATION
+    ======================================== */
+    function showNotification(message) {
+      const toast = document.createElement('div');
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #FF8A00, #00B87C);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(255, 138, 0, 0.4);
+        z-index: 99999;
+        font-weight: 600;
+        animation: slideUp 0.4s ease;
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideDown 0.4s ease';
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    /* ========================================
+       🔒 VÉRIFICATION CONNEXION
+    ======================================== */
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = localStorage.getItem("kwiksend_user");
+      if (user) {
+        console.log("✅ Utilisateur déjà connecté");
+        window.location.href = "dashboard.html";
+      }
     });
   </script>
-<script>
-  // ✅ Vérifie si l'utilisateur est déjà connecté
-  document.addEventListener("DOMContentLoaded", () => {
-    const user = localStorage.getItem("kwiksend_user");
-    if (user) {
-      console.log("✅ Utilisateur déjà connecté :", user);
-      window.location.href = "dashboard.html";
-    }
-  });
-</script>
+
 </body>
 </html>
