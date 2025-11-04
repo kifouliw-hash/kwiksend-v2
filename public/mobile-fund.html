@@ -4,111 +4,829 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>KwikSend — Alimenter Mobile Money</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
     body {
-      background: #fdf8f3;
-      color: #333;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
     }
-    main {
-      max-width: 680px;
-      margin: 60px auto;
-      padding: 20px;
-      text-align: center;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+
+    /* 🧭 Header moderne */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
     }
-    select, input, button {
-      padding: 0.7rem;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      font-size: 1rem;
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    button {
-      background: #ff7a00;
-      color: white;
-      font-weight: 600;
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
       transition: 0.2s;
     }
-    button:hover {
-      background: #ff9b33;
+
+    .nav-links a:hover {
+      color: #FF8A00;
+    }
+
+    .burger {
+      display: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #FF8A00;
+    }
+
+    /* 💼 Container principal */
+    .fund-container {
+      max-width: 700px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slideDown 0.6s ease;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+      animation: slideDown 0.6s ease 0.1s both;
+    }
+
+    /* 💳 Carte principale */
+    .fund-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(10, 15, 28, 0.08);
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      animation: slideDown 0.6s ease 0.2s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fund-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,138,0,0.03), transparent 70%);
+      animation: float 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* 📱 Grille opérateurs */
+    .operator-section {
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0A0F1C;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .operator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .operator-btn {
+      padding: 1.5rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 16px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      position: relative;
+    }
+
+    .operator-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,138,0,0.05), rgba(0,184,124,0.05));
+      transition: width 0.3s;
+      border-radius: 16px;
+      z-index: 0;
+    }
+
+    .operator-btn:hover::before {
+      width: 100%;
+    }
+
+    .operator-btn:hover {
+      border-color: #FF8A00;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 138, 0, 0.15);
+    }
+
+    .operator-btn.selected {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.15), rgba(0, 184, 124, 0.15));
+      border: 2px solid #FF8A00;
+      box-shadow: 0 8px 25px rgba(255, 138, 0, 0.3);
+    }
+
+    .operator-icon {
+      font-size: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .operator-name {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 💰 Section montant */
+    .amount-section {
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 💱 Sélecteur de devise */
+    .currency-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      background: rgba(255, 138, 0, 0.05);
+      padding: 0.5rem;
+      border-radius: 16px;
+    }
+
+    .currency-btn {
+      flex: 1;
+      padding: 0.8rem;
+      border: 2px solid transparent;
+      background: transparent;
+      color: #666;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .currency-btn:hover {
+      background: rgba(255, 138, 0, 0.1);
+      color: #FF8A00;
+    }
+
+    .currency-btn.active {
+      background: linear-gradient(135deg, #FF8A00, #FFA500);
+      color: white;
+      border-color: #FF8A00;
+      box-shadow: 0 4px 12px rgba(255, 138, 0, 0.3);
+    }
+
+    .amount-input-wrapper {
+      position: relative;
+    }
+
+    .currency-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #FF8A00;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 1.2rem 1rem 1.2rem 5rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 16px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      transition: all 0.3s;
+      background: white;
+      color: #0A0F1C;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #FF8A00;
+      box-shadow: 0 0 0 4px rgba(255, 138, 0, 0.1);
+    }
+
+    input[type="number"]::placeholder {
+      color: #B0B3C2;
+      font-weight: 500;
+    }
+
+    /* 🔄 Équivalence */
+    .equivalence {
+      margin-top: 0.8rem;
+      padding: 0.8rem 1rem;
+      background: linear-gradient(135deg, rgba(0, 184, 124, 0.08), rgba(0, 212, 143, 0.08));
+      border: 1px solid rgba(0, 184, 124, 0.2);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .equivalence-label {
+      color: #666;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .equivalence-value {
+      color: #00B87C;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* 💡 Info box */
+    .info-box {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(255, 138, 0, 0.05));
+      border-left: 4px solid #8B5CF6;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: #666;
+      position: relative;
+      z-index: 1;
+    }
+
+    .info-box strong {
+      color: #8B5CF6;
+    }
+
+    /* 🎯 Bouton principal */
+    .submit-btn {
+      width: 100%;
+      padding: 1.3rem;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #00B87C, #00D48F);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 184, 124, 0.4);
+    }
+
+    .submit-btn:hover::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 💬 Message succès */
+    #msg {
+      text-align: center;
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 184, 124, 0.1), rgba(0, 212, 143, 0.1));
+      border: 1px solid rgba(0, 184, 124, 0.3);
+      color: #00B87C;
+      font-weight: 600;
+      display: none;
+      animation: slideDown 0.4s ease;
+    }
+
+    #msg.show {
+      display: block;
+    }
+
+    /* 🔗 Lien retour */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #FF8A00;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
+      transition: all 0.3s;
+      background: rgba(255, 138, 0, 0.05);
+    }
+
+    .back-link:hover {
+      background: rgba(255, 138, 0, 0.15);
+      transform: translateX(-5px);
+    }
+
+    /* Footer */
+    footer {
+      background: #0A0F1C;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .burger {
+        display: block;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .fund-card {
+        padding: 1.5rem;
+      }
+
+      .operator-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .operator-btn {
+        padding: 1rem;
+      }
+
+      .operator-icon {
+        font-size: 2rem;
+      }
+    }
+
+    /* Loader */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <header><div class="logo">Kwik<span>Send</span></div></header>
 
-  <main>
-    <h1>📱 Alimenter — Mobile Money (simulation)</h1>
-    <p>Choisissez votre opérateur et saisissez le montant à créditer.</p>
+<!-- 🧭 Header -->
+<header>
+  <div class="header-container">
+    <div class="logo" onclick="window.location.href='dashboard.html'">KwikSend</div>
+    <nav>
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="transfert.html">Transfert</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+        <li><a href="#" onclick="logout()">Déconnexion</a></li>
+      </ul>
+    </nav>
+    <span class="burger" onclick="toggleMenu()">☰</span>
+  </div>
+</header>
 
-    <form id="mmFund" style="margin-top:18px;display:flex;flex-direction:column;gap:12px;">
-      <select id="operator" required>
-        <option value="">— Sélectionnez un opérateur —</option>
-        <option value="Orange Money">Orange Money (CI)</option>
-        <option value="Wave">Wave</option>
-        <option value="MTN Money">MTN Mobile Money</option>
-      </select>
-      <input id="amount" type="number" placeholder="Montant (€)" min="0.1" step="0.01" required />
-      <button type="submit" class="btn btn-accent">Valider l’alimentation</button>
+<!-- 💼 Container principal -->
+<div class="fund-container">
+  
+  <h1 class="page-title">📱 Alimenter par Mobile Money</h1>
+  <p class="page-subtitle">Rechargez votre portefeuille KwikSend via Mobile Money</p>
+
+  <!-- 💳 Carte principale -->
+  <div class="fund-card">
+    
+    <form id="mmFund">
+      
+      <!-- 📱 Section opérateurs -->
+      <div class="operator-section">
+        <div class="section-label">
+          <span>📱</span>
+          <span>Sélectionnez votre opérateur</span>
+        </div>
+        
+        <div class="operator-grid">
+          <div class="operator-btn" data-operator="Orange Money" onclick="selectOperator('Orange Money', this)">
+            <span class="operator-icon">🟠</span>
+            <span class="operator-name">Orange Money</span>
+          </div>
+          
+          <div class="operator-btn" data-operator="Wave" onclick="selectOperator('Wave', this)">
+            <span class="operator-icon">🔵</span>
+            <span class="operator-name">Wave</span>
+          </div>
+          
+          <div class="operator-btn" data-operator="MTN Money" onclick="selectOperator('MTN Money', this)">
+            <span class="operator-icon">🟡</span>
+            <span class="operator-name">MTN Money</span>
+          </div>
+          
+          <div class="operator-btn" data-operator="Moov Money" onclick="selectOperator('Moov Money', this)">
+            <span class="operator-icon">🟢</span>
+            <span class="operator-name">Moov Money</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 💰 Section montant -->
+      <div class="amount-section">
+        <div class="section-label">
+          <span>💰</span>
+          <span>Montant à créditer</span>
+        </div>
+        
+        <!-- Sélecteur de devise -->
+        <div class="currency-selector">
+          <button type="button" class="currency-btn active" data-currency="FCFA" onclick="switchCurrency('FCFA', this)">
+            🌍 FCFA
+          </button>
+          <button type="button" class="currency-btn" data-currency="EUR" onclick="switchCurrency('EUR', this)">
+            🇪🇺 EUR
+          </button>
+        </div>
+        
+        <div class="amount-input-wrapper">
+          <span class="currency-icon" id="currencySymbol">FCFA</span>
+          <input 
+            type="number" 
+            id="amount" 
+            placeholder="Exemple: 32 500" 
+            min="0.1" 
+            step="0.01" 
+            required 
+          />
+        </div>
+        
+        <!-- Équivalence -->
+        <div class="equivalence" id="equivalence">
+          <span class="equivalence-label">Équivalent :</span>
+          <span class="equivalence-value" id="equivalenceValue">0.00 EUR</span>
+        </div>
+      </div>
+
+      <!-- 💡 Info box -->
+      <div class="info-box">
+        <strong>💡 Information :</strong> Les opérateurs Mobile Money en Afrique utilisent principalement le FCFA. 
+        Le montant sera automatiquement converti dans votre portefeuille KwikSend (EUR).
+      </div>
+
+      <!-- 🎯 Bouton validation -->
+      <button type="submit" class="submit-btn" id="submitBtn">
+        ✨ Valider l'alimentation
+      </button>
+
     </form>
 
-    <p id="msg" style="color:green;margin-top:12px"></p>
-    <p style="margin-top:18px"><a href="portefeuille.html">← Retour au portefeuille</a></p>
-  </main>
+    <!-- 💬 Message succès -->
+    <div id="msg"></div>
 
-  <script>
-  (() => {
-    const BAL_KEY='ks_balance', HIST_KEY='ks_history';
-    const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
-    const setBal = v => localStorage.setItem(BAL_KEY, String(v));
-    const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
-    const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
+    <!-- 🔗 Lien retour -->
+    <div style="text-align: center;">
+      <a href="portefeuille.html" class="back-link">
+        <span>←</span>
+        <span>Retour au portefeuille</span>
+      </a>
+    </div>
 
-    document.getElementById('mmFund').addEventListener('submit',(e)=>{
-      e.preventDefault();
-      const operator = document.getElementById('operator').value;
-      const amount = parseFloat(document.getElementById('amount').value);
-      if(!operator) return alert('Veuillez sélectionner un opérateur.');
-      if(!(amount>0)) return alert('Montant invalide.');
+  </div>
 
-      // Sauvegarde temporaire pour simulation de traitement
-      sessionStorage.setItem('ks_pending', JSON.stringify({
-        type: `Alimentation (${operator})`,
-        amount: amount,
-        method: operator,
-        ts: Date.now()
-      }));
+</div>
 
-      // Redirection vers 3DS (simulation d’autorisation)
-      window.location.href = `3ds.html?return=${encodeURIComponent('mobile-fund.html')}`;
-    });
+<!-- Footer -->
+<footer>
+  <p>© 2025 KwikSend. Tous droits réservés.</p>
+</footer>
 
-    // Retour depuis 3DS
-    const params = new URLSearchParams(location.search);
-    if(params.get('3ds') === 'ok' && sessionStorage.getItem('ks_pending')){
-      const pending = JSON.parse(sessionStorage.getItem('ks_pending'));
-      const newBal = getBal() + Number(pending.amount);
-      setBal(newBal);
+<!-- 📜 Scripts -->
+<script>
+/* ========================================
+   🎮 CONFIGURATION & ÉTAT
+======================================== */
+const BAL_KEY = 'ks_balance';
+const HIST_KEY = 'ks_history';
+const CONVERSION_RATE = 650; // 1 EUR = 650 FCFA
 
-      const hist = getHist();
-      hist.unshift({
-        date: new Date().toLocaleString(),
-        type: pending.type,
-        amount: (Number(pending.amount)).toFixed(2),
-        method: pending.method,
-        status: 'Réussi'
-      });
-      setHist(hist);
+let selectedOperator = null;
+let currentCurrency = 'FCFA'; // Par défaut FCFA pour Mobile Money
 
-      sessionStorage.removeItem('ks_pending');
-      document.getElementById('msg').textContent = '✅ Paiement validé (simulation 3DS). Redirection...';
-      setTimeout(()=> window.location.href = 'portefeuille.html?ok=1', 1200);
+const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
+const setBal = v => localStorage.setItem(BAL_KEY, String(v));
+const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
+
+/* ========================================
+   💱 CHANGEMENT DE DEVISE
+======================================== */
+function switchCurrency(currency, element) {
+  currentCurrency = currency;
+  
+  // Mise à jour visuelle des boutons
+  document.querySelectorAll('.currency-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  element.classList.add('active');
+  
+  // Mise à jour du symbole
+  const currencySymbol = document.getElementById('currencySymbol');
+  currencySymbol.textContent = currency;
+  
+  // Mise à jour du placeholder
+  const amountInput = document.getElementById('amount');
+  if (currency === 'FCFA') {
+    amountInput.placeholder = 'Exemple: 32 500';
+    amountInput.step = '1';
+  } else {
+    amountInput.placeholder = 'Exemple: 50.00';
+    amountInput.step = '0.01';
+  }
+  
+  // Mise à jour de l'équivalence
+  updateEquivalence();
+}
+
+/* ========================================
+   🔄 CALCUL ÉQUIVALENCE
+======================================== */
+function updateEquivalence() {
+  const amount = parseFloat(document.getElementById('amount').value) || 0;
+  const equivalenceEl = document.getElementById('equivalenceValue');
+  
+  if (currentCurrency === 'FCFA') {
+    // FCFA → EUR
+    const eur = amount / CONVERSION_RATE;
+    equivalenceEl.textContent = `${eur.toFixed(2)} EUR`;
+  } else {
+    // EUR → FCFA
+    const fcfa = amount * CONVERSION_RATE;
+    equivalenceEl.textContent = `${fcfa.toLocaleString('fr-FR')} FCFA`;
+  }
+}
+
+// Listener sur le champ montant
+document.getElementById('amount').addEventListener('input', updateEquivalence);
+
+/* ========================================
+   📱 SÉLECTION OPÉRATEUR
+======================================== */
+function selectOperator(operator, element) {
+  selectedOperator = operator;
+  
+  // Mise à jour visuelle
+  document.querySelectorAll('.operator-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  element.classList.add('selected');
+}
+
+/* ========================================
+   ✅ TRAITEMENT FORMULAIRE
+======================================== */
+document.getElementById('mmFund').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const amount = parseFloat(document.getElementById('amount').value);
+  const submitBtn = document.getElementById('submitBtn');
+  
+  // Validations
+  if (!selectedOperator) {
+    return alert('⚠️ Veuillez sélectionner un opérateur Mobile Money');
+  }
+  
+  if (!amount || amount <= 0) {
+    return alert('⚠️ Montant invalide. Veuillez entrer un montant valide.');
+  }
+  
+  // Conversion en EUR si nécessaire (pour le portefeuille)
+  let amountEUR = amount;
+  if (currentCurrency === 'FCFA') {
+    amountEUR = amount / CONVERSION_RATE;
+  }
+  
+  // Animation bouton
+  const originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = 'Traitement en cours<span class="loading"></span>';
+  submitBtn.disabled = true;
+  
+  // Sauvegarde temporaire pour simulation
+  sessionStorage.setItem('ks_pending', JSON.stringify({
+    type: `Alimentation (${selectedOperator})`,
+    amount: amountEUR, // Toujours en EUR pour le portefeuille
+    originalAmount: amount,
+    currency: currentCurrency,
+    method: selectedOperator,
+    ts: Date.now()
+  }));
+  
+  // Redirection vers 3DS après un court délai
+  setTimeout(() => {
+    window.location.href = `3ds.html?return=${encodeURIComponent('mobile-fund.html')}`;
+  }, 800);
+});
+
+/* ========================================
+   🔄 RETOUR DEPUIS 3DS
+======================================== */
+const params = new URLSearchParams(location.search);
+if (params.get('3ds') === 'ok' && sessionStorage.getItem('ks_pending')) {
+  const pending = JSON.parse(sessionStorage.getItem('ks_pending'));
+  
+  // Mise à jour solde (toujours en EUR dans le portefeuille)
+  const newBal = getBal() + Number(pending.amount);
+  setBal(newBal);
+  
+  // Message d'historique avec devise originale
+  let historyMessage = pending.type;
+  if (pending.currency === 'FCFA') {
+    historyMessage += ` - ${pending.originalAmount.toLocaleString('fr-FR')} FCFA`;
+  }
+  
+  // Ajout à l'historique
+  const hist = getHist();
+  hist.unshift({
+    date: new Date().toLocaleString(),
+    type: historyMessage,
+    amount: (Number(pending.amount)).toFixed(2),
+    method: pending.method,
+    status: 'Réussi'
+  });
+  setHist(hist);
+  
+  // Nettoyage
+  sessionStorage.removeItem('ks_pending');
+  
+  // Affichage message succès avec détails
+  const msgEl = document.getElementById('msg');
+  let successMessage = '✅ Paiement validé (3DS). ';
+  if (pending.currency === 'FCFA') {
+    successMessage += `${pending.originalAmount.toLocaleString('fr-FR')} FCFA (${Number(pending.amount).toFixed(2)} EUR) `;
+  } else {
+    successMessage += `${Number(pending.amount).toFixed(2)} EUR `;
+  }
+  successMessage += 'crédité sur votre portefeuille. Redirection...';
+  
+  msgEl.textContent = successMessage;
+  msgEl.classList.add('show');
+  
+  // Redirection
+  setTimeout(() => {
+    window.location.href = 'portefeuille.html?ok=1';
+  }, 2000);
+}
+
+/* ========================================
+   🚪 DÉCONNEXION
+======================================== */
+function logout() {
+  localStorage.removeItem("kwiksend_user");
+  window.location.href = "index.html";
+}
+
+/* ========================================
+   🍔 TOGGLE MENU
+======================================== */
+function toggleMenu() {
+  document.getElementById("nav-menu").classList.toggle("active");
+}
+
+/* ========================================
+   📱 RESPONSIVE - NAV MOBILE
+======================================== */
+const burger = document.querySelector('.burger');
+if (burger) {
+  burger.addEventListener('click', () => {
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+      navLinks.classList.toggle('active');
     }
-  })();
-  </script>
+  });
+}
+</script>
+
+<!-- Appel scripts globaux -->
+<script src="app.js"></script>
+
 </body>
 </html>

@@ -4,13 +4,454 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>KwikSend — Alimenter par carte</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    /* ========================================
+       🎨 ANIMATIONS
+    ======================================== */
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    /* ========================================
+       🧭 HEADER MODERNE
+    ======================================== */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #FF8A00;
+    }
+
+    .burger {
+      display: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #FF8A00;
+    }
+
+    /* ========================================
+       💳 CONTAINER PRINCIPAL
+    ======================================== */
+    .fund-container {
+      max-width: 680px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: slideDown 0.6s ease;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-subtitle {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    /* ========================================
+       💳 CARTE VIRTUELLE PREVIEW
+    ======================================== */
+    .card-preview {
+      background: linear-gradient(135deg, #FF8A00 0%, #00B87C 50%, #8B5CF6 100%);
+      padding: 2rem;
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 40px rgba(255, 138, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .card-preview::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+      animation: float 8s ease-in-out infinite reverse;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-logo {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .card-chip {
+      width: 45px;
+      height: 35px;
+      background: linear-gradient(135deg, #ffd700, #ffeb3b);
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-number {
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      color: white;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 1rem;
+    }
+
+    .card-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* ========================================
+       📋 FORMULAIRE MODERNE
+    ======================================== */
+    .fund-form {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(10, 15, 28, 0.08);
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      margin-bottom: 2rem;
+      animation: slideDown 0.6s ease 0.2s both;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #0A0F1C;
+      font-size: 0.9rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: white;
+      color: #0A0F1C;
+      font-family: inherit;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #FF8A00;
+      box-shadow: 0 0 0 4px rgba(255, 138, 0, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: #B0B3C2;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: #999;
+      pointer-events: none;
+    }
+
+    .form-group.has-icon .input-icon {
+      top: calc(50% + 0.75rem);
+    }
+
+    /* ========================================
+       💡 INFO BOX
+    ======================================== */
+    .info-box {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(255, 138, 0, 0.05));
+      border-left: 4px solid #8B5CF6;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #666;
+      animation: slideDown 0.6s ease 0.3s both;
+    }
+
+    .info-box strong {
+      color: #8B5CF6;
+    }
+
+    /* ========================================
+       🎯 BOUTON DE VALIDATION
+    ======================================== */
+    .submit-btn {
+      width: 100%;
+      padding: 1.2rem;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #00B87C, #00D48F);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 184, 124, 0.4);
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ========================================
+       ✅ MESSAGE DE SUCCÈS
+    ======================================== */
+    .success-message {
+      background: linear-gradient(135deg, rgba(0, 184, 124, 0.1), rgba(0, 212, 143, 0.1));
+      border: 2px solid #00B87C;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: 600;
+      color: #00B87C;
+      display: none;
+      animation: slideDown 0.4s ease;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    /* ========================================
+       🔗 LIENS
+    ======================================== */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #FF8A00;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
+      transition: all 0.3s;
+      background: rgba(255, 138, 0, 0.1);
+    }
+
+    .back-link:hover {
+      background: rgba(255, 138, 0, 0.2);
+      transform: translateX(-3px);
+    }
+
+    .link-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    /* ========================================
+       🔒 SÉCURITÉ BADGE
+    ======================================== */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding: 0.8rem;
+      background: rgba(0, 184, 124, 0.05);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: #00B87C;
+    }
+
+    .security-badge::before {
+      content: '🔒';
+      font-size: 1.2rem;
+    }
+
+    /* ========================================
+       📱 RESPONSIVE
+    ======================================== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 10px;
+        width: 200px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .burger {
+        display: block;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .fund-form {
+        padding: 1.5rem;
+      }
+
+      .card-preview {
+        padding: 1.5rem;
+      }
+    }
+
+    /* ========================================
+       🔄 LOADER
+    ======================================== */
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
+
   <!-- 🧭 Header -->
   <header>
     <div class="header-container">
-      <div class="logo">Kwik<span>Send</span></div>
+      <div class="logo">KwikSend</div>
       <nav>
         <ul class="nav-links" id="nav-menu">
           <li><a href="dashboard.html">Accueil</a></li>
@@ -26,74 +467,225 @@
     </div>
   </header>
 
-  <!-- 💳 Formulaire -->
-  <main style="max-width:680px;margin:40px auto;padding:20px;text-align:center;">
-    <h1>💳 Alimenter — Carte bancaire (simulation)</h1>
-    <p>Entrez des infos fictives et le montant pour simuler l’alimentation.</p>
+  <!-- 💳 Container Principal -->
+  <div class="fund-container">
+    
+    <!-- En-tête de page -->
+    <div class="page-header">
+      <h1 class="page-title">💳 Alimenter par carte bancaire</h1>
+      <p class="page-subtitle">Rechargez votre portefeuille KwikSend en toute sécurité</p>
+    </div>
 
-    <form id="fundForm" style="margin-top:18px;display:flex;flex-direction:column;gap:10px;">
-      <input id="cardNumber" type="text" placeholder="Numéro de carte (fake)" required />
-      <input id="cardExpiry" type="text" placeholder="MM/AA" required />
-      <input id="cardCvv" type="text" placeholder="CVV" required />
-      <input id="amount" type="number" placeholder="Montant (€)" min="0.1" step="0.01" required />
-      <button type="submit" class="btn btn-accent">Valider (simulation)</button>
-    </form>
+    <!-- Carte virtuelle preview -->
+    <div class="card-preview">
+      <div class="card-content">
+        <div class="card-logo">KwikSend</div>
+        <div class="card-chip"></div>
+        <div class="card-number">•••• •••• •••• ••••</div>
+        <div class="card-info">
+          <span>Carte de paiement</span>
+          <span>••/••</span>
+        </div>
+      </div>
+    </div>
 
-    <p id="msg" style="color:green;margin-top:12px"></p>
-    <p style="margin-top:18px"><a href="portefeuille.html">← Retour au portefeuille</a></p>
-  </main>
+    <!-- Info box -->
+    <div class="info-box">
+      <strong>💡 Mode simulation :</strong> Cette page simule un paiement par carte. 
+      Vous pouvez entrer des informations fictives pour tester le processus.
+    </div>
+
+    <!-- Formulaire -->
+    <div class="fund-form">
+      <form id="fundForm">
+        
+        <!-- Numéro de carte -->
+        <div class="form-group has-icon">
+          <label class="form-label">Numéro de carte</label>
+          <span class="input-icon">💳</span>
+          <input 
+            id="cardNumber" 
+            type="text" 
+            class="form-input" 
+            placeholder="1234 5678 9012 3456" 
+            maxlength="19"
+            required 
+          />
+        </div>
+
+        <!-- Date d'expiration et CVV -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group has-icon">
+            <label class="form-label">Date d'expiration</label>
+            <span class="input-icon">📅</span>
+            <input 
+              id="cardExpiry" 
+              type="text" 
+              class="form-input" 
+              placeholder="MM/AA" 
+              maxlength="5"
+              required 
+            />
+          </div>
+
+          <div class="form-group has-icon">
+            <label class="form-label">CVV</label>
+            <span class="input-icon">🔒</span>
+            <input 
+              id="cardCvv" 
+              type="text" 
+              class="form-input" 
+              placeholder="123" 
+              maxlength="4"
+              required 
+            />
+          </div>
+        </div>
+
+        <!-- Montant -->
+        <div class="form-group has-icon">
+          <label class="form-label">Montant à ajouter (€)</label>
+          <span class="input-icon">💰</span>
+          <input 
+            id="amount" 
+            type="number" 
+            class="form-input" 
+            placeholder="Ex: 50.00" 
+            min="0.1" 
+            step="0.01" 
+            required 
+          />
+        </div>
+
+        <!-- Badge sécurité -->
+        <div class="security-badge">
+          Paiement sécurisé avec validation 3D Secure
+        </div>
+
+        <!-- Bouton de validation -->
+        <button type="submit" class="submit-btn" id="submitBtn">
+          ✨ Valider le paiement
+        </button>
+
+      </form>
+
+      <!-- Message de succès -->
+      <div id="successMsg" class="success-message">
+        ✅ Paiement validé ! Redirection en cours...
+      </div>
+    </div>
+
+    <!-- Lien retour -->
+    <div class="link-container">
+      <a href="portefeuille.html" class="back-link">
+        ← Retour au portefeuille
+      </a>
+    </div>
+
+  </div>
 
   <!-- 📜 Script principal -->
   <script>
   (() => {
-    const BAL_KEY='ks_balance', HIST_KEY='ks_history';
+    const BAL_KEY = 'ks_balance';
+    const HIST_KEY = 'ks_history';
 
     const getBal = () => parseFloat(localStorage.getItem(BAL_KEY) || '0');
     const setBal = v => localStorage.setItem(BAL_KEY, String(v));
     const getHist = () => JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
     const setHist = a => localStorage.setItem(HIST_KEY, JSON.stringify(a));
 
-    // ✅ Vérification Luhn basique (simu)
-    function luhnCheck(num){
-      const s = String(num).replace(/\D/g,'').split('').reverse().map(Number);
+    // ✅ Vérification Luhn basique (simulation)
+    function luhnCheck(num) {
+      const s = String(num).replace(/\D/g, '').split('').reverse().map(Number);
       let sum = 0;
-      for (let i=0;i<s.length;i++){
+      for (let i = 0; i < s.length; i++) {
         let v = s[i];
-        if(i % 2 === 1){ v *= 2; if(v>9) v -= 9; }
+        if (i % 2 === 1) {
+          v *= 2;
+          if (v > 9) v -= 9;
+        }
         sum += v;
       }
       return sum % 10 === 0;
     }
 
+    // 🔄 Auto-format du numéro de carte
+    const cardNumberInput = document.getElementById('cardNumber');
+    cardNumberInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\s/g, '');
+      let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+      e.target.value = formatted;
+      
+      // Mise à jour de la preview
+      document.querySelector('.card-number').textContent = 
+        formatted.padEnd(19, '•').replace(/\d(?=\d{4})/g, '•');
+    });
+
+    // 🔄 Auto-format de la date d'expiration
+    const expiryInput = document.getElementById('cardExpiry');
+    expiryInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '');
+      if (val.length >= 2) {
+        val = val.slice(0, 2) + '/' + val.slice(2, 4);
+      }
+      e.target.value = val;
+    });
+
+    // 📝 Soumission du formulaire
     const form = document.getElementById('fundForm');
-    form.addEventListener('submit',(e)=>{
+    const submitBtn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('successMsg');
+
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
+      
       const amount = parseFloat(document.getElementById('amount').value);
-      const card = document.getElementById('cardNumber').value.trim();
+      const card = document.getElementById('cardNumber').value.trim().replace(/\s/g, '');
       const exp = document.getElementById('cardExpiry').value.trim();
       const cvv = document.getElementById('cardCvv').value.trim();
 
-      if(!(amount>0)) return alert('Montant invalide');
-      if(card.length < 12 || !luhnCheck(card)) {
-        if(!confirm("Numéro de carte invalide (simulation). Continuer quand même ?")) return;
+      // Validations
+      if (!(amount > 0)) {
+        return alert('⚠️ Montant invalide');
       }
 
-      // 💾 Enregistre une transaction temporaire et redirige vers la page 3DS
+      if (card.length < 13 || !luhnCheck(card)) {
+        if (!confirm("Numéro de carte invalide (simulation). Continuer quand même ?")) {
+          return;
+        }
+      }
+
+      if (cvv.length < 3) {
+        return alert('⚠️ CVV invalide');
+      }
+
+      // Animation du bouton
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = 'Traitement en cours<span class="loader"></span>';
+      submitBtn.disabled = true;
+
+      // 💾 Enregistre une transaction temporaire et redirige vers 3DS
       sessionStorage.setItem('ks_pending', JSON.stringify({
         type: 'Alimentation (Carte)',
         amount: amount,
         method: 'Carte',
         ts: Date.now()
       }));
-      window.location.href = `3ds.html?return=${encodeURIComponent('card-fund.html')}`;
+
+      // Simulation d'un délai de traitement
+      setTimeout(() => {
+        window.location.href = `3ds.html?return=${encodeURIComponent('card-fund.html')}`;
+      }, 1000);
     });
 
     // 🔄 Retour de la page 3DS
     const params = new URLSearchParams(location.search);
-    if(params.get('3ds') === 'ok' && sessionStorage.getItem('ks_pending')){
+    if (params.get('3ds') === 'ok' && sessionStorage.getItem('ks_pending')) {
       const pending = JSON.parse(sessionStorage.getItem('ks_pending'));
       const newBal = getBal() + Number(pending.amount);
       setBal(newBal);
+      
       const hist = getHist();
       hist.unshift({
         date: new Date().toLocaleString(),
@@ -103,14 +695,33 @@
         status: 'Réussi'
       });
       setHist(hist);
+      
       sessionStorage.removeItem('ks_pending');
-      document.getElementById('msg').textContent = '✅ Paiement validé (3DS). Redirection...';
-      setTimeout(()=> window.location.href = 'portefeuille.html?ok=1', 1000);
+      
+      // Affichage du message de succès
+      successMsg.classList.add('show');
+      
+      // Redirection après 1.5 secondes
+      setTimeout(() => {
+        window.location.href = 'portefeuille.html?ok=1';
+      }, 1500);
     }
+
+    // 🚪 Fonction de déconnexion
+    window.logout = function() {
+      localStorage.removeItem("kwiksend_user");
+      window.location.href = "index.html";
+    };
+
+    // 🍔 Toggle menu burger
+    window.toggleMenu = function() {
+      document.getElementById("nav-menu").classList.toggle("open");
+    };
   })();
   </script>
 
   <!-- 🔗 Script global -->
   <script src="app.js"></script>
+
 </body>
 </html>
