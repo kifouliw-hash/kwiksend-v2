@@ -1,1 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KwikSend — Paiement Mobile Money</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%);
+      color: #333;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    main {
+      max-width: 680px;
+      margin: 60px auto;
+      padding: 20px;
+      text-align: center;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+    select, input, button {
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+    button {
+      background: linear-gradient(135deg, #FF8A00, #FFA500);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      border: none;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #FFA500, #FFB84D);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 138, 0, 0.3);
+    }
+    .transfer-info {
+      background: rgba(255, 138, 0, 0.1);
+      border-left: 4px solid #FF8A00;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .transfer-info p {
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Kwik<span>Send</span></div>
+  </header>
 
+  <main>
+    <h1>📱 Paiement par Mobile Money</h1>
+    <p>Choisissez votre opérateur et entrez votre numéro pour finaliser le transfert.</p>
+
+    <!-- Infos du transfert -->
+    <div class="transfer-info" id="transferInfo"></div>
+
+    <form id="mobileForm">
+      <label style="text-align:left; display:block; margin-bottom:0.5rem; font-weight:600;">Opérateur de paiement</label>
+      <select id="paymentOperator" required>
+        <option value="">— Sélectionnez un opérateur —</option>
+        <option value="Orange Money">🟠 Orange Money</option>
+        <option value="Wave">🔵 Wave</option>
+        <option value="MTN Money">🟡 MTN Mobile Money</option>
+        <option value="Moov Money">🟢 Moov Money</option>
+      </select>
+      
+      <label style="text-align:left; display:block; margin-bottom:0.5rem; font-weight:600;">Votre numéro Mobile Money</label>
+      <input id="phoneNumber" type="text" placeholder="+225 XX XX XX XX XX" required />
+      
+      <button type="submit">✅ Valider le paiement</button>
+    </form>
+
+    <p style="margin-top:18px"><a href="transfert.html">← Retour aux transferts</a></p>
+  </main>
+
+  <script>
+  (() => {
+    const HIST_KEY = 'ks_history';
+    
+    // Récupération des données du transfert
+    const transferData = JSON.parse(sessionStorage.getItem('ks_transfer_pending') || '{}');
+    
+    // Affichage des infos
+    const infoDiv = document.getElementById('transferInfo');
+    if (transferData.amount) {
+      infoDiv.innerHTML = `
+        <p><strong>📍 Destination :</strong> ${transferData.destination === 'africa' ? 'Afrique (Mobile Money)' : 'Europe (IBAN)'}</p>
+        <p><strong>👤 Destinataire :</strong> ${transferData.receiver || '-'}</p>
+        ${transferData.operator ? `<p><strong>📱 Opérateur destinataire :</strong> ${transferData.operator}</p>` : ''}
+        <p><strong>💰 Montant :</strong> ${transferData.amount} EUR</p>
+        <p><strong>💳 Frais :</strong> ${transferData.fees} EUR</p>
+        <p><strong>✅ Montant reçu :</strong> ${transferData.received} EUR</p>
+      `;
+    } else {
+      infoDiv.innerHTML = '<p style="color: #999;">Aucune information de transfert trouvée.</p>';
+    }
+    
+    // Soumission du formulaire
+    const form = document.getElementById('mobileForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const operator = document.getElementById('paymentOperator').value;
+      const phone = document.getElementById('phoneNumber').value.trim();
+      
+      if (!operator) {
+        return alert('⚠️ Veuillez sélectionner un opérateur.');
+      }
+      
+      if (!phone) {
+        return alert('⚠️ Veuillez entrer votre numéro Mobile Money.');
+      }
+      
+      // Sauvegarde temporaire pour 3DS
+      sessionStorage.setItem('ks_mobile_transfer_pending', JSON.stringify({
+        ...transferData,
+        paymentOperator: operator,
+        paymentPhone: phone
+      }));
+      
+      // Redirection vers 3DS
+      window.location.href = `3ds.html?return=${encodeURIComponent('mobile-transfer.html')}`;
+    });
+    
+    // Retour de 3DS
+    const params = new URLSearchParams(location.search);
+    if (params.get('3ds') === 'ok' && sessionStorage.getItem('ks_mobile_transfer_pending')) {
+      const data = JSON.parse(sessionStorage.getItem('ks_mobile_transfer_pending'));
+      
+      // Enregistrement dans l'historique SANS modifier le solde
+      let history = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+      history.unshift({
+        date: new Date().toLocaleString(),
+        type: data.type || 'Transfert par Mobile Money',
+        amount: `-${data.amount}`,
+        method: data.paymentOperator || 'Mobile Money',
+        to: data.receiver,
+        motif: data.operator || 'Transfert direct',
+        status: 'Réussi'
+      });
+      localStorage.setItem(HIST_KEY, JSON.stringify(history));
+      
+      // Nettoyage
+      sessionStorage.removeItem('ks_mobile_transfer_pending');
+      sessionStorage.removeItem('ks_transfer_pending');
+      
+      alert(`✅ Paiement par ${data.paymentOperator} validé !\n\nTransfert de ${data.amount} EUR effectué avec succès.`);
+      window.location.href = 'portefeuille.html?ok=1';
+    }
+  })();
+  </script>
+</body>
+</html>
