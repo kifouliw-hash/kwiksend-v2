@@ -3,262 +3,752 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transfert KwikSend</title>
-  <link rel="stylesheet" href="style.css">
+  <title>KwikSend - Transfert Afrique ↔ Europe</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
   <style>
-    /* Variables CSS à intégrer dans transfert.html ou dans le fichier style.css */
-    :root {
-      --orange: #ff7a00;
-      --yellow: #ffcc00;
-      --green-cta: #0a8f2f;
-      --text-dark: #1a1a1a;
-      --text-light: #ffffff;
-      --bg-light: #fdf8f3;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
     }
 
-    /* Styles de la page */
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
     body {
-      background: var(--bg-light);
-      color: var(--text-dark);
-      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
     }
 
-    .cta {
-      background: var(--green-cta);
-      color: var(--text-light);
-      font-weight: 600;
-      padding: 0.8rem 1.5rem;
-      border-radius: 15px;
-      transition: background-color 0.3s ease;
-    }
-
-    .cta:hover {
-      background-color: darken(var(--green-cta), 10%);
-    }
-
-    .header {
-      background: linear-gradient(90deg, var(--orange), var(--yellow));
-      color: var(--text-light);
+    /* 🧭 Header moderne */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
       padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
     }
 
-    .hero {
-      background: linear-gradient(90deg, var(--orange), var(--yellow));
-      color: var(--text-light);
-      padding: 4rem 2rem;
-      text-align: center;
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .footer {
-      background: var(--text-dark);
-      color: var(--text-light);
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    /* 💼 Container principal */
+    .transfer-container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .transfer-title {
       text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 2rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 🔄 Toggle Direction - Design moderne */
+    .direction-toggle {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+
+    .toggle-btn {
+      padding: 1rem 2.5rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: #0A0F1C;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toggle-btn:hover {
+      border-color: #FF8A00;
+      background: rgba(255, 138, 0, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .toggle-btn.active {
+      background: linear-gradient(135deg, #FF8A00, #00B87C);
+      color: white;
+      border-color: #FF8A00;
+      box-shadow: 0 8px 25px rgba(255, 138, 0, 0.3);
+    }
+
+    /* 📋 Formulaire - Design moderne */
+    .transfer-form {
+      background: white;
       padding: 2rem;
-    }
-
-    /* Formulaire */
-    .form {
-      margin: 2rem auto;
-      max-width: 600px;
-    }
-
-    input, select, button {
-      padding: 10px;
-      border: 1px solid var(--yellow);
-      border-radius: 10px;
-      margin-bottom: 1rem;
-    }
-
-    button {
-      background-color: var(--green-cta);
-      color: var(--text-light);
-    }
-
-    /* Boutons */
-    .btn {
-      background: var(--green-cta);
-      color: var(--text-light);
-      font-weight: 600;
-      padding: 0.8rem 1.5rem;
-      border-radius: 15px;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn:hover {
-      background-color: darken(var(--green-cta), 10%);
-    }
-
-    /* Section d'envoi et de réception */
-    .send, .receive {
-      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(10, 15, 28, 0.08);
+      border: 1px solid rgba(255, 138, 0, 0.1);
       margin-bottom: 2rem;
     }
 
-    .section-title {
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #0A0F1C;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: white;
+      color: #0A0F1C;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #FF8A00;
+      box-shadow: 0 0 0 4px rgba(255, 138, 0, 0.1);
+    }
+
+    .input-with-currency {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .input-with-currency input {
+      flex: 1;
+    }
+
+    .input-with-currency select {
+      width: 120px;
+    }
+
+    /* 📱 Grille opérateurs - Design moderne */
+    .operator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .operator-btn {
+      padding: 1.2rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 16px;
+      cursor: pointer;
       text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .operator-btn:hover {
+      border-color: #FF8A00;
+      background: rgba(255, 138, 0, 0.05);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.15);
+    }
+
+    .operator-btn.selected {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.15), rgba(0, 184, 124, 0.15));
+      border: 2px solid #FF8A00;
+      box-shadow: 0 8px 25px rgba(255, 138, 0, 0.25);
+    }
+
+    .operator-icon {
       font-size: 2rem;
-      margin-bottom: 1rem;
+    }
+
+    /* 💳 Méthodes de paiement */
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .payment-btn {
+      padding: 1.2rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: #0A0F1C;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .payment-btn:hover {
+      border-color: #FF8A00;
+      background: rgba(255, 138, 0, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .payment-btn.selected {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.15), rgba(0, 184, 124, 0.15));
+      border: 2px solid #FF8A00;
+      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.2);
+    }
+
+    /* 📊 Simulation Box - Design moderne */
+    .simulation-box {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.08), rgba(0, 184, 124, 0.08));
+      border: 2px solid rgba(255, 138, 0, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .simulation-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+    }
+
+    .simulation-row:last-child {
+      border-bottom: none;
+      padding-top: 1.5rem;
+    }
+
+    .simulation-label {
+      color: #666;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .simulation-value {
+      font-weight: 700;
+      color: #0A0F1C;
+      font-size: 1.2rem;
+    }
+
+    .simulation-value.highlight {
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.8rem;
+    }
+
+    /* 🎯 Bouton principal */
+    .submit-btn {
+      width: 100%;
+      padding: 1.2rem;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #00B87C, #00D48F);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 184, 124, 0.4);
+    }
+
+    .submit-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 🎨 Section cachée */
+    .hidden {
+      display: none;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .transfer-title {
+        font-size: 1.5rem;
+      }
+
+      .direction-toggle {
+        flex-direction: column;
+      }
+
+      .toggle-btn {
+        width: 100%;
+      }
+
+      .operator-grid,
+      .payment-methods {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Footer */
+    footer {
+      background: #0A0F1C;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
     }
   </style>
 </head>
 <body>
 
-<!-- 🔛 Header -->
-<header class="header">
+<!-- 🧭 Header -->
+<header>
   <div class="header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+    <div class="logo" onclick="window.location.href='dashboard.html'">KwikSend</div>
     <nav>
       <ul class="nav-links">
         <li><a href="dashboard.html">Accueil</a></li>
         <li><a href="portefeuille.html">Portefeuille</a></li>
-        <li><a href="transfert.html" class="cta">Transfert</a></li>
-        <li><a href="kwiksend-transfer.html">KwikSend Transfer</a></li>
+        <li><a href="transfert.html" class="active">Transfert</a></li>
+        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
         <li><a href="releves.html">Relevés</a></li>
         <li><a href="profile.html">Compte</a></li>
         <li><a href="#" onclick="logout()">Déconnexion</a></li>
       </ul>
     </nav>
-    <div class="header-actions">
-      <select id="langSwitcher" onchange="switchLang(this.value)">
-        <option value="fr">FR</option>
-        <option value="en">EN</option>
-      </select>
-    </div>
   </div>
 </header>
 
-<!-- 🌟 Section Transfert -->
-<section class="hero">
-  <h1>🌍 Transfert Afrique ↔ Europe</h1>
-  <p>Choisissez votre destination et votre moyen de paiement.</p>
+<!-- 💼 Container principal -->
+<section class="transfer-container">
+  <h1 class="transfer-title">🌍 Transfert Afrique ↔ Europe</h1>
 
   <!-- 🔄 Toggle Direction -->
   <div class="direction-toggle">
-    <button class="toggle-btn active" data-direction="send" onclick="switchDirection('send')" type="button">💸 Envoyer</button>
-    <button class="toggle-btn" data-direction="receive" onclick="switchDirection('receive')" type="button">📥 Recevoir</button>
+    <button class="toggle-btn active" data-direction="send" onclick="switchDirection('send')">
+      💸 Envoyer
+    </button>
+    <button class="toggle-btn" data-direction="receive" onclick="switchDirection('receive')">
+      📥 Recevoir
+    </button>
   </div>
 
-  <!-- 📤 Formulaire Envoyer -->
-  <form id="formSend" class="form send" style="display: block;">
-    <div class="section-title">Envoi en cours...</div>
-    <label for="destinationSend">🌐 Destination :</label>
-    <select id="destinationSend" onchange="updateOperators()">
-      <option value="africa">🌍 Afrique (Mobile Money)</option>
-      <option value="europe">🇪🇺 Europe (IBAN)</option>
-    </select>
-
-    <label id="receiverLabel">📞 Numéro ou IBAN :</label>
-    <input type="text" id="receiverSend" placeholder="Entrez votre numéro ou IBAN" required>
-
-    <label>💰 Montant :</label>
-    <div style="display: flex;">
-      <input type="number" id="amountSend" placeholder="100" required style="flex: 1;">
-      <select id="currencySend" onchange="updateSimulation()">
-        <option value="EUR">EUR</option>
-        <option value="FCFA">FCFA</option>
+  <!-- 📤 FORMULAIRE ENVOI -->
+  <div id="sendForm" class="transfer-form">
+    <!-- Destination -->
+    <div class="form-group">
+      <label>🌐 Destination</label>
+      <select id="destinationSend" onchange="updateDestinationFields()">
+        <option value="">-- Choisissez une destination --</option>
+        <option value="africa">🌍 Afrique (Mobile Money)</option>
+        <option value="europe">🇪🇺 Europe (IBAN)</option>
       </select>
     </div>
 
-    <!-- 🔹 Moyens de paiement -->
-    <h3>💳 Moyen de paiement</h3>
-    <div id="paymentOptions">
-      <button type="button" onclick="selectPaymentMethod('wallet')">💳 Portefeuille</button>
-      <button type="button" onclick="selectPaymentMethod('card')">💳 Carte Bancaire</button>
-      <button type="button" onclick="selectPaymentMethod('mobile')">📲 Mobile Money</button>
+    <!-- Champs dynamiques selon destination -->
+    <div id="operatorSection" class="form-group hidden">
+      <label>📱 Opérateur Mobile Money</label>
+      <div class="operator-grid">
+        <div class="operator-btn" onclick="selectOperator('Orange Money', this)">
+          <span class="operator-icon">🟠</span>
+          <span>Orange Money</span>
+        </div>
+        <div class="operator-btn" onclick="selectOperator('MTN Money', this)">
+          <span class="operator-icon">🟡</span>
+          <span>MTN Money</span>
+        </div>
+        <div class="operator-btn" onclick="selectOperator('Wave', this)">
+          <span class="operator-icon">🔵</span>
+          <span>Wave</span>
+        </div>
+        <div class="operator-btn" onclick="selectOperator('Moov Money', this)">
+          <span class="operator-icon">🟢</span>
+          <span>Moov Money</span>
+        </div>
+      </div>
     </div>
 
-    <button type="submit" class="btn">✨ Envoyer maintenant</button>
-  </form>
+    <!-- Numéro / IBAN -->
+    <div id="receiverSection" class="form-group hidden">
+      <label id="receiverLabel">📞 Numéro du destinataire</label>
+      <input type="text" id="receiverInput" placeholder="Exemple: +225 07 XX XX XX XX">
+    </div>
 
-  <!-- 📥 Formulaire Recevoir -->
-  <form id="formReceive" class="form receive" style="display: none;">
-    <div class="section-title">Réception</div>
-    <label for="amountReceive">💰 Montant attendu :</label>
-    <input type="number" id="amountReceive" placeholder="Montant" required>
-    <button type="submit" class="btn">✅ Confirmer réception</button>
-  </form>
+    <!-- Montant -->
+    <div class="form-group">
+      <label>💰 Montant</label>
+      <div class="input-with-currency">
+        <input type="number" id="amountInput" placeholder="Exemple: 100" min="1" step="0.01">
+        <select id="currencySelect" onchange="updateSimulation()">
+          <option value="EUR">EUR (€)</option>
+          <option value="FCFA">FCFA</option>
+        </select>
+      </div>
+    </div>
 
-  <!-- Simulation des frais -->
-  <div class="simulation-box" id="simulationBox">
-    <div class="simulation-row">Montant : <span id="simAmount">0.00 EUR</span></div>
-    <div class="simulation-row">Frais : <span id="simFees">-1.50 EUR</span></div>
-    <div class="simulation-row">Montant reçu : <span class="highlight" id="simReceived">98.50 EUR</span></div>
+    <!-- Moyen de paiement -->
+    <div class="form-group">
+      <label>💳 Moyen de paiement</label>
+      <div class="payment-methods">
+        <button type="button" class="payment-btn" onclick="selectPayment('wallet', this)">
+          💼 Portefeuille
+        </button>
+        <button type="button" class="payment-btn" onclick="selectPayment('card', this)">
+          💳 Carte
+        </button>
+        <button type="button" class="payment-btn" onclick="selectPayment('mobile', this)">
+          📱 Mobile Money
+        </button>
+      </div>
+    </div>
+
+    <!-- Simulation -->
+    <div class="simulation-box">
+      <div class="simulation-row">
+        <span class="simulation-label">Montant envoyé</span>
+        <span class="simulation-value" id="simAmount">0.00 EUR</span>
+      </div>
+      <div class="simulation-row">
+        <span class="simulation-label">Frais de transfert</span>
+        <span class="simulation-value" id="simFees">1.50 EUR</span>
+      </div>
+      <div class="simulation-row">
+        <span class="simulation-label">Montant reçu</span>
+        <span class="simulation-value highlight" id="simReceived">0.00 EUR</span>
+      </div>
+    </div>
+
+    <!-- Bouton validation -->
+    <button class="submit-btn" onclick="processSend()">
+      ✨ Envoyer maintenant
+    </button>
   </div>
 
+  <!-- 📥 FORMULAIRE RECEPTION (simplifié) -->
+  <div id="receiveForm" class="transfer-form hidden">
+    <div class="form-group">
+      <label>💰 Montant à recevoir</label>
+      <div class="input-with-currency">
+        <input type="number" id="receiveAmount" placeholder="Exemple: 50" min="1">
+        <select>
+          <option value="EUR">EUR (€)</option>
+          <option value="FCFA">FCFA</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="processReceive()">
+      ✅ Générer le lien de paiement
+    </button>
+  </div>
 </section>
 
 <!-- Footer -->
-<footer class="footer">
+<footer>
   <p>© 2025 KwikSend. Tous droits réservés.</p>
 </footer>
 
-<!-- Scripts -->
+<!-- 📜 Scripts -->
 <script>
-// 🎮 Configuration des opérateurs et frais
-const OPERATORS = {
-    africa: [
-        { name: 'Orange Money', code: 'OM', emoji: '🟠' },
-        { name: 'MTN Money', code: 'MTN', emoji: '🟡' },
-        { name: 'Wave', code: 'WAVE', emoji: '🔵' },
-        { name: 'Moov Money', code: 'MOOV', emoji: '🟢' }
-    ]
-};
-
-const FEES = {
-    fixed: 1.50,
-    percent: 0.009
-};
-
+// ========================================
+// 🎮 CONFIGURATION & ÉTAT
+// ========================================
+const FEES = { fixed: 1.50, percent: 0.009 };
 const CONVERSION_RATE = 650; // 1 EUR = 650 FCFA
 
-// État global
 let currentDirection = 'send';
-let selectedPaymentMethod = null;
+let selectedOperator = null;
+let selectedPayment = null;
 
-// 🔄 TOGGLE DIRECTION
+// ========================================
+// 🔄 TOGGLE DIRECTION (Envoyer / Recevoir)
+// ========================================
 function switchDirection(direction) {
-    currentDirection = direction;
-    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`[data-direction="${direction}"]`).classList.add('active');
-
-    if (direction === 'send') {
-        document.getElementById('formSend').style.display = 'block';
-        document.getElementById('formReceive').style.display = 'none';
-    } else {
-        document.getElementById('formSend').style.display = 'none';
-        document.getElementById('formReceive').style.display = 'block';
-    }
+  currentDirection = direction;
+  
+  // Update boutons
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.direction === direction);
+  });
+  
+  // Toggle forms
+  document.getElementById('sendForm').classList.toggle('hidden', direction !== 'send');
+  document.getElementById('receiveForm').classList.toggle('hidden', direction !== 'receive');
 }
 
-// 💳 Moyen de paiement
-function selectPaymentMethod(method) {
-    selectedPaymentMethod = method;
-    document.querySelectorAll('#paymentOptions button').forEach(btn => {
-        btn.classList.toggle('selected', btn.onclick.toString().includes(method));
-    });
+// ========================================
+// 🌍 GESTION DESTINATION
+// ========================================
+function updateDestinationFields() {
+  const destination = document.getElementById('destinationSend').value;
+  const operatorSection = document.getElementById('operatorSection');
+  const receiverSection = document.getElementById('receiverSection');
+  const receiverLabel = document.getElementById('receiverLabel');
+  const receiverInput = document.getElementById('receiverInput');
+  
+  if (destination === 'africa') {
+    operatorSection.classList.remove('hidden');
+    receiverSection.classList.remove('hidden');
+    receiverLabel.textContent = '📞 Numéro Mobile Money';
+    receiverInput.placeholder = 'Exemple: +225 07 XX XX XX XX';
+  } else if (destination === 'europe') {
+    operatorSection.classList.add('hidden');
+    receiverSection.classList.remove('hidden');
+    receiverLabel.textContent = '🏦 IBAN du destinataire';
+    receiverInput.placeholder = 'Exemple: FR76 XXXX XXXX XXXX XXXX XXXX XXX';
+    selectedOperator = null; // Reset operator
+  } else {
+    operatorSection.classList.add('hidden');
+    receiverSection.classList.add('hidden');
+  }
+  
+  updateSimulation();
 }
 
-// Simulation Envoi
+// ========================================
+// 📱 SÉLECTION OPÉRATEUR
+// ========================================
+function selectOperator(operator, element) {
+  selectedOperator = operator;
+  
+  // Update UI
+  document.querySelectorAll('.operator-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  element.classList.add('selected');
+}
+
+// ========================================
+// 💳 SÉLECTION MÉTHODE PAIEMENT
+// ========================================
+function selectPayment(method, element) {
+  selectedPayment = method;
+  
+  // Update UI
+  document.querySelectorAll('.payment-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  element.classList.add('selected');
+}
+
+// ========================================
+// 📊 SIMULATION FRAIS
+// ========================================
 function updateSimulation() {
-    let amountEUR = document.getElementById('amountSend').value || 0;
-    if (document.getElementById('currencySend').value === 'FCFA') {
-        amountEUR = amountEUR / CONVERSION_RATE;
-    }
-
-    const fees = FEES.fixed + (amountEUR * FEES.percent);
-    const received = amountEUR - fees;
-
-    document.getElementById('simAmount').textContent = parseFloat(amountEUR).toFixed(2) + ' EUR';
-    document.getElementById('simFees').textContent = '-' + fees.toFixed(2) + ' EUR';
-    document.getElementById('simReceived').textContent = received.toFixed(2) + ' EUR';
+  const amountInput = document.getElementById('amountInput');
+  const currency = document.getElementById('currencySelect').value;
+  
+  let amountEUR = parseFloat(amountInput.value) || 0;
+  
+  // Conversion si FCFA
+  if (currency === 'FCFA') {
+    amountEUR = amountEUR / CONVERSION_RATE;
+  }
+  
+  // Calcul frais
+  const fees = FEES.fixed + (amountEUR * FEES.percent);
+  const received = Math.max(0, amountEUR - fees);
+  
+  // Affichage
+  document.getElementById('simAmount').textContent = amountEUR.toFixed(2) + ' EUR';
+  document.getElementById('simFees').textContent = fees.toFixed(2) + ' EUR';
+  document.getElementById('simReceived').textContent = received.toFixed(2) + ' EUR';
 }
 
-// 🧭 Gestion de la déconnexion
+// Listener sur changement montant
+document.addEventListener('DOMContentLoaded', () => {
+  const amountInput = document.getElementById('amountInput');
+  if (amountInput) {
+    amountInput.addEventListener('input', updateSimulation);
+  }
+});
+
+// ========================================
+// ✅ TRAITEMENT ENVOI
+// ========================================
+function processSend() {
+  const destination = document.getElementById('destinationSend').value;
+  const receiver = document.getElementById('receiverInput').value.trim();
+  const amount = parseFloat(document.getElementById('amountInput').value);
+  const currency = document.getElementById('currencySelect').value;
+  
+  // Validations
+  if (!destination) {
+    return alert('⚠️ Veuillez choisir une destination');
+  }
+  
+  if (destination === 'africa' && !selectedOperator) {
+    return alert('⚠️ Veuillez sélectionner un opérateur Mobile Money');
+  }
+  
+  if (!receiver) {
+    return alert('⚠️ Veuillez entrer le numéro/IBAN du destinataire');
+  }
+  
+  if (!amount || amount <= 0) {
+    return alert('⚠️ Veuillez entrer un montant valide');
+  }
+  
+  if (!selectedPayment) {
+    return alert('⚠️ Veuillez choisir un moyen de paiement');
+  }
+  
+  // Conversion en EUR si nécessaire
+  let amountEUR = amount;
+  if (currency === 'FCFA') {
+    amountEUR = amount / CONVERSION_RATE;
+  }
+  
+  // Calcul frais
+  const fees = FEES.fixed + (amountEUR * FEES.percent);
+  const received = amountEUR - fees;
+  
+  // Sauvegarde dans app.js (fonction globale)
+  if (typeof saveDirectTransfer === 'function') {
+    saveDirectTransfer({
+      type: destination === 'africa' ? 'Envoi vers Afrique' : 'Envoi vers Europe',
+      destination: destination,
+      operator: selectedOperator,
+      receiver: receiver,
+      amount: amountEUR.toFixed(2),
+      currency: 'EUR',
+      fees: fees.toFixed(2),
+      received: received.toFixed(2),
+      status: 'En cours',
+      method: selectedPayment
+    });
+  }
+  
+  // Mise à jour solde portefeuille
+  const BAL_KEY = 'ks_balance';
+  let balance = parseFloat(localStorage.getItem(BAL_KEY) || '0');
+  
+  if (selectedPayment === 'wallet') {
+    if (balance < amountEUR) {
+      return alert('❌ Solde insuffisant dans votre portefeuille');
+    }
+    balance -= amountEUR;
+    localStorage.setItem(BAL_KEY, String(balance));
+  }
+  
+  // Notification succès
+  alert(`✅ Transfert de ${amountEUR.toFixed(2)} EUR initié avec succès !\n\nDestinataire: ${receiver}\nMontant reçu: ${received.toFixed(2)} EUR`);
+  
+  // Redirection vers portefeuille
+  window.location.href = 'portefeuille.html?ok=1';
+}
+
+// ========================================
+// 📥 TRAITEMENT RÉCEPTION
+// ========================================
+function processReceive() {
+  const amount = parseFloat(document.getElementById('receiveAmount').value);
+  
+  if (!amount || amount <= 0) {
+    return alert('⚠️ Veuillez entrer un montant valide');
+  }
+  
+  // Redirection vers page de réception avec montant
+  sessionStorage.setItem('receive_amount', amount);
+  window.location.href = 'recevoir.html';
+}
+
+// ========================================
+// 🚪 DÉCONNEXION
+// ========================================
 function logout() {
-    localStorage.removeItem("kwiksend_user");
-    window.location.href = "connexion.html";
+  localStorage.removeItem("kwiksend_user");
+  window.location.href = "connexion.html";
 }
 </script>
+
+<!-- Appel scripts globaux -->
+<script src="app.js"></script>
 
 </body>
 </html>
