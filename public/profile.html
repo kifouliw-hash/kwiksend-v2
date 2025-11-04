@@ -4,54 +4,371 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KwikSend — Mon compte</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
   <style>
-    .settings-list { list-style:none; padding:0; margin:0; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    /* 🧭 Header moderne */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    .burger {
+      display: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #FF8A00;
+    }
+
+    /* 📊 Container principal */
+    .profile-container {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 2rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slideDown 0.6s ease;
+    }
+
+    /* 👤 Carte profil utilisateur */
+    .user-profile-card {
+      background: linear-gradient(135deg, #FF8A00, #00B87C);
+      padding: 2rem;
+      border-radius: 20px;
+      color: white;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 40px rgba(255, 138, 0, 0.3);
+      animation: slideDown 0.6s ease 0.1s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .user-profile-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+      animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-20px, -20px); }
+    }
+
+    .profile-info {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .profile-details h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .profile-details p {
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    /* 📋 Liste des paramètres */
+    .settings-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(10, 15, 28, 0.08);
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      overflow: hidden;
+      animation: slideDown 0.6s ease 0.2s both;
+    }
+
+    .settings-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
     .settings-item {
-      display:flex; 
-      justify-content:space-between; 
-      align-items:center;
-      padding:1rem; 
-      border-bottom:1px solid #eee; 
-      cursor:pointer;
-      transition: background 0.2s ease;
-    }
-    .settings-item:hover { background:#fafafa; }
-
-    .settings-left { display:flex; gap:12px; align-items:center; }
-    .settings-icon { font-size:1.2rem; }
-
-    /* ✅ Badge KYC */
-    .kyc-badge-inline {
-      margin-left:10px; 
-      font-size:.85rem; 
-      font-weight:700;
-      padding:4px 8px; 
-      border-radius:999px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.08);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: slideInLeft 0.4s ease both;
     }
 
-    /* ✅ Liens élégants */
+    .settings-item:nth-child(1) { animation-delay: 0.3s; }
+    .settings-item:nth-child(2) { animation-delay: 0.35s; }
+    .settings-item:nth-child(3) { animation-delay: 0.4s; }
+    .settings-item:nth-child(4) { animation-delay: 0.45s; }
+    .settings-item:nth-child(5) { animation-delay: 0.5s; }
+    .settings-item:nth-child(6) { animation-delay: 0.55s; }
+    .settings-item:nth-child(7) { animation-delay: 0.6s; }
+
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+
+    .settings-item:hover {
+      background: linear-gradient(90deg, rgba(255, 138, 0, 0.05), rgba(0, 184, 124, 0.05));
+      transform: translateX(5px);
+    }
+
+    .settings-left {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex: 1;
+    }
+
+    .settings-icon {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.1), rgba(0, 184, 124, 0.1));
+      border-radius: 12px;
+    }
+
+    .settings-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .settings-title {
+      font-weight: 600;
+      color: #0A0F1C;
+      font-size: 1rem;
+    }
+
+    .settings-subtitle {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .settings-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #999;
+    }
+
     .settings-item a {
-      text-decoration: none; 
-      color: inherit; 
-      display: flex; 
-      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
       align-items: center;
       width: 100%;
-      transition: color .2s ease, transform .1s ease;
+      gap: 1rem;
     }
-    .settings-item a:hover {
-      color: var(--orange); 
-      font-weight: 600;
-      transform: translateX(3px);
+
+    /* ✅ Badge KYC moderne */
+    .kyc-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-verified {
+      background: linear-gradient(135deg, #00B87C, #00D48F);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 184, 124, 0.3);
+    }
+
+    .badge-pending {
+      background: linear-gradient(135deg, #FFA500, #FFB84D);
+      color: white;
+      box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+    }
+
+    .badge-not-submitted {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    /* Icône flèche */
+    .arrow-icon {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .settings-item:hover .arrow-icon {
+      transform: translateX(5px);
+    }
+
+    /* Footer */
+    footer {
+      background: #0A0F1C;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 10px;
+        width: 200px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .burger {
+        display: block;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .profile-info {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .settings-item {
+        padding: 1rem;
+      }
+
+      .settings-subtitle {
+        display: none;
+      }
+
+      .settings-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 <body>
+
+<!-- 🧭 Header -->
 <header>
   <div class="header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+    <div class="logo" onclick="window.location.href='dashboard.html'">KwikSend</div>
     <nav>
       <ul class="nav-links" id="nav-menu">
         <li><a href="dashboard.html">Accueil</a></li>
@@ -59,7 +376,7 @@
         <li><a href="transfert.html">Transfert</a></li>
         <li><a href="kwiktransfert.html">KwikTransfert</a></li>
         <li><a href="releves.html">Relevés</a></li>
-        <li><a href="profile.html">Compte</a></li>
+        <li><a href="profile.html" class="active">Compte</a></li>
         <li><a href="#" onclick="logout()">Déconnexion</a></li>
       </ul>
     </nav>
@@ -67,92 +384,196 @@
   </div>
 </header>
 
-<main style="padding:1.5rem;">
-  <h2>⚙️ Mon Compte</h2>
-  <ul class="settings-list">
-    <li class="settings-item" onclick="location.href='kyc.html'">
-      <div class="settings-left">
-        <span class="settings-icon">👤</span>
-        <span>Compte</span>
+<!-- 📊 Container principal -->
+<div class="profile-container">
+  
+  <h1 class="page-title">⚙️ Mon Compte</h1>
+
+  <!-- 👤 Carte profil utilisateur -->
+  <div class="user-profile-card">
+    <div class="profile-info">
+      <div class="profile-avatar">👤</div>
+      <div class="profile-details">
+        <h2 id="profileName">KwikSend User</h2>
+        <p id="profileEmail">user@kwiksend.com</p>
       </div>
-      <span id="kycBadge" class="kyc-badge-inline">Non soumis</span>
-    </li>
+    </div>
+  </div>
 
-    <li class="settings-item">
-      <a href="releves.html" class="settings-left">
-        <span class="settings-icon">📜</span>
-        <span>Historique des transferts</span>
-      </a>
-    </li>
+  <!-- 📋 Liste des paramètres -->
+  <div class="settings-card">
+    <ul class="settings-list">
+      
+      <!-- Compte / KYC -->
+      <li class="settings-item" onclick="location.href='kyc.html'">
+        <div class="settings-left">
+          <span class="settings-icon">👤</span>
+          <div class="settings-text">
+            <span class="settings-title">Vérification d'identité</span>
+            <span class="settings-subtitle">KYC & Documents</span>
+          </div>
+        </div>
+        <div class="settings-right">
+          <span id="kycBadge" class="kyc-badge badge-not-submitted">Non soumis</span>
+          <span class="arrow-icon">›</span>
+        </div>
+      </li>
 
-    <li class="settings-item">
-      <a href="limites.html" class="settings-left">
-        <span class="settings-icon">🏦</span>
-        <span>Limites</span>
-      </a>
-    </li>
+      <!-- Historique -->
+      <li class="settings-item">
+        <a href="releves.html">
+          <span class="settings-icon">📜</span>
+          <div class="settings-text">
+            <span class="settings-title">Historique des transferts</span>
+            <span class="settings-subtitle">Consultez vos transactions</span>
+          </div>
+          <span class="arrow-icon">›</span>
+        </a>
+      </li>
 
-    <li class="settings-item">
-      <a href="cartes.html" class="settings-left">
-        <span class="settings-icon">💳</span>
-        <span>Gérer vos cartes</span>
-      </a>
-    </li>
+      <!-- Limites -->
+      <li class="settings-item">
+        <a href="limites.html">
+          <span class="settings-icon">🏦</span>
+          <div class="settings-text">
+            <span class="settings-title">Limites de compte</span>
+            <span class="settings-subtitle">Plafonds d'envoi et de retrait</span>
+          </div>
+          <span class="arrow-icon">›</span>
+        </a>
+      </li>
 
-    <li class="settings-item">
-      <a href="parametres.html" class="settings-left">
-        <span class="settings-icon">🔒</span>
-        <span>Paramètres</span>
-      </a>
-    </li>
+      <!-- Cartes -->
+      <li class="settings-item">
+        <a href="cartes.html">
+          <span class="settings-icon">💳</span>
+          <div class="settings-text">
+            <span class="settings-title">Gérer vos cartes</span>
+            <span class="settings-subtitle">Ajoutez ou supprimez des cartes</span>
+          </div>
+          <span class="arrow-icon">›</span>
+        </a>
+      </li>
 
-    <li class="settings-item">
-      <a href="support.html" class="settings-left">
-        <span class="settings-icon">❓</span>
-        <span>Support</span>
-      </a>
-    </li>
+      <!-- Paramètres -->
+      <li class="settings-item">
+        <a href="parametres.html">
+          <span class="settings-icon">🔒</span>
+          <div class="settings-text">
+            <span class="settings-title">Sécurité & Paramètres</span>
+            <span class="settings-subtitle">Mot de passe, 2FA, langue</span>
+          </div>
+          <span class="arrow-icon">›</span>
+        </a>
+      </li>
 
-    <li class="settings-item">
-      <a href="mentions.html" class="settings-left">
-        <span class="settings-icon">ℹ️</span>
-        <span>Mentions légales</span>
-      </a>
-    </li>
-  </ul>
-</main>
+      <!-- Support -->
+      <li class="settings-item">
+        <a href="support.html">
+          <span class="settings-icon">❓</span>
+          <div class="settings-text">
+            <span class="settings-title">Support & Aide</span>
+            <span class="settings-subtitle">Contactez notre équipe</span>
+          </div>
+          <span class="arrow-icon">›</span>
+        </a>
+      </li>
 
+      <!-- Mentions légales -->
+      <li class="settings-item">
+        <a href="mentions.html">
+          <span class="settings-icon">ℹ️</span>
+          <div class="settings-text">
+            <span class="settings-title">Mentions légales</span>
+            <span class="settings-subtitle">CGU & Politique de confidentialité</span>
+          </div>
+          <span class="arrow-icon">›</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+
+</div>
+
+<!-- Footer -->
 <footer>
   <p>© 2025 KwikSend. Tous droits réservés.</p>
 </footer>
 
+<!-- 📜 Scripts -->
 <script>
-(function(){
-  function renderKycBadge(){
-    const status = localStorage.getItem('ks_kyc_status') || 'not_submitted';
-    const badge = document.getElementById('kycBadge');
-    if(!badge) return;
-    if(status === 'verified'){
-      badge.textContent = 'Vérifié';
-      badge.style.background = '#e8f8ef';
-      badge.style.color = '#0a8f2f';
-      badge.style.border = '1px solid #c9f0d6';
-    } else if(status === 'pending'){
-      badge.textContent = 'En attente';
-      badge.style.background = '#fff4e6';
-      badge.style.color = '#b05900';
-      badge.style.border = '1px solid #ffe7cc';
-    } else {
-      badge.textContent = 'Non soumis';
-      badge.style.background = '#f2f2f2';
-      badge.style.color = '#666';
-      badge.style.border = '1px solid #eee';
-    }
+/* ========================================
+   🎮 GESTION BADGE KYC
+======================================== */
+function renderKycBadge() {
+  const status = localStorage.getItem('ks_kyc_status') || 'not_submitted';
+  const badge = document.getElementById('kycBadge');
+  
+  if (!badge) return;
+
+  if (status === 'verified') {
+    badge.textContent = '✓ Vérifié';
+    badge.className = 'kyc-badge badge-verified';
+  } else if (status === 'pending') {
+    badge.textContent = '⏳ En attente';
+    badge.className = 'kyc-badge badge-pending';
+  } else {
+    badge.textContent = 'Non soumis';
+    badge.className = 'kyc-badge badge-not-submitted';
   }
-  document.addEventListener('DOMContentLoaded', renderKycBadge);
-  window.addEventListener('storage', (e)=> { if(e.key === 'ks_kyc_status') renderKycBadge(); });
-})();
+}
+
+/* ========================================
+   👤 CHARGEMENT PROFIL UTILISATEUR
+======================================== */
+function loadUserProfile() {
+  const user = JSON.parse(localStorage.getItem("kwiksend_user") || "{}");
+  
+  if (user.name) {
+    document.getElementById("profileName").textContent = user.name;
+  } else if (user.firstName && user.lastName) {
+    document.getElementById("profileName").textContent = `${user.firstName} ${user.lastName}`;
+  }
+  
+  if (user.email) {
+    document.getElementById("profileEmail").textContent = user.email;
+  }
+}
+
+/* ========================================
+   🚪 DÉCONNEXION
+======================================== */
+function logout() {
+  localStorage.removeItem("kwiksend_user");
+  window.location.href = "index.html";
+}
+
+/* ========================================
+   🍔 TOGGLE MENU
+======================================== */
+function toggleMenu() {
+  document.getElementById("nav-menu").classList.toggle("active");
+}
+
+/* ========================================
+   🔄 INIT
+======================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  loadUserProfile();
+  renderKycBadge();
+});
+
+// Écoute les changements de statut KYC
+window.addEventListener('storage', (e) => {
+  if (e.key === 'ks_kyc_status') {
+    renderKycBadge();
+  }
+});
 </script>
+
+<!-- Appel scripts globaux -->
 <script src="app.js"></script>
+
 </body>
 </html>
