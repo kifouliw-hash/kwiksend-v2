@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>KwikSend - Tableau de bord</title>
-  <meta name="description" content="Votre espace personnel KwikSend pour envoyer et recevoir de l’argent.">
+  <meta name="description" content="Votre espace personnel KwikSend pour envoyer et recevoir de l'argent.">
   <meta name="theme-color" content="#ff7a00">
 
   <!-- Favicon & icônes -->
@@ -17,81 +17,357 @@
   <!-- Manifest PWA -->
   <link rel="manifest" href="site.webmanifest">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
   <style>
-    /* ✅ Menu Burger */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    /* Animation de fond dynamique */
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 15s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    /* 🧭 Header moderne */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    /* Burger menu */
     .burger {
       display: none;
       font-size: 2rem;
       cursor: pointer;
-      margin-left: 1rem;
+      color: #FF8A00;
     }
+
+    /* 🎉 Hero Section - Bienvenue */
+    .hero {
+      background: linear-gradient(135deg, #FF8A00, #00B87C);
+      color: white;
+      padding: 3rem 1rem;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(255, 138, 0, 0.3);
+      animation: slideDown 0.6s ease;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 900;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      margin-bottom: 2rem;
+    }
+
+    /* Boutons CTA */
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta {
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      cursor: pointer;
+    }
+
+    .cta-primary {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .cta-secondary {
+      background: white;
+      color: #00B87C;
+      box-shadow: 0 8px 25px rgba(0, 184, 124, 0.3);
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255, 138, 0, 0.4);
+    }
+
+    .cta:hover::before {
+      left: 100%;
+    }
+
+    /* 📊 Container principal */
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    /* 🔑 Fonctionnalités - Nouvelle grille moderne */
+    .features-section {
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 2rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 6px 20px rgba(10, 15, 28, 0.08);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(255, 138, 0, 0.2);
+      border-color: rgba(255, 138, 0, 0.3);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .feature-card:nth-child(2) .feature-icon {
+      animation-delay: 0.3s;
+    }
+
+    .feature-card:nth-child(3) .feature-icon {
+      animation-delay: 0.6s;
+    }
+
+    .feature-card:nth-child(4) .feature-icon {
+      animation-delay: 0.9s;
+    }
+
+    .feature-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-description {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* 🌟 Avantages - Design moderne */
+    .advantages-section {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.05), rgba(0, 184, 124, 0.05));
+      padding: 3rem 1rem;
+      border-radius: 30px;
+      margin-bottom: 3rem;
+    }
+
+    .advantages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 900px;
+      margin: 2rem auto 0;
+    }
+
+    .advantage-item {
+      text-align: center;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+    }
+
+    .advantage-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255, 138, 0, 0.15);
+    }
+
+    .advantage-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .advantage-text {
+      font-weight: 600;
+      color: #0A0F1C;
+    }
+
+    /* 📝 Footer */
+    footer {
+      background: #0A0F1C;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    /* 📱 Responsive */
     @media (max-width: 768px) {
-      nav ul {
+      .nav-links {
         display: none;
-        flex-direction: column;
-        background: #fff;
         position: absolute;
         top: 60px;
         right: 10px;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 10px;
         width: 200px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       }
-      nav ul.active {
+
+      .nav-links.active {
         display: flex;
       }
+
       .burger {
         display: block;
       }
-    }
 
-    /* ✅ Cartes fonctionnalités */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .card-link {
-      text-decoration: none;
-    }
-    .card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 1.5rem;
-      text-align: center;
-      font-size: 1.1rem;
-      font-weight: 600;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-    }
+      .hero h1 {
+        font-size: 2rem;
+      }
 
-    /* ✅ Centrer le bloc avantages */
-    #avantages {
-      text-align: center;
-    }
-    #avantages ul {
-      list-style: none;
-      padding: 0;
-    }
-    #avantages li {
-      margin: .5rem 0;
+      .cta-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cta {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .advantages-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- 🧭 Header connecté -->
+<!-- 🧭 Header -->
 <header>
   <div class="header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+    <div class="logo" onclick="window.location.href='dashboard.html'">KwikSend</div>
     <nav>
       <ul class="nav-links" id="nav-menu">
-        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="dashboard.html" class="active">Accueil</a></li>
         <li><a href="portefeuille.html">Portefeuille</a></li>
         <li><a href="transfert.html">Transfert</a></li>
         <li><a href="kwiktransfert.html">KwikTransfert</a></li>
@@ -104,53 +380,89 @@
   </div>
 </header>
 
-<!-- 🎉 Bienvenue -->
-<section class="hero" style="padding:3rem 1rem;text-align:center;">
+<!-- 🎉 Hero - Bienvenue -->
+<section class="hero">
   <h1 id="welcome-title">Bienvenue sur votre espace KwikSend 👋</h1>
   <p>Gérez vos transferts, votre portefeuille et vos services en toute simplicité.</p>
 
-  <div style="margin-top:2rem;">
-    <a href="portefeuille.html" class="cta">Voir mon portefeuille</a>
-    <a href="transfert.html" class="cta" style="background:#0a8f2f;">Effectuer un transfert</a>
+  <div class="cta-group">
+    <a href="portefeuille.html" class="cta cta-primary">💼 Voir mon portefeuille</a>
+    <a href="transfert.html" class="cta cta-secondary">💸 Effectuer un transfert</a>
   </div>
 </section>
 
-<!-- 🔑 Fonctionnalités -->
-<section id="fonctionnalites" style="padding:3rem 1rem;">
-  <h2>Nos fonctionnalités</h2>
-  <div class="features-grid">
-    <a class="card-link" href="portefeuille.html">
-      <div class="card">💳 Portefeuille multi-devises</div>
-    </a>
-    <a class="card-link" href="transfert.html">
-      <div class="card">🌍 Transferts Afrique ↔ Europe</div>
-    </a>
-    <a class="card-link" href="kwiktransfert.html">
-      <div class="card">⚡ Transferts instantanés KwikSend</div>
-    </a>
-    <a class="card-link" href="releves.html">
-      <div class="card">📄 Relevés officiels</div>
-    </a>
-  </div>
-</section>
+<!-- 📊 Dashboard Container -->
+<div class="dashboard-container">
+  
+  <!-- 🔑 Fonctionnalités -->
+  <section class="features-section">
+    <h2 class="section-title">✨ Nos fonctionnalités</h2>
+    <div class="features-grid">
+      
+      <a class="feature-card" href="portefeuille.html">
+        <div class="feature-icon">💳</div>
+        <div class="feature-title">Portefeuille multi-devises</div>
+        <div class="feature-description">Gérez EUR et FCFA en un seul endroit</div>
+      </a>
 
-<!-- 🌟 Avantages -->
-<section id="avantages" style="padding:3rem 1rem;background:#fdf8f3;">
-  <h2>Pourquoi choisir KwikSend ?</h2>
-  <ul>
-    <li>✔ Rapidité et fiabilité</li>
-    <li>✔ Frais réduits et transparents</li>
-    <li>✔ Accessible partout, 24h/24</li>
-    <li>✔ Sécurité renforcée</li>
-  </ul>
-</section>
+      <a class="feature-card" href="transfert.html">
+        <div class="feature-icon">🌍</div>
+        <div class="feature-title">Transferts internationaux</div>
+        <div class="feature-description">Afrique ↔ Europe en quelques clics</div>
+      </a>
+
+      <a class="feature-card" href="kwiktransfert.html">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Transferts instantanés</div>
+        <div class="feature-description">Entre utilisateurs KwikSend gratuitement</div>
+      </a>
+
+      <a class="feature-card" href="releves.html">
+        <div class="feature-icon">📄</div>
+        <div class="feature-title">Relevés officiels</div>
+        <div class="feature-description">Téléchargez vos documents certifiés</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- 🌟 Avantages -->
+  <section class="advantages-section">
+    <h2 class="section-title">🌟 Pourquoi choisir KwikSend ?</h2>
+    
+    <div class="advantages-grid">
+      
+      <div class="advantage-item">
+        <div class="advantage-icon">⚡</div>
+        <div class="advantage-text">Rapidité et fiabilité</div>
+      </div>
+
+      <div class="advantage-item">
+        <div class="advantage-icon">💰</div>
+        <div class="advantage-text">Frais réduits et transparents</div>
+      </div>
+
+      <div class="advantage-item">
+        <div class="advantage-icon">🌍</div>
+        <div class="advantage-text">Accessible partout, 24h/24</div>
+      </div>
+
+      <div class="advantage-item">
+        <div class="advantage-icon">🔒</div>
+        <div class="advantage-text">Sécurité renforcée</div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
 
 <!-- 📝 Footer -->
 <footer>
   <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
 </footer>
 
-<!-- Scripts -->
+<!-- 📜 Scripts -->
 <script>
   // 🚫 Protection d'accès : redirige si non connecté
   document.addEventListener("DOMContentLoaded", () => {
@@ -161,7 +473,7 @@
       return;
     }
 
-    // ✅ Message de bienvenue avec nom complet
+    // ✅ Message de bienvenue personnalisé
     const welcomeTitle = document.getElementById("welcome-title");
     if (user.name) {
       welcomeTitle.textContent = `Bienvenue ${user.name} 👋`;
@@ -172,20 +484,21 @@
     }
   });
 
-  // ✅ Déconnexion harmonisée
+  // ✅ Déconnexion
   function logout() {
     localStorage.removeItem("kwiksend_user");
     alert("👋 Vous avez été déconnecté.");
     window.location.href = "connexion.html";
   }
 
-  // ✅ Burger toggle (mobile)
+  // ✅ Toggle menu burger (mobile)
   function toggleMenu() {
-    document.querySelector("nav ul").classList.toggle("active");
+    document.getElementById("nav-menu").classList.toggle("active");
   }
 </script>
 
 <!-- Appels scripts globaux -->
 <script src="app.js"></script>
+
 </body>
 </html>
