@@ -1,672 +1,264 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfert Direct 🔛 Afrique ↔ Europe</title>
-    <meta name="description" content="Transférez directement entre Afrique et Europe avec KwikSend.">
-    <meta name="theme-color" content="#FF8A00">
-    
-    <!-- Charte graphique : Orange #FF8A00, Vert #00B87C, Violet #8B5CF6 -->
-    <link rel="stylesheet" href="style.css">
-    
-    <style>
-        /* --------------------------------
-            🎨 Animation de fond (vague douce)
-        -------------------------------- */
-        @keyframes waveGradient {
-            0%, 100% { background: linear-gradient(135deg, #ffffff 0%, #fdf8f3 100%); }
-            25% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
-            50% { background: linear-gradient(135deg, #f3e5f5 0%, #e8d5f2 100%); }
-            75% { background: linear-gradient(135deg, #e0f7f4 0%, #c9f0d6 100%); }
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transfert KwikSend</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Variables CSS à intégrer dans transfert.html ou dans le fichier style.css */
+    :root {
+      --orange: #ff7a00;
+      --yellow: #ffcc00;
+      --green-cta: #0a8f2f;
+      --text-dark: #1a1a1a;
+      --text-light: #ffffff;
+      --bg-light: #fdf8f3;
+    }
 
-        /* --------------------------------
-            🌟 Section 1: Header
-        -------------------------------- */
-        .hero {
-            background: linear-gradient(180deg, #FF8A00, #FFB84D);
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-            min-height: 50vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    /* Styles de la page */
+    body {
+      background: var(--bg-light);
+      color: var(--text-dark);
+      font-family: 'Poppins', sans-serif;
+    }
 
-        .hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-        }
+    .cta {
+      background: var(--green-cta);
+      color: var(--text-light);
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: 15px;
+      transition: background-color 0.3s ease;
+    }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.95;
-        }
+    .cta:hover {
+      background-color: darken(var(--green-cta), 10%);
+    }
 
-        /* --------------------------------
-            🌟 Section 2: Toggle Direction
-        -------------------------------- */
-        .direction-toggle {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            justify-content: center;
-        }
+    .header {
+      background: linear-gradient(90deg, var(--orange), var(--yellow));
+      color: var(--text-light);
+      padding: 1rem 0;
+    }
 
-        .toggle-btn {
-            padding: 0.8rem 1.8rem;
-            border: 2px solid #e0e0e0;
-            background: white;
-            color: #0A0F1C;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            font-size: 1rem;
-        }
+    .hero {
+      background: linear-gradient(90deg, var(--orange), var(--yellow));
+      color: var(--text-light);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
 
-        .toggle-btn:hover {
-            border-color: var(--orange);
-            background: rgba(255, 138, 0, 0.05);
-        }
+    .footer {
+      background: var(--text-dark);
+      color: var(--text-light);
+      text-align: center;
+      padding: 2rem;
+    }
 
-        .toggle-btn.active {
-            background: linear-gradient(135deg, var(--orange), var(--green));
-            color: white;
-            border-color: var(--orange);
-            box-shadow: 0 8px 25px rgba(255, 138, 0, 0.3);
-        }
+    /* Formulaire */
+    .form {
+      margin: 2rem auto;
+      max-width: 600px;
+    }
 
-        /* --------------------------------
-            🌟 Section 3: Opérateurs
-        -------------------------------- */
-        .operator-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
+    input, select, button {
+      padding: 10px;
+      border: 1px solid var(--yellow);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
 
-        .operator-btn {
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            background: white;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.6rem;
-        }
+    button {
+      background-color: var(--green-cta);
+      color: var(--text-light);
+    }
 
-        .operator-btn:hover {
-            border-color: var(--orange);
-            background: rgba(255, 138, 0, 0.05);
-        }
+    /* Boutons */
+    .btn {
+      background: var(--green-cta);
+      color: var(--text-light);
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: 15px;
+      transition: background-color 0.3s ease;
+    }
 
-        .operator-btn.selected {
-            background: linear-gradient(135deg, rgba(255, 138, 0, 0.15), rgba(0, 184, 124, 0.15));
-            border: 2px solid var(--orange);
-            box-shadow: 0 6px 20px rgba(255, 138, 0, 0.2);
-        }
+    .btn:hover {
+      background-color: darken(var(--green-cta), 10%);
+    }
 
-        .operator-icon {
-            font-size: 1.8rem;
-        }
+    /* Section d'envoi et de réception */
+    .send, .receive {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
 
-        /* --------------------------------
-            🌟 Section 4: Simulation Box
-        -------------------------------- */
-        .simulation-box {
-            background: linear-gradient(135deg, rgba(255, 138, 0, 0.08), rgba(0, 184, 124, 0.08));
-            border: 2px solid rgba(255, 138, 0, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .simulation-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(255, 138, 0, 0.1);
-        }
-
-        .simulation-row:last-child {
-            border-bottom: none;
-        }
-
-        .simulation-label {
-            color: #B0B3C2;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .simulation-value {
-            font-weight: 700;
-            color: #0A0F1C;
-            font-size: 1.1rem;
-        }
-
-        .simulation-value.highlight {
-            background: linear-gradient(90deg, var(--orange), var(--green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* --------------------------------
-            🌟 Section 5: Moyens de Paiement
-        -------------------------------- */
-        .payment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-
-        .payment-btn {
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            background: white;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .payment-btn:hover {
-            border-color: var(--orange);
-            background: rgba(255, 138, 0, 0.05);
-        }
-
-        .payment-btn.selected {
-            background: linear-gradient(135deg, rgba(255, 138, 0, 0.15), rgba(0, 184, 124, 0.15));
-            border: 2px solid var(--orange);
-            box-shadow: 0 6px 20px rgba(255, 138, 0, 0.2);
-        }
-
-        /* --------------------------------
-            🌟 Section 6: Alerts
-        -------------------------------- */
-        .alert {
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            animation: slideDown 0.3s ease;
-        }
-
-        .alert-error {
-            background: rgba(255, 0, 0, 0.1);
-            border-left: 4px solid #FF0000;
-            color: #C00000;
-        }
-
-        .alert-success {
-            background: rgba(0, 184, 124, 0.1);
-            border-left: 4px solid var(--green);
-            color: var(--green);
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --------------------------------
-            🌟 Section 7: Footer
-        -------------------------------- */
-        footer {
-            background: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-            font-size: 0.9rem;
-        }
-    </style>
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
 <body>
 
-<!-- --------------------------------
-    🌍 Header
--------------------------------- -->
-<header>
-    <div class="header-container">
-        <div class="logo">Kwik<span>Send</span></div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="dashboard.html">Accueil</a></li>
-                <li><a href="portefeuille.html">Portefeuille</a></li>
-                <li><a href="transfert.html">Transfert</a></li>
-                <li><a href="kwiktransfert.html">KwikTransfert</a></li>
-                <li><a href="releves.html">Relevés</a></li>
-                <li><a href="profile.html">Compte</a></li>
-                <li><a href="#" onclick="logout()">Déconnexion</a></li>
-            </ul>
-        </nav>
+<!-- 🔛 Header -->
+<header class="header">
+  <div class="header-container">
+    <div class="logo">Kwik<span>Send</span></div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Accueil</a></li>
+        <li><a href="portefeuille.html">Portefeuille</a></li>
+        <li><a href="transfert.html" class="cta">Transfert</a></li>
+        <li><a href="kwiksend-transfer.html">KwikSend Transfer</a></li>
+        <li><a href="releves.html">Relevés</a></li>
+        <li><a href="profile.html">Compte</a></li>
+        <li><a href="#" onclick="logout()">Déconnexion</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <select id="langSwitcher" onchange="switchLang(this.value)">
+        <option value="fr">FR</option>
+        <option value="en">EN</option>
+      </select>
     </div>
+  </div>
 </header>
 
-<!-- 🔛 Section Hero -->
+<!-- 🌟 Section Transfert -->
 <section class="hero">
-    <div class="hero-content">
-        <h1>🌍 Transfert Direct</h1>
-        <p style="color:#B0B3C2;">Envoyez ou recevez instantanément entre Afrique et Europe</p>
+  <h1>🌍 Transfert Afrique ↔ Europe</h1>
+  <p>Choisissez votre destination et votre moyen de paiement.</p>
 
-        <!-- 🧭 Alerts -->
-        <div id="alert" style="display:none;"></div>
+  <!-- 🔄 Toggle Direction -->
+  <div class="direction-toggle">
+    <button class="toggle-btn active" data-direction="send" onclick="switchDirection('send')" type="button">💸 Envoyer</button>
+    <button class="toggle-btn" data-direction="receive" onclick="switchDirection('receive')" type="button">📥 Recevoir</button>
+  </div>
 
-        <!-- 🔄 Direction Toggle -->
-        <div class="direction-toggle">
-            <button class="toggle-btn active" data-direction="send" onclick="switchDirection('send')" type="button">
-                💸 Envoyer
-            </button>
-            <button class="toggle-btn" data-direction="receive" onclick="switchDirection('receive')" type="button">
-                📥 Recevoir
-            </button>
-        </div>
+  <!-- 📤 Formulaire Envoyer -->
+  <form id="formSend" class="form send" style="display: block;">
+    <div class="section-title">Envoi en cours...</div>
+    <label for="destinationSend">🌐 Destination :</label>
+    <select id="destinationSend" onchange="updateOperators()">
+      <option value="africa">🌍 Afrique (Mobile Money)</option>
+      <option value="europe">🇪🇺 Europe (IBAN)</option>
+    </select>
 
-        <!-- 📤 Formulaire Envoyer -->
-        <form id="formSend" class="form-section" style="display:block;">
-            <!-- --------------------------------
-                🌟 Destination (Afrique/Europe)
-            -------------------------------- -->
-            <div style="margin-bottom:1.5rem;">
-                <label for="destinationSend" style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">🌐 Vers où ?</label>
-                <select id="destinationSend" onchange="updateOperators()" style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;width:100%;font-size:1rem;">
-                    <option value="africa">🌍 Afrique (Mobile Money)</option>
-                    <option value="europe">🇪🇺 Europe (IBAN)</option>
-                </select>
-            </div>
+    <label id="receiverLabel">📞 Numéro ou IBAN :</label>
+    <input type="text" id="receiverSend" placeholder="Entrez votre numéro ou IBAN" required>
 
-            <!-- --------------------------------
-                📱 Section Opérateurs (Afrique uniquement)
-            -------------------------------- -->
-            <div id="operatorSectionSend" style="display:none;margin-bottom:1.5rem;">
-                <label for="operatorGridSend" style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">📱 Opérateur</label>
-                <div class="operator-grid" id="operatorGridSend">
-                    <!-- Dynamique -->
-                </div>
-            </div>
-
-            <!-- --------------------------------
-                📞 Numéro ou IBAN
-            -------------------------------- -->
-            <div style="margin-bottom:1.5rem;">
-                <label id="receiverLabel" style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">📞 Numéro ou IBAN</label>
-                <input type="text" id="receiverSend" placeholder="Ex: 0700000000" required style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;width:100%;font-size:1rem;transition:all 0.3s;">
-            </div>
-
-            <!-- --------------------------------
-                💰 Montant
-            -------------------------------- -->
-            <div style="margin-bottom:1.5rem;">
-                <label for="amountSend" style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">💰 Montant</label>
-                <div style="display:flex;gap:0.5rem;">
-                    <input type="number" id="amountSend" placeholder="100" min="1" step="0.01" required style="flex:1;padding:1rem;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;">
-                    <select id="currencySend" onchange="updateSimulation()" style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;">
-                        <option value="EUR">EUR</option>
-                        <option value="FCFA">FCFA</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- --------------------------------
-                📊 Simulation des frais
-            -------------------------------- -->
-            <div class="simulation-box">
-                <div class="simulation-row">
-                    <span class="simulation-label">Montant :</span>
-                    <span class="simulation-value" id="simAmount">0.00 EUR</span>
-                </div>
-                <div class="simulation-row">
-                    <span class="simulation-label">Frais :</span>
-                    <span class="simulation-value" id="simFees" style="color:#FF6B6B;">-1.50 EUR</span>
-                </div>
-                <div class="simulation-row">
-                    <span class="simulation-label">Montant reçu :</span>
-                    <span class="simulation-value highlight" id="simReceived">98.50 EUR</span>
-                </div>
-            </div>
-
-            <!-- --------------------------------
-                💳 Moyen de paiement
-            -------------------------------- -->
-            <div id="paymentSectionSend" style="margin-bottom:1.5rem;">
-                <label for="paymentGridSend" style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">💳 Moyen de paiement</label>
-                <div class="payment-grid" id="paymentGridSend">
-                    <!-- Dynamique -->
-                </div>
-            </div>
-
-            <!-- --------------------------------
-                💼 Frais et envoi
-            -------------------------------- -->
-            <div class="fees-detail">
-                ⚡ <strong>Frais fixes 1.5€</strong> + <strong>0.9%</strong> de commission. Transfert instantané (24h max).
-            </div>
-            <button type="submit" style="width:100%;padding:1.2rem;background:linear-gradient(135deg,#FF8A00,#00B87C);color:white;border:none;border-radius:12px;font-weight:700;font-size:1.05rem;cursor:pointer;box-shadow:0 8px 25px rgba(255,138,0,0.3);transition:all 0.3s;">
-                ✨ Envoyer maintenant
-            </button>
-        </form>
-
-        <!-- 📥 Formulaire Recevoir -->
-        <form id="formReceive" class="form-section form-hidden" style="display:none;">
-            <h2>📥 Recevoir</h2>
-            <p>Les champs "Source", "Opérateur", "Numéro ou IBAN de l'expéditeur", "Montant attendu" fonctionnent exactement comme pour l'envoi. ❤️</p>
-            <!-- Pour cet exemple, nous allons simplement afficher le montant attendu -->
-            <div style="margin-bottom:1.5rem;">
-                <label for="amountReceive" style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">💰 Montant attendu</label>
-                <input type="number" id="amountReceive" placeholder="100" min="1" step="0.01" required style="padding:1rem;border:2px solid #e0e0e0;border-radius:12px;width:100%;font-size:1rem;">
-            </div>
-            <button type="submit" style="width:100%;padding:1.2rem;background:linear-gradient(135deg,#FF8A00,#00B87C);color:white;border:none;border-radius:12px;font-weight:700;font-size:1.05rem;cursor:pointer;box-shadow:0 8px 25px rgba(255,138,0,0.3);transition:all 0.3s;">
-                ✅ Confirmer réception
-            </button>
-        </form>
+    <label>💰 Montant :</label>
+    <div style="display: flex;">
+      <input type="number" id="amountSend" placeholder="100" required style="flex: 1;">
+      <select id="currencySend" onchange="updateSimulation()">
+        <option value="EUR">EUR</option>
+        <option value="FCFA">FCFA</option>
+      </select>
     </div>
+
+    <!-- 🔹 Moyens de paiement -->
+    <h3>💳 Moyen de paiement</h3>
+    <div id="paymentOptions">
+      <button type="button" onclick="selectPaymentMethod('wallet')">💳 Portefeuille</button>
+      <button type="button" onclick="selectPaymentMethod('card')">💳 Carte Bancaire</button>
+      <button type="button" onclick="selectPaymentMethod('mobile')">📲 Mobile Money</button>
+    </div>
+
+    <button type="submit" class="btn">✨ Envoyer maintenant</button>
+  </form>
+
+  <!-- 📥 Formulaire Recevoir -->
+  <form id="formReceive" class="form receive" style="display: none;">
+    <div class="section-title">Réception</div>
+    <label for="amountReceive">💰 Montant attendu :</label>
+    <input type="number" id="amountReceive" placeholder="Montant" required>
+    <button type="submit" class="btn">✅ Confirmer réception</button>
+  </form>
+
+  <!-- Simulation des frais -->
+  <div class="simulation-box" id="simulationBox">
+    <div class="simulation-row">Montant : <span id="simAmount">0.00 EUR</span></div>
+    <div class="simulation-row">Frais : <span id="simFees">-1.50 EUR</span></div>
+    <div class="simulation-row">Montant reçu : <span class="highlight" id="simReceived">98.50 EUR</span></div>
+  </div>
+
 </section>
 
-<!-- 📝 Footer -->
-<footer>
-    <p>© 2025 KwikSend. Tous droits réservés.</p>
+<!-- Footer -->
+<footer class="footer">
+  <p>© 2025 KwikSend. Tous droits réservés.</p>
 </footer>
 
-<!-- 📲 Logique de transfert et interaction -->
+<!-- Scripts -->
 <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(console.error);
+// 🎮 Configuration des opérateurs et frais
+const OPERATORS = {
+    africa: [
+        { name: 'Orange Money', code: 'OM', emoji: '🟠' },
+        { name: 'MTN Money', code: 'MTN', emoji: '🟡' },
+        { name: 'Wave', code: 'WAVE', emoji: '🔵' },
+        { name: 'Moov Money', code: 'MOOV', emoji: '🟢' }
+    ]
+};
+
+const FEES = {
+    fixed: 1.50,
+    percent: 0.009
+};
+
+const CONVERSION_RATE = 650; // 1 EUR = 650 FCFA
+
+// État global
+let currentDirection = 'send';
+let selectedPaymentMethod = null;
+
+// 🔄 TOGGLE DIRECTION
+function switchDirection(direction) {
+    currentDirection = direction;
+    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-direction="${direction}"]`).classList.add('active');
+
+    if (direction === 'send') {
+        document.getElementById('formSend').style.display = 'block';
+        document.getElementById('formReceive').style.display = 'none';
+    } else {
+        document.getElementById('formSend').style.display = 'none';
+        document.getElementById('formReceive').style.display = 'block';
     }
+}
 
-    // ======================================
-    // 🎮 CONFIGURATION
-    // ======================================
-    const OPERATORS = {
-        africa: [
-            { name: 'Orange Money', code: 'OM', emoji: '🟠' },
-            { name: 'MTN Money', code: 'MTN', emoji: '🟡' },
-            { name: 'Wave', code: 'WAVE', emoji: '🔵' },
-            { name: 'Moov Money', code: 'MOOV', emoji: '🟢' }
-        ]
-    };
-
-    const FEES = {
-        fixed: 1.50,
-        percent: 0.009
-    };
-
-    const CONVERSION_RATE = 650; // 1 EUR = 650 FCFA
-
-    // ======================================
-    // 🔄 TOGGLE DIRECTION
-    // ======================================
-    let currentDirection = 'send';
-    let selectedOperator = null;
-    let selectedPaymentMethod = null;
-
-    function switchDirection(direction) {
-        currentDirection = direction;
-        document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelector(`[data-direction="${direction}"]`).classList.add('active');
-
-        if (direction === 'send') {
-            document.getElementById('formSend').style.display = 'block';
-            document.getElementById('formReceive').style.display = 'none';
-        } else {
-            document.getElementById('formSend').style.display = 'none';
-            document.getElementById('formReceive').style.display = 'block';
-        }
-    }
-
-    // ======================================
-    // 📱 UPDATE OPERATORS (SEND)
-    // ======================================
-    function updateOperators() {
-        const dest = document.getElementById('destinationSend').value;
-        const operatorSection = document.getElementById('operatorSectionSend');
-        const grid = document.getElementById('operatorGridSend');
-
-        if (dest === 'africa') {
-            operatorSection.style.display = 'block';
-            grid.innerHTML = OPERATORS.africa.map(op => `
-                <button type="button" class="operator-btn" data-operator="${op.code}" onclick="selectOperator('${op.code}', 'send')">
-                    <div class="operator-icon">${op.emoji}</div>
-                    <div>${op.name}</div>
-                </button>
-            `).join('');
-            document.getElementById('receiverLabel').textContent = '📞 Numéro Mobile Money';
-            document.getElementById('receiverSend').placeholder = 'Ex: 0700000000';
-            updatePaymentOptions();
-        } else {
-            operatorSection.style.display = 'none';
-            document.getElementById('receiverLabel').textContent = '🏦 IBAN';
-            document.getElementById('receiverSend').placeholder = 'Ex: FR7630006000...';
-            updatePaymentOptions();
-        }
-    }
-
-    function selectOperator(code, type) {
-        if (type === 'send') {
-            selectedOperator = code;
-            document.querySelectorAll('#operatorGridSend .operator-btn').forEach(btn => {
-                btn.classList.toggle('selected', btn.dataset.operator === code);
-            });
-        }
-        updateSimulation();
-    }
-
-    // ======================================
-    // 💳 PAIEMENT METHOD (ENVOI)
-    // ======================================
-    function updatePaymentOptions() {
-        const dest = document.getElementById('destinationSend').value;
-        const paymentSection = document.getElementById('paymentSectionSend');
-        const grid = document.getElementById('paymentGridSend');
-
-        if (dest === 'africa') {
-            grid.innerHTML = `
-                <button type="button" class="payment-btn" data-method="wallet" onclick="selectPaymentMethod('wallet')">
-                    <div class="operator-icon">💳</div>
-                    <div>Portefeuille KwikSend</div>
-                </button>
-                <button type="button" class="payment-btn" data-method="card" onclick="selectPaymentMethod('card')">
-                    <div class="operator-icon">💳</div>
-                    <div>Carte bancaire</div>
-                </button>
-                <button type="button" class="payment-btn" data-method="mobile" onclick="selectPaymentMethod('mobile')">
-                    <div class="operator-icon">📲</div>
-                    <div>Mobile Money Afrique</div>
-                </button>
-            `;
-        } else {
-            grid.innerHTML = `
-                <button type="button" class="payment-btn" data-method="wallet" onclick="selectPaymentMethod('wallet')">
-                    <div class="operator-icon">💳</div>
-                    <div>Portefeuille KwikSend</div>
-                </button>
-                <button type="button" class="payment-btn" data-method="card" onclick="selectPaymentMethod('card')">
-                    <div class="operator-icon">💳</div>
-                    <div>Carte bancaire</div>
-                </button>
-                <button type="button" class="payment-btn" data-method="mobile" onclick="selectPaymentMethod('mobile')">
-                    <div class="operator-icon">📲</div>
-                    <div>Mobile Money (Orange, Wave...)</div>
-                </button>
-            `;
-        }
-        paymentSection.style.display = 'block';
-    }
-
-    function selectPaymentMethod(method) {
-        selectedPaymentMethod = method;
-        document.querySelectorAll('#paymentGridSend .payment-btn').forEach(btn => {
-            btn.classList.toggle('selected', btn.dataset.method === method);
-        });
-    }
-
-    // ======================================
-    // 💰 SIMULATION
-    // ======================================
-    function updateSimulation() {
-        const amount = parseFloat(document.getElementById('amountSend').value) || 0;
-        const currency = document.getElementById('currencySend').value;
-
-        let amountEUR = amount;
-        if (currency === 'FCFA') {
-            amountEUR = amount / CONVERSION_RATE;
-        }
-
-        const fees = FEES.fixed + (amountEUR * FEES.percent);
-        const received = amountEUR - fees;
-
-        document.getElementById('simAmount').textContent = amount.toFixed(2) + ' ' + currency;
-        document.getElementById('simFees').textContent = '-' + fees.toFixed(2) + ' EUR';
-        document.getElementById('simReceived').textContent = received.toFixed(2) + ' EUR';
-    }
-
-    // ======================================
-    // 📤 SUBMIT FORM SEND
-    // ======================================
-    document.getElementById('formSend').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const dest = document.getElementById('destinationSend').value;
-        const receiver = document.getElementById('receiverSend').value.trim();
-        const amount = parseFloat(document.getElementById('amountSend').value);
-        const currency = document.getElementById('currencySend').value;
-
-        // Validation
-        if (!receiver) {
-            showAlert('Veuillez entrer un numéro ou IBAN', 'error');
-            return;
-        }
-
-        if (dest === 'africa' && !selectedOperator) {
-            showAlert('Veuillez sélectionner un opérateur Mobile Money', 'error');
-            return;
-        }
-
-        if (!selectedPaymentMethod) {
-            showAlert('Veuillez sélectionner un moyen de paiement', 'error');
-            return;
-        }
-
-        if (amount <= 0) {
-            showAlert('Montant invalide', 'error');
-            return;
-        }
-
-        // Enregistrer dans l'historique
-        saveDirectTransfer({
-            type: 'Envoi Direct',
-            destination: dest,
-            operator: selectedOperator,
-            receiver,
-            amount: currency === 'EUR' ? amount : amount / CONVERSION_RATE,
-            currency: 'EUR',
-            paymentMethod: selectedPaymentMethod,
-            status: 'En attente de validation'
-        });
-
-        showAlert(`✅ Transfert lancé ! Redirection en cours...`, 'success');
-        
-        setTimeout(() => {
-            // Vérifie si on utilise le portefeuille ou carte bancaire pour simuler un paiement
-            if (selectedPaymentMethod === 'wallet' || selectedPaymentMethod === 'card') {
-                window.location.href = '3ds.html?return=' + encodeURIComponent('transfert.html');
-            } else {
-                window.location.href = 'portefeuille.html?ok=1';
-            }
-        }, 2000);
+// 💳 Moyen de paiement
+function selectPaymentMethod(method) {
+    selectedPaymentMethod = method;
+    document.querySelectorAll('#paymentOptions button').forEach(btn => {
+        btn.classList.toggle('selected', btn.onclick.toString().includes(method));
     });
+}
 
-    // ======================================
-    // 📥 SUBMIT FORM RECEIVE
-    // ======================================
-    document.getElementById('formReceive').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const amount = parseFloat(document.getElementById('amountReceive').value) || 0;
-
-        if (amount <= 0) {
-            showAlert('Montant invalide', 'error');
-            return;
-        }
-
-        showAlert(`✅ Transfert en attente! Confirmez au guichet.`, 'success');
-        
-        setTimeout(() => {
-            document.getElementById('formReceive').reset();
-            switchDirection('send');
-        }, 2000);
-    });
-
-    // ======================================
-    // 🔔 SHOW ALERT
-    // ======================================
-    function showAlert(message, type) {
-        const alertEl = document.getElementById('alert');
-        alertEl.className = `alert alert-${type}`;
-        alertEl.textContent = message;
-        alertEl.style.display = 'block';
-
-        if (type === 'success') {
-            setTimeout(() => {
-                alertEl.style.display = 'none';
-            }, 4000);
-        }
+// Simulation Envoi
+function updateSimulation() {
+    let amountEUR = document.getElementById('amountSend').value || 0;
+    if (document.getElementById('currencySend').value === 'FCFA') {
+        amountEUR = amountEUR / CONVERSION_RATE;
     }
 
-    // ======================================
-    // 💾 SAVE TO HISTORY
-    // ======================================
-    function saveDirectTransfer(transfer) {
-        const HIST_KEY = 'ks_direct_transfers';
-        let history = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+    const fees = FEES.fixed + (amountEUR * FEES.percent);
+    const received = amountEUR - fees;
 
-        history.unshift({
-            date: new Date().toLocaleString(),
-            ...transfer
-        });
+    document.getElementById('simAmount').textContent = parseFloat(amountEUR).toFixed(2) + ' EUR';
+    document.getElementById('simFees').textContent = '-' + fees.toFixed(2) + ' EUR';
+    document.getElementById('simReceived').textContent = received.toFixed(2) + ' EUR';
+}
 
-        localStorage.setItem(HIST_KEY, JSON.stringify(history));
-    }
-
-    // ======================================
-    // 🚀 INIT
-    // ======================================
-    document.addEventListener('DOMContentLoaded', () => {
-        updateOperators();
-        updatePaymentOptions();
-    });
-
-    // ======================================
-    // 🚪 LOGOUT (À GARDER IDEM)
-    // ======================================
-    function logout() {
-        localStorage.removeItem("kwiksend_user");
-        window.location.href = "index.html";
-    }
+// 🧭 Gestion de la déconnexion
+function logout() {
+    localStorage.removeItem("kwiksend_user");
+    window.location.href = "connexion.html";
+}
 </script>
-
-<!-- ❤️ APPEL DES SCRIPTS -->
-<script src="script.js"></script>
-<script src="translate.js"></script>
-<script src="app.js"></script>
 
 </body>
 </html>
