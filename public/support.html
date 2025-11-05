@@ -3,48 +3,557 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KwikSend — Support & Aide</title>
-  <link rel="stylesheet" href="style.css">
+  <title>KwikSend - Support & Aide</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
   <style>
-    .faq-item {
-      border-bottom: 1px solid #eee;
-      padding: 1rem 0;
-      cursor: pointer;
-    }
-    .faq-item h3 {
+    * {
       margin: 0;
-      font-size: 1.1rem;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    /* 🧭 Header moderne */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .faq-answer {
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    .burger {
       display: none;
-      margin-top: 0.5rem;
-      color: #555;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #FF8A00;
+    }
+
+    /* 💡 Support Container */
+    .support-container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .support-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .support-subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
       font-size: 0.95rem;
     }
-    .contact-card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
-      max-width: 700px;
-      margin: 2rem auto;
+
+    /* 🔍 Search Bar */
+    .search-container {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 138, 0, 0.2);
+      border-radius: 16px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(255, 138, 0, 0.1);
     }
-    .contact-card input, .contact-card textarea {
+
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      font-size: 1.2rem;
+      color: #FF8A00;
+    }
+
+    .search-input {
       width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
+      padding: 1rem 1rem 1rem 3rem;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      color: #0A0F1C;
+      outline: none;
     }
+
+    .search-input::placeholder {
+      color: #999;
+    }
+
+    /* 🎯 Quick Links */
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .quick-link-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 138, 0, 0.15);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      color: #0A0F1C;
+    }
+
+    .quick-link-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(255, 138, 0, 0.2);
+      border-color: #FF8A00;
+    }
+
+    .quick-link-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.8rem;
+      filter: drop-shadow(0 2px 4px rgba(255, 138, 0, 0.3));
+    }
+
+    .quick-link-title {
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .quick-link-desc {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    /* ❓ FAQ Section */
+    .faq-section {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 138, 0, 0.15);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .faq-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .faq-icon {
+      font-size: 1.8rem;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .faq-item {
+      background: rgba(249, 249, 249, 0.8);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .faq-item.active {
+      border-color: #FF8A00;
+      box-shadow: 0 4px 16px rgba(255, 138, 0, 0.15);
+    }
+
+    .faq-question {
+      padding: 1.2rem 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #0A0F1C;
+      transition: all 0.2s;
+    }
+
+    .faq-question:hover {
+      background: rgba(255, 138, 0, 0.05);
+    }
+
+    .faq-question-text {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex: 1;
+    }
+
+    .faq-question-icon {
+      font-size: 1.2rem;
+    }
+
+    .faq-toggle {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #FF8A00;
+      transition: transform 0.3s;
+    }
+
+    .faq-item.active .faq-toggle {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+    }
+
+    .faq-answer-content {
+      padding: 0 1.5rem 1.5rem 1.5rem;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* 📬 Contact Form */
+    .contact-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 138, 0, 0.15);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      margin-bottom: 2rem;
+    }
+
+    .contact-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .contact-description {
+      color: #666;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      color: #0A0F1C;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      background: rgba(249, 249, 249, 0.8);
+      color: #0A0F1C;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: #FF8A00;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #FF8A00, #FFA500);
+      color: white;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(255, 138, 0, 0.3);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .submit-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .submit-btn:hover {
+      box-shadow: 0 6px 24px rgba(255, 138, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .contact-status {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+
+    .contact-status.success {
+      background: rgba(0, 184, 124, 0.1);
+      border: 2px solid #00B87C;
+      color: #00B87C;
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    /* 📞 Contact Methods */
+    .contact-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .contact-method {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.05), rgba(0, 184, 124, 0.05));
+      border: 1px solid rgba(255, 138, 0, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .contact-method:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.15);
+    }
+
+    .contact-method-icon {
+      font-size: 2rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .contact-method-title {
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-method-info {
+      color: #FF8A00;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* 👣 Footer */
+    footer {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 138, 0, 0.1);
+      padding: 2rem 0;
+      margin-top: 4rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #666;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: #FF8A00;
+    }
+
+    .copyright {
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .burger {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .support-title {
+        font-size: 1.5rem;
+      }
+
+      .quick-links {
+        grid-template-columns: 1fr;
+      }
+
+      .faq-section,
+      .contact-card {
+        padding: 1.5rem;
+      }
+
+      .contact-methods {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 🎨 Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .faq-item {
+      animation: fadeIn 0.5s ease;
+    }
+
+    .faq-item:nth-child(1) { animation-delay: 0s; }
+    .faq-item:nth-child(2) { animation-delay: 0.1s; }
+    .faq-item:nth-child(3) { animation-delay: 0.2s; }
+    .faq-item:nth-child(4) { animation-delay: 0.3s; }
+    .faq-item:nth-child(5) { animation-delay: 0.4s; }
+    .faq-item:nth-child(6) { animation-delay: 0.5s; }
   </style>
 </head>
 <body>
+
+<!-- 🧭 Header -->
 <header>
   <div class="header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+    <div class="logo">KwikSend</div>
     <nav>
       <ul class="nav-links" id="nav-menu">
         <li><a href="dashboard.html">Accueil</a></li>
@@ -60,84 +569,497 @@
   </div>
 </header>
 
-<main style="padding:1.5rem;">
-  <section style="max-width:700px;margin:auto;">
-    <h2>❓ Foire aux questions (FAQ)</h2>
-    <div id="faqList">
+<!-- 💡 Support Container -->
+<section class="support-container">
+  <h1 class="support-title">💡 Centre d'aide & Support</h1>
+  <p class="support-subtitle">
+    Trouvez rapidement des réponses à vos questions ou contactez notre équipe
+  </p>
+
+  <!-- 🔍 Search Bar -->
+  <div class="search-container">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        class="search-input" 
+        id="searchInput"
+        placeholder="Rechercher dans l'aide... (ex: comment envoyer de l'argent)"
+      />
+    </div>
+  </div>
+
+  <!-- 🎯 Quick Links -->
+  <div class="quick-links">
+    <a href="#faq" class="quick-link-card">
+      <div class="quick-link-icon">❓</div>
+      <div class="quick-link-title">FAQ</div>
+      <div class="quick-link-desc">Questions fréquentes</div>
+    </a>
+    
+    <a href="#contact" class="quick-link-card">
+      <div class="quick-link-icon">📬</div>
+      <div class="quick-link-title">Contact</div>
+      <div class="quick-link-desc">Nous écrire</div>
+    </a>
+    
+    <a href="portefeuille.html" class="quick-link-card">
+      <div class="quick-link-icon">💰</div>
+      <div class="quick-link-title">Portefeuille</div>
+      <div class="quick-link-desc">Gérer mes fonds</div>
+    </a>
+    
+    <a href="transfert.html" class="quick-link-card">
+      <div class="quick-link-icon">🌍</div>
+      <div class="quick-link-title">Transferts</div>
+      <div class="quick-link-desc">Envoyer de l'argent</div>
+    </a>
+  </div>
+
+  <!-- ❓ FAQ Section -->
+  <div id="faq" class="faq-section">
+    <h2 class="faq-title">
+      <span class="faq-icon">❓</span>
+      Questions fréquemment posées
+    </h2>
+    
+    <div class="faq-list" id="faqList">
       <div class="faq-item">
-        <h3>💸 Comment envoyer de l’argent ? <span>+</span></h3>
-        <div class="faq-answer">Connectez-vous à votre compte, puis allez dans “Transfert Afrique ↔ Europe” ou “KwikSend ↔ KwikSend”. Entrez le montant et validez.</div>
+        <div class="faq-question">
+          <div class="faq-question-text">
+            <span class="faq-question-icon">💸</span>
+            Comment envoyer de l'argent avec KwikSend ?
+          </div>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Pour envoyer de l'argent, connectez-vous à votre compte et accédez à la section "Transfert". Vous avez deux options :
+            <br><br>
+            <strong>1. Transfert Afrique ↔ Europe :</strong> Pour les transferts internationaux entre l'Afrique et l'Europe.
+            <br>
+            <strong>2. KwikTransfert (entre utilisateurs) :</strong> Pour les transferts instantanés entre comptes KwikSend.
+            <br><br>
+            Entrez le montant, les informations du destinataire, vérifiez les détails et validez la transaction. C'est aussi simple que cela !
+          </div>
+        </div>
       </div>
+
       <div class="faq-item">
-        <h3>🏦 Comment retirer mes fonds ? <span>+</span></h3>
-        <div class="faq-answer">Vous pouvez retirer via IBAN, carte bancaire ou Mobile Money depuis la section “Portefeuille → Alimenter / Retirer”.</div>
+        <div class="faq-question">
+          <div class="faq-question-text">
+            <span class="faq-question-icon">🏦</span>
+            Comment retirer mes fonds ?
+          </div>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Vous pouvez retirer vos fonds de trois manières :
+            <br><br>
+            <strong>• Via IBAN :</strong> Transfert vers votre compte bancaire (délai : 1-3 jours ouvrables)
+            <br>
+            <strong>• Par carte bancaire :</strong> Retrait sur votre carte de débit/crédit (instantané)
+            <br>
+            <strong>• Mobile Money :</strong> Retrait sur votre compte mobile (instantané)
+            <br><br>
+            Accédez à "Portefeuille → Alimenter / Retirer" et sélectionnez votre méthode de retrait préférée.
+          </div>
+        </div>
       </div>
+
       <div class="faq-item">
-        <h3>📄 Comment obtenir mon relevé ? <span>+</span></h3>
-        <div class="faq-answer">Dans “Relevés”, cliquez sur “Télécharger mon relevé PDF”. Un document officiel simulé sera généré automatiquement.</div>
+        <div class="faq-question">
+          <div class="faq-question-text">
+            <span class="faq-question-icon">📄</span>
+            Comment obtenir mon relevé de transactions ?
+          </div>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Pour obtenir votre relevé de transactions :
+            <br><br>
+            1. Accédez à la section "Relevés" depuis le menu principal
+            <br>
+            2. Sélectionnez la période souhaitée (mensuel, trimestriel, annuel ou personnalisé)
+            <br>
+            3. Cliquez sur "Télécharger mon relevé PDF"
+            <br>
+            4. Un document officiel sera généré instantanément
+            <br><br>
+            Le relevé contient toutes vos transactions avec les détails complets (dates, montants, destinataires).
+          </div>
+        </div>
       </div>
+
       <div class="faq-item">
-        <h3>🔐 Est-ce que mes données sont sécurisées ? <span>+</span></h3>
-        <div class="faq-answer">Oui. KwikSend chiffre vos données localement et ne partage jamais vos informations personnelles.</div>
+        <div class="faq-question">
+          <div class="faq-question-text">
+            <span class="faq-question-icon">🔐</span>
+            Mes données sont-elles sécurisées ?
+          </div>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Absolument ! La sécurité est notre priorité absolue :
+            <br><br>
+            <strong>• Chiffrement de bout en bout :</strong> Toutes vos données sont chiffrées
+            <br>
+            <strong>• Authentification 2FA :</strong> Protection renforcée avec double authentification
+            <br>
+            <strong>• Conformité RGPD :</strong> Respect total de vos droits sur vos données
+            <br>
+            <strong>• Vérification KYC :</strong> Processus de vérification d'identité sécurisé
+            <br>
+            <strong>• Aucun partage :</strong> Vos informations ne sont jamais vendues ou partagées
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <div class="faq-question-text">
+            <span class="faq-question-icon">⏱️</span>
+            Combien de temps prend un transfert ?
+          </div>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Les délais varient selon le type de transfert :
+            <br><br>
+            <strong>• KwikTransfert (entre utilisateurs) :</strong> Instantané (quelques secondes)
+            <br>
+            <strong>• Mobile Money :</strong> 5-15 minutes
+            <br>
+            <strong>• Carte bancaire :</strong> 30 minutes à 2 heures
+            <br>
+            <strong>• Virement IBAN :</strong> 1-3 jours ouvrables
+            <br><br>
+            Dans 95% des cas, les transferts entre utilisateurs KwikSend sont instantanés !
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <div class="faq-question-text">
+            <span class="faq-question-icon">💰</span>
+            Quels sont les frais de transaction ?
+          </div>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Nos frais sont transparents et compétitifs :
+            <br><br>
+            <strong>• KwikTransfert :</strong> Gratuit entre utilisateurs KwikSend
+            <br>
+            <strong>• Transfert international :</strong> 1-3% selon le corridor et le montant
+            <br>
+            <strong>• Retrait Mobile Money :</strong> 0.5% (max 5€)
+            <br>
+            <strong>• Retrait carte/IBAN :</strong> 1% (max 10€)
+            <br><br>
+            Les frais exacts vous seront indiqués avant de valider chaque transaction.
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section class="contact-card">
-    <h2>📬 Nous contacter</h2>
-    <p style="color:#666;">Besoin d’aide ? Remplissez ce formulaire et notre équipe vous répondra rapidement (simulation).</p>
+  <!-- 📬 Contact Form -->
+  <div id="contact" class="contact-card">
+    <h2 class="contact-title">
+      <span>📬</span>
+      Contactez-nous
+    </h2>
+    <p class="contact-description">
+      Vous n'avez pas trouvé de réponse à votre question ? Notre équipe support est là pour vous aider. 
+      Remplissez ce formulaire et nous vous répondrons dans les plus brefs délais.
+    </p>
 
     <form id="contactForm">
-      <input type="text" id="name" placeholder="Votre nom" required>
-      <input type="email" id="email" placeholder="Votre e-mail" required>
-      <textarea id="message" rows="5" placeholder="Votre message..." required></textarea>
-      <button type="submit">Envoyer le message</button>
+      <div class="form-group">
+        <label class="form-label" for="name">Nom complet *</label>
+        <input 
+          type="text" 
+          id="name" 
+          class="form-input" 
+          placeholder="Ex: Jean Dupont"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Adresse email *</label>
+        <input 
+          type="email" 
+          id="email" 
+          class="form-input" 
+          placeholder="Ex: jean.dupont@email.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="subject">Sujet</label>
+        <input 
+          type="text" 
+          id="subject" 
+          class="form-input" 
+          placeholder="Ex: Problème avec un transfert"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="message">Message *</label>
+        <textarea 
+          id="message" 
+          class="form-textarea" 
+          placeholder="Décrivez votre problème ou votre question en détail..."
+          required
+        ></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        📤 Envoyer le message
+      </button>
     </form>
 
-    <p id="contactStatus" style="margin-top:10px;color:#0a8f2f;display:none;">✅ Message envoyé (simulation)</p>
-  </section>
-</main>
+    <div id="contactStatus" class="contact-status">
+      ✅ Message envoyé avec succès ! Notre équipe vous répondra dans les 24h.
+    </div>
 
+    <!-- Contact Methods -->
+    <div class="contact-methods">
+      <div class="contact-method">
+        <div class="contact-method-icon">📧</div>
+        <div class="contact-method-title">Email</div>
+        <div class="contact-method-info">kifouliw@gmail.com</div>
+      </div>
+      
+      <div class="contact-method">
+        <div class="contact-method-icon">💬</div>
+        <div class="contact-method-title">Chat en direct</div>
+        <div class="contact-method-info">Bientôt disponible</div>
+      </div>
+      
+      <div class="contact-method">
+        <div class="contact-method-icon">📱</div>
+        <div class="contact-method-title">WhatsApp</div>
+        <div class="contact-method-info">Support 24/7</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 👣 Footer -->
 <footer>
-  <p>© 2025 KwikSend. Tous droits réservés.</p>
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="dashboard.html">Accueil</a>
+      <a href="portefeuille.html">Portefeuille</a>
+      <a href="profile.html">Mon compte</a>
+      <a href="mentions.html">Mentions légales</a>
+      <a href="mailto:kifouliw@gmail.com">Contact</a>
+    </div>
+    <p class="copyright">© 2025 KwikSend. Tous droits réservés.</p>
+  </div>
 </footer>
 
+<!-- 📲 Scripts -->
 <script>
 (function(){
-  // --- FAQ toggle ---
-  document.querySelectorAll('.faq-item').forEach(item=>{
-    item.addEventListener('click', ()=>{
-      const ans = item.querySelector('.faq-answer');
-      const open = ans.style.display === 'block';
-      document.querySelectorAll('.faq-answer').forEach(a=>a.style.display='none');
-      document.querySelectorAll('.faq-item span').forEach(s=>s.textContent='+');
-      ans.style.display = open ? 'none' : 'block';
-      item.querySelector('span').textContent = open ? '+' : '–';
+  // FAQ Toggle
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    
+    question.addEventListener('click', () => {
+      const isActive = item.classList.contains('active');
+      
+      // Close all FAQ items
+      faqItems.forEach(faq => faq.classList.remove('active'));
+      
+      // Open clicked item if it wasn't active
+      if (!isActive) {
+        item.classList.add('active');
+      }
     });
   });
 
-  // --- Contact simulation ---
-  const form = document.getElementById('contactForm');
-  const status = document.getElementById('contactStatus');
-  form.addEventListener('submit', e=>{
+  // Search Functionality
+  const searchInput = document.getElementById('searchInput');
+  
+  searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    
+    faqItems.forEach(item => {
+      const questionText = item.querySelector('.faq-question-text').textContent.toLowerCase();
+      const answerText = item.querySelector('.faq-answer-content').textContent.toLowerCase();
+      
+      if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+        item.style.display = 'block';
+        
+        // Highlight search term if found
+        if (searchTerm.length > 2) {
+          item.classList.add('active');
+        }
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    
+    // If search is empty, show all
+    if (searchTerm === '') {
+      faqItems.forEach(item => {
+        item.style.display = 'block';
+        item.classList.remove('active');
+      });
+    }
+  });
+
+  // Contact Form Submission
+  const contactForm = document.getElementById('contactForm');
+  const contactStatus = document.getElementById('contactStatus');
+  
+  contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
+    const subject = document.getElementById('subject').value.trim();
     const message = document.getElementById('message').value.trim();
-    if(!name || !email || !message) return alert("Merci de remplir tous les champs.");
+    
+    if (!name || !email || !message) {
+      showToast('⚠️ Veuillez remplir tous les champs obligatoires', 'warning');
+      return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showToast('⚠️ Veuillez entrer une adresse email valide', 'warning');
+      return;
+    }
+    
+    // Save to localStorage (simulation)
+    const messages = JSON.parse(localStorage.getItem('ks_support_msgs') || '[]');
+    messages.push({
+      name,
+      email,
+      subject: subject || 'Sans sujet',
+      message,
+      date: new Date().toISOString(),
+      status: 'pending'
+    });
+    localStorage.setItem('ks_support_msgs', JSON.stringify(messages));
+    
+    // Show success message
+    contactStatus.classList.add('success');
+    contactForm.reset();
+    
+    showToast('✅ Message envoyé avec succès !', 'success');
+    
+    // Hide status after 5 seconds
+    setTimeout(() => {
+      contactStatus.classList.remove('success');
+    }, 5000);
+  });
 
-    // simulation enregistrement local
-    const msgs = JSON.parse(localStorage.getItem('ks_support_msgs') || '[]');
-    msgs.push({ name, email, message, date:new Date().toLocaleString() });
-    localStorage.setItem('ks_support_msgs', JSON.stringify(msgs));
+  // Toast notification
+  function showToast(message, type = 'info') {
+    const colors = {
+      success: 'linear-gradient(135deg, #00B87C, #00D48F)',
+      warning: 'linear-gradient(135deg, #FF8A00, #FFA500)',
+      error: 'linear-gradient(135deg, #DC2626, #EF4444)',
+      info: 'linear-gradient(135deg, #8B5CF6, #A78BFA)'
+    };
 
-    form.reset();
-    status.style.display = 'block';
-    setTimeout(()=> status.style.display='none', 2500);
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${colors[type]};
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      z-index: 99999;
+      font-weight: 600;
+      animation: slideIn 0.4s ease;
+      max-width: 300px;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.animation = 'slideOut 0.4s ease';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  // Add animation styles
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Toggle menu (mobile)
+  window.toggleMenu = function() {
+    document.getElementById('nav-menu').classList.toggle('active');
+  };
+
+  // Logout
+  window.logout = function() {
+    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+      localStorage.removeItem('kwiksend_user');
+      window.location.href = 'index.html';
+    }
+  };
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
   });
 })();
 </script>
-<!-- Appels scripts globaux -->
-<script src="app.js"></script>
+
 </body>
 </html>
