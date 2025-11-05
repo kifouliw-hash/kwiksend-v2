@@ -1,28 +1,594 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KwikSend — Vérification KYC</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KwikSend - Vérification KYC</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
   <style>
-    /* mini-styles spécifiques KYC (si tu veux les garder dans style.css replace them) */
-    .kyc-card { background:#fff;padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.06); max-width:720px;margin:auto; }
-    .dropzone { border:2px dashed #eee;padding:18px;border-radius:10px;text-align:center;cursor:pointer; }
-    .dropzone.drag { border-color:var(--orange); background:#fff8f2; }
-    .thumb { margin-top:12px; display:flex; gap:8px; align-items:center; }
-    .thumb img { width:96px;height:64px;object-fit:cover;border-radius:6px;border:1px solid #ddd; }
-    .status-pill { display:inline-block;padding:6px 10px;border-radius:999px;font-weight:600;font-size:.9rem; }
-    .status-pending { background:#fff4e6;color:#b05900;border:1px solid #ffe7cc; }
-    .status-verified { background:#e8f8ef;color:#0a8f2f;border:1px solid #c9f0d6; }
-    .loader-small { width:28px;height:28px;border-radius:50%;border:4px solid rgba(0,0,0,.08);border-top-color:var(--orange);animation:spin .9s linear infinite; display:inline-block;vertical-align:middle; }
-    @keyframes spin{to{transform:rotate(360deg)}}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    /* 🧭 Header moderne */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    .burger {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #FF8A00;
+    }
+
+    /* 📄 KYC Container */
+    .kyc-container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .kyc-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .kyc-subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    /* 🎯 Status Badge */
+    .status-banner {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 138, 0, 0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(255, 138, 0, 0.1);
+      transition: all 0.3s;
+    }
+
+    .status-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 138, 0, 0.15);
+    }
+
+    .status-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .status-icon {
+      font-size: 2.5rem;
+      filter: drop-shadow(0 2px 8px rgba(255, 138, 0, 0.3));
+    }
+
+    .status-text h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 0.3rem;
+    }
+
+    .status-text p {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .status-pending {
+      background: linear-gradient(135deg, #FFF4E6, #FFE7CC);
+      color: #B05900;
+      border: 2px solid #FFD699;
+    }
+
+    .status-verified {
+      background: linear-gradient(135deg, #E8F8EF, #C9F0D6);
+      color: #0A8F2F;
+      border: 2px solid #9FE6B8;
+    }
+
+    .status-rejected {
+      background: linear-gradient(135deg, #FFE8E8, #FFCCCC);
+      color: #C62828;
+      border: 2px solid #FF9999;
+    }
+
+    .status-not-submitted {
+      background: linear-gradient(135deg, #F5F5F5, #E0E0E0);
+      color: #666;
+      border: 2px solid #CCCCCC;
+    }
+
+    /* 📋 Form Card */
+    .kyc-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 138, 0, 0.15);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s;
+    }
+
+    .kyc-card:hover {
+      box-shadow: 0 12px 32px rgba(255, 138, 0, 0.12);
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #0A0F1C;
+      font-size: 0.9rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.9rem;
+      border: 2px solid #e0e0e0;
+      background: rgba(249, 249, 249, 0.8);
+      color: #0A0F1C;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #FF8A00;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.1);
+    }
+
+    /* 📤 Dropzone */
+    .dropzone {
+      border: 3px dashed #e0e0e0;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dropzone::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.05), rgba(0, 184, 124, 0.05));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .dropzone:hover::before {
+      opacity: 1;
+    }
+
+    .dropzone:hover {
+      border-color: #FF8A00;
+      background: rgba(255, 248, 242, 0.8);
+      transform: scale(1.01);
+    }
+
+    .dropzone.drag {
+      border-color: #FF8A00;
+      background: rgba(255, 248, 242, 0.9);
+      transform: scale(1.02);
+    }
+
+    .dropzone-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .dropzone-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 2px 8px rgba(255, 138, 0, 0.2));
+    }
+
+    .dropzone-text {
+      font-weight: 600;
+      color: #0A0F1C;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropzone-hint {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    /* 🖼️ Preview */
+    .preview-container {
+      margin-top: 1.5rem;
+      display: none;
+    }
+
+    .preview-container.active {
+      display: block;
+    }
+
+    .preview-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.2s;
+    }
+
+    .preview-card:hover {
+      border-color: #FF8A00;
+      box-shadow: 0 4px 12px rgba(255, 138, 0, 0.1);
+    }
+
+    .preview-image {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .preview-info {
+      flex: 1;
+    }
+
+    .preview-name {
+      font-weight: 600;
+      color: #0A0F1C;
+      margin-bottom: 0.3rem;
+    }
+
+    .preview-size {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .preview-remove {
+      background: #f0f0f0;
+      color: #666;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .preview-remove:hover {
+      background: #FFE8E8;
+      color: #C62828;
+    }
+
+    /* 🎨 Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF8A00, #FFA500);
+      color: white;
+      box-shadow: 0 4px 16px rgba(255, 138, 0, 0.3);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 24px rgba(255, 138, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: #f2f2f2;
+      color: #666;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    /* ⏳ Loader */
+    .loader-container {
+      display: none;
+      align-items: center;
+      gap: 0.8rem;
+      margin-left: 1rem;
+    }
+
+    .loader-container.active {
+      display: flex;
+    }
+
+    .loader-spinner {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 138, 0, 0.2);
+      border-top-color: #FF8A00;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      color: #FF8A00;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* 📝 Requirements */
+    .requirements {
+      background: rgba(139, 92, 246, 0.05);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .requirements-title {
+      font-weight: 700;
+      color: #8B5CF6;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .requirements-list {
+      list-style: none;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .requirements-list li {
+      display: flex;
+      align-items: start;
+      gap: 0.8rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .requirements-list li::before {
+      content: '✓';
+      color: #8B5CF6;
+      font-weight: 900;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .burger {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .kyc-title {
+        font-size: 1.5rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .status-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      .loader-container {
+        margin-left: 0;
+        justify-content: center;
+        width: 100%;
+        margin-top: 1rem;
+      }
+    }
+
+    /* 🎉 Success Animation */
+    @keyframes successPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .success-animation {
+      animation: successPulse 0.5s ease-in-out;
+    }
   </style>
 </head>
 <body>
+
+<!-- 🧭 Header -->
 <header>
   <div class="header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+    <div class="logo">KwikSend</div>
     <nav>
       <ul class="nav-links" id="nav-menu">
         <li><a href="dashboard.html">Accueil</a></li>
@@ -30,7 +596,7 @@
         <li><a href="transfert.html">Transfert</a></li>
         <li><a href="kwiktransfert.html">KwikTransfert</a></li>
         <li><a href="releves.html">Relevés</a></li>
-        <li><a href="profile.html">Compte</a></li>
+        <li><a href="profile.html" class="active">Compte</a></li>
         <li><a href="#" onclick="logout()">Déconnexion</a></li>
       </ul>
     </nav>
@@ -38,188 +604,457 @@
   </div>
 </header>
 
-<main style="padding:2rem;">
-  <section class="kyc-card" aria-labelledby="kycTitle">
-    <h2 id="kycTitle">📄 Vérification d'identité (KYC) — Simulation</h2>
-    <p style="color:#666;">Pour l'instant c'est une simulation : téléversez une pièce d'identité (image). Le statut sera enregistré localement.</p>
+<!-- 📄 KYC Container -->
+<section class="kyc-container">
+  <h1 class="kyc-title">📄 Vérification d'identité (KYC)</h1>
+  <p class="kyc-subtitle">
+    Complétez votre vérification pour débloquer toutes les fonctionnalités de KwikSend
+  </p>
 
-    <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;">
-      <div style="flex:1;min-width:260px;">
-        <label><b>Informations personnelles</b></label>
-        <div style="display:grid;gap:8px;margin-top:8px;">
-          <input id="inpFullName" placeholder="Nom complet" />
-          <input id="inpDob" type="date" placeholder="Date de naissance" />
-          <input id="inpAddress" placeholder="Adresse (ville, pays)" />
-        </div>
+  <!-- 🎯 Status Banner -->
+  <div class="status-banner">
+    <div class="status-info">
+      <div class="status-icon" id="statusIcon">🔒</div>
+      <div class="status-text">
+        <h3 id="statusTitle">Vérification en attente</h3>
+        <p id="statusDescription">Soumettez vos documents pour activer votre compte</p>
+      </div>
+    </div>
+    <span class="status-pill status-not-submitted" id="statusPill">Non soumis</span>
+  </div>
+
+  <!-- 📋 KYC Form -->
+  <div class="kyc-card">
+    <div class="section-title">
+      <span class="section-icon">👤</span>
+      Informations personnelles
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="inpFullName">Nom complet *</label>
+        <input 
+          type="text" 
+          id="inpFullName" 
+          class="form-input" 
+          placeholder="Ex: Jean Dupont"
+          required
+        />
       </div>
 
-      <div style="flex:1;min-width:260px;">
-        <label><b>Pièce d'identité</b></label>
+      <div class="form-group">
+        <label class="form-label" for="inpDob">Date de naissance *</label>
+        <input 
+          type="date" 
+          id="inpDob" 
+          class="form-input"
+          required
+        />
+      </div>
 
-        <div id="dropzone" class="dropzone" tabindex="0">
-          <div id="dzText">🔽 Glisser-déposer ou cliquer pour choisir un fichier (JPG/PNG, max 5MB)</div>
-          <input id="fileInput" type="file" accept="image/*" style="display:none" />
-        </div>
+      <div class="form-group">
+        <label class="form-label" for="inpAddress">Adresse complète *</label>
+        <input 
+          type="text" 
+          id="inpAddress" 
+          class="form-input" 
+          placeholder="Ex: 123 Rue de la Paix, Paris, France"
+          required
+        />
+      </div>
 
-        <div id="preview" class="thumb" aria-live="polite"></div>
-
-        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
-          <button id="submitKyc" class="btn btn-accent">Soumettre (simulation)</button>
-          <button id="clearKyc" class="btn" style="background:#f2f2f2;color:#222">Annuler</button>
-          <div id="kycLoader" style="display:none;margin-left:8px;"><span class="loader-small"></span></div>
-        </div>
-
-        <p style="margin-top:10px;color:#666;font-size:.9rem;">Après soumission, le statut sera enregistré localement (simulation).</p>
+      <div class="form-group">
+        <label class="form-label" for="inpNationality">Nationalité</label>
+        <input 
+          type="text" 
+          id="inpNationality" 
+          class="form-input" 
+          placeholder="Ex: Française"
+        />
       </div>
     </div>
 
-    <hr style="margin:16px 0;border:none;border-top:1px solid #f0f0f0" />
+    <hr style="margin: 2rem 0; border: none; border-top: 1px solid rgba(255, 138, 0, 0.1);" />
 
-    <div>
-      <b>Statut KYC actuel :</b>
-      <span id="kycStatusWrap" style="margin-left:8px;">
-        <span id="kycStatusPill" class="status-pill status-pending">Non soumis</span>
-      </span>
+    <div class="section-title">
+      <span class="section-icon">🪪</span>
+      Document d'identité
     </div>
-  </section>
-</main>
 
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Zone de dépôt pour document">
+      <div class="dropzone-content">
+        <div class="dropzone-icon">📤</div>
+        <div class="dropzone-text">Glissez-déposez votre document ici</div>
+        <div class="dropzone-hint">ou cliquez pour sélectionner (JPG, PNG - Max 5MB)</div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+    </div>
+
+    <div class="preview-container" id="previewContainer">
+      <div class="preview-card">
+        <img id="previewImage" class="preview-image" alt="Aperçu du document" />
+        <div class="preview-info">
+          <div class="preview-name" id="previewName">document.jpg</div>
+          <div class="preview-size" id="previewSize">0 KB</div>
+        </div>
+        <button class="preview-remove" id="removeBtn">✕ Retirer</button>
+      </div>
+    </div>
+
+    <div class="requirements">
+      <div class="requirements-title">
+        <span>ℹ️</span>
+        Documents acceptés
+      </div>
+      <ul class="requirements-list">
+        <li>Carte d'identité nationale (recto-verso)</li>
+        <li>Passeport (page principale avec photo)</li>
+        <li>Permis de conduire (recto-verso)</li>
+        <li>Photo claire et lisible, sans reflet</li>
+      </ul>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-primary" id="submitBtn">
+        ✓ Soumettre ma vérification
+      </button>
+      <button class="btn btn-secondary" id="clearBtn">
+        ✕ Réinitialiser
+      </button>
+      <div class="loader-container" id="loaderContainer">
+        <div class="loader-spinner"></div>
+        <span class="loader-text">Vérification en cours...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 📲 Scripts -->
 <script>
 (function(){
-  // keys
+  // Storage keys
   const KYC_KEY = 'ks_kyc_status';
   const KYC_DATA = 'ks_kyc_data';
 
-  // elements
+  // Elements
   const fileInput = document.getElementById('fileInput');
   const dropzone = document.getElementById('dropzone');
-  const preview = document.getElementById('preview');
-  const submitBtn = document.getElementById('submitKyc');
-  const clearBtn = document.getElementById('clearKyc');
-  const loader = document.getElementById('kycLoader');
-  const statusPill = document.getElementById('kycStatusPill');
+  const previewContainer = document.getElementById('previewContainer');
+  const previewImage = document.getElementById('previewImage');
+  const previewName = document.getElementById('previewName');
+  const previewSize = document.getElementById('previewSize');
+  const removeBtn = document.getElementById('removeBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const loaderContainer = document.getElementById('loaderContainer');
+  const statusPill = document.getElementById('statusPill');
+  const statusIcon = document.getElementById('statusIcon');
+  const statusTitle = document.getElementById('statusTitle');
+  const statusDescription = document.getElementById('statusDescription');
 
-  // load existing state
-  function loadState(){
-    const st = localStorage.getItem(KYC_KEY) || 'not_submitted';
-    renderStatus(st);
+  // Form inputs
+  const inpFullName = document.getElementById('inpFullName');
+  const inpDob = document.getElementById('inpDob');
+  const inpAddress = document.getElementById('inpAddress');
+  const inpNationality = document.getElementById('inpNationality');
+
+  let currentFile = null;
+  let currentDataUrl = null;
+
+  // Load existing state
+  function loadState() {
+    const status = localStorage.getItem(KYC_KEY) || 'not_submitted';
+    renderStatus(status);
+    
     const data = JSON.parse(localStorage.getItem(KYC_DATA) || 'null');
-    if(data && data.filename){
-      showPreviewDataURL(data.dataUrl, data.filename);
+    if (data) {
+      inpFullName.value = data.name || '';
+      inpDob.value = data.dob || '';
+      inpAddress.value = data.address || '';
+      inpNationality.value = data.nationality || '';
+      
+      if (data.filename && data.dataUrl) {
+        showPreview(data.dataUrl, data.filename, data.size);
+      }
     }
   }
 
-  function renderStatus(st){
-    if(st === 'verified'){
-      statusPill.textContent = 'Vérifié';
-      statusPill.className = 'status-pill status-verified';
-    } else if(st === 'pending'){
-      statusPill.textContent = 'En attente';
-      statusPill.className = 'status-pill status-pending';
-    } else if(st === 'rejected'){
-      statusPill.textContent = 'Rejeté';
-      statusPill.className = 'status-pill status-pending';
-    } else {
-      statusPill.textContent = 'Non soumis';
-      statusPill.className = 'status-pill status-pending';
+  // Render status
+  function renderStatus(status) {
+    const statusConfig = {
+      'verified': {
+        icon: '✅',
+        title: 'Compte vérifié',
+        description: 'Votre identité a été vérifiée avec succès',
+        pillText: 'Vérifié',
+        pillClass: 'status-verified'
+      },
+      'pending': {
+        icon: '⏳',
+        title: 'Vérification en cours',
+        description: 'Vos documents sont en cours d\'analyse',
+        pillText: 'En attente',
+        pillClass: 'status-pending'
+      },
+      'rejected': {
+        icon: '❌',
+        title: 'Vérification rejetée',
+        description: 'Veuillez soumettre de nouveaux documents',
+        pillText: 'Rejeté',
+        pillClass: 'status-rejected'
+      },
+      'not_submitted': {
+        icon: '🔒',
+        title: 'Vérification en attente',
+        description: 'Soumettez vos documents pour activer votre compte',
+        pillText: 'Non soumis',
+        pillClass: 'status-not-submitted'
+      }
+    };
+
+    const config = statusConfig[status] || statusConfig['not_submitted'];
+    
+    statusIcon.textContent = config.icon;
+    statusTitle.textContent = config.title;
+    statusDescription.textContent = config.description;
+    statusPill.textContent = config.pillText;
+    statusPill.className = `status-pill ${config.pillClass}`;
+    
+    localStorage.setItem('ks_kyc_status', status);
+  }
+
+  // Dropzone events
+  dropzone.addEventListener('click', () => fileInput.click());
+  
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('drag');
+  });
+  
+  dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('drag');
+  });
+  
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag');
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) handleFile(file);
+  });
+
+  // Handle file upload
+  function handleFile(file) {
+    if (!file.type.startsWith('image/')) {
+      showAlert('⚠️ Veuillez sélectionner une image (JPG/PNG)', 'warning');
+      return;
     }
-    // also trigger account badge update via localStorage (account page listens)
-    localStorage.setItem('ks_kyc_status', st);
-  }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      showAlert('⚠️ Fichier trop volumineux (max 5MB)', 'warning');
+      return;
+    }
 
-  function showPreviewDataURL(dataUrl, name){
-    preview.innerHTML = '';
-    const img = document.createElement('img');
-    img.src = dataUrl;
-    img.alt = name || 'preview';
-    preview.appendChild(img);
-    const nm = document.createElement('div');
-    nm.style.fontSize = '.9rem';
-    nm.style.color = '#333';
-    nm.textContent = name;
-    preview.appendChild(nm);
-  }
-
-  // dropzone behaviour
-  dropzone.addEventListener('click', ()=> fileInput.click());
-  dropzone.addEventListener('dragover', (e)=>{ e.preventDefault(); dropzone.classList.add('drag'); });
-  dropzone.addEventListener('dragleave', ()=> dropzone.classList.remove('drag'));
-  dropzone.addEventListener('drop', (e)=> {
-    e.preventDefault(); dropzone.classList.remove('drag');
-    const f = e.dataTransfer.files && e.dataTransfer.files[0];
-    if(f) handleFile(f);
-  });
-
-  fileInput.addEventListener('change', (e)=> {
-    const f = e.target.files[0];
-    if(f) handleFile(f);
-  });
-
-  function handleFile(file){
-    if(!file.type.startsWith('image/')) return alert('Veuillez choisir une image (JPG/PNG).');
-    if(file.size > 5*1024*1024) return alert('Fichier trop volumineux (max 5MB).');
+    currentFile = file;
+    
     const reader = new FileReader();
     reader.onload = () => {
-      const dataUrl = reader.result;
-      showPreviewDataURL(dataUrl, file.name);
-      // store temp in sessionStorage only (for demo)
-      sessionStorage.setItem('kyc_file_name', file.name);
-      sessionStorage.setItem('kyc_file_data', dataUrl);
+      currentDataUrl = reader.result;
+      showPreview(currentDataUrl, file.name, file.size);
     };
     reader.readAsDataURL(file);
   }
 
-  // submit (simulation)
-  submitBtn.addEventListener('click', ()=>{
-    const fullName = document.getElementById('inpFullName').value.trim();
-    if(!fullName) return alert('Veuillez entrer votre nom complet.');
-    const fileData = sessionStorage.getItem('kyc_file_data');
-    if(!fileData) return alert('Veuillez téléverser une image de votre pièce.');
+  // Show preview
+  function showPreview(dataUrl, filename, size) {
+    previewImage.src = dataUrl;
+    previewName.textContent = filename;
+    previewSize.textContent = formatFileSize(size);
+    previewContainer.classList.add('active');
+  }
 
-    // show loader
-    loader.style.display = 'inline-block';
+  // Format file size
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 KB';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Remove file
+  removeBtn.addEventListener('click', () => {
+    currentFile = null;
+    currentDataUrl = null;
+    previewContainer.classList.remove('active');
+    fileInput.value = '';
+  });
+
+  // Submit form
+  submitBtn.addEventListener('click', () => {
+    const fullName = inpFullName.value.trim();
+    const dob = inpDob.value;
+    const address = inpAddress.value.trim();
+
+    if (!fullName) {
+      showAlert('⚠️ Veuillez entrer votre nom complet', 'warning');
+      inpFullName.focus();
+      return;
+    }
+
+    if (!dob) {
+      showAlert('⚠️ Veuillez entrer votre date de naissance', 'warning');
+      inpDob.focus();
+      return;
+    }
+
+    if (!address) {
+      showAlert('⚠️ Veuillez entrer votre adresse', 'warning');
+      inpAddress.focus();
+      return;
+    }
+
+    if (!currentDataUrl) {
+      showAlert('⚠️ Veuillez téléverser une image de votre pièce d\'identité', 'warning');
+      return;
+    }
+
+    // Show loader
+    loaderContainer.classList.add('active');
     submitBtn.disabled = true;
-
-    // simulate upload + verification (2s -> pending then 2s -> verified)
     renderStatus('pending');
 
-    // save submitted data (simulate server store) in localStorage
+    // Simulate upload + verification
     const payload = {
       name: fullName,
-      dob: document.getElementById('inpDob').value || '',
-      address: document.getElementById('inpAddress').value || '',
-      filename: sessionStorage.getItem('kyc_file_name') || 'doc.jpg',
-      dataUrl: sessionStorage.getItem('kyc_file_data') || ''
+      dob: dob,
+      address: address,
+      nationality: inpNationality.value.trim(),
+      filename: currentFile ? currentFile.name : 'document.jpg',
+      size: currentFile ? currentFile.size : 0,
+      dataUrl: currentDataUrl,
+      submittedAt: new Date().toISOString()
     };
+
     localStorage.setItem(KYC_DATA, JSON.stringify(payload));
 
-    setTimeout(()=>{
-      // simulate final verification result (here we auto-verify for demo)
+    // Simulate verification delay (2 seconds)
+    setTimeout(() => {
       renderStatus('verified');
-      loader.style.display = 'none';
+      loaderContainer.classList.remove('active');
       submitBtn.disabled = false;
-      alert('✅ Document soumis et vérifié (simulation).');
-      // also clear session temp
-      sessionStorage.removeItem('kyc_file_name');
-      sessionStorage.removeItem('kyc_file_data');
-    }, 1600);
+      showAlert('✅ Vérification complétée avec succès !', 'success');
+      
+      // Add success animation
+      document.querySelector('.status-banner').classList.add('success-animation');
+      setTimeout(() => {
+        document.querySelector('.status-banner').classList.remove('success-animation');
+      }, 500);
+    }, 2000);
   });
 
-  clearBtn.addEventListener('click', ()=>{
-    sessionStorage.removeItem('kyc_file_name');
-    sessionStorage.removeItem('kyc_file_data');
-    preview.innerHTML = '';
-    document.getElementById('inpFullName').value='';
-    document.getElementById('inpDob').value='';
-    document.getElementById('inpAddress').value='';
-    renderStatus('not_submitted');
+  // Clear form
+  clearBtn.addEventListener('click', () => {
+    if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire ?')) {
+      inpFullName.value = '';
+      inpDob.value = '';
+      inpAddress.value = '';
+      inpNationality.value = '';
+      currentFile = null;
+      currentDataUrl = null;
+      previewContainer.classList.remove('active');
+      fileInput.value = '';
+      
+      // Don't reset status if already verified
+      const currentStatus = localStorage.getItem(KYC_KEY);
+      if (currentStatus !== 'verified') {
+        renderStatus('not_submitted');
+        localStorage.removeItem(KYC_DATA);
+      }
+    }
   });
 
-  // init
+  // Show alert
+  function showAlert(message, type = 'info') {
+    const colors = {
+      success: 'linear-gradient(135deg, #00B87C, #00D48F)',
+      warning: 'linear-gradient(135deg, #FF8A00, #FFA500)',
+      error: 'linear-gradient(135deg, #C62828, #FF5252)',
+      info: 'linear-gradient(135deg, #8B5CF6, #A78BFA)'
+    };
+
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${colors[type]};
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      z-index: 99999;
+      font-weight: 600;
+      animation: slideIn 0.4s ease;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.animation = 'slideOut 0.4s ease';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  // Toggle menu (mobile)
+  window.toggleMenu = function() {
+    document.getElementById('nav-menu').classList.toggle('active');
+  };
+
+  // Logout
+  window.logout = function() {
+    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+      localStorage.removeItem('kwiksend_user');
+      window.location.href = 'index.html';
+    }
+  };
+
+  // Animations CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Initialize
   loadState();
 })();
 </script>
-<!-- Appels scripts globaux -->
-<script src="app.js"></script>
+
 </body>
 </html>
