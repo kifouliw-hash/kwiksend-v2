@@ -3,37 +3,415 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KwikSend — Mentions légales & CGU</title>
-  <link rel="stylesheet" href="style.css">
+  <title>KwikSend - Mentions légales & CGU</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    /* 🧭 Header moderne */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    .burger {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #FF8A00;
+    }
+
+    /* 📄 Main Container */
     main {
       max-width: 900px;
-      margin: auto;
-      padding: 2rem;
-      line-height: 1.7;
-      color: #333;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      margin: 3rem auto;
+      padding: 0 1rem;
     }
-    h2 {
-      margin-top: 2rem;
-      color: var(--orange);
-    }
-    h3 {
-      margin-top: 1.2rem;
-      color: #222;
-    }
-    p {
+
+    .legal-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
       margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    ul { margin: 0.5rem 0 1rem 1.5rem; }
+
+    .legal-subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    /* 📋 Content Card */
+    .legal-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 138, 0, 0.15);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      line-height: 1.8;
+    }
+
+    /* 🎨 Typography */
+    .section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(255, 138, 0, 0.2);
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+    }
+
+    .subsection {
+      margin-top: 1.5rem;
+    }
+
+    .subsection-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #FF8A00;
+      margin-bottom: 0.8rem;
+    }
+
+    p {
+      color: #333;
+      margin-bottom: 1rem;
+      text-align: justify;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    strong {
+      color: #0A0F1C;
+      font-weight: 600;
+    }
+
+    /* 📝 Lists */
+    ul {
+      margin: 1rem 0 1rem 1.5rem;
+      color: #333;
+    }
+
+    li {
+      margin-bottom: 0.6rem;
+      padding-left: 0.5rem;
+    }
+
+    li::marker {
+      color: #FF8A00;
+    }
+
+    /* 🎯 Info Boxes */
+    .info-box {
+      background: rgba(139, 92, 246, 0.05);
+      border-left: 4px solid #8B5CF6;
+      border-radius: 8px;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+    }
+
+    .info-box p {
+      margin-bottom: 0;
+      color: #555;
+    }
+
+    .warning-box {
+      background: rgba(255, 138, 0, 0.05);
+      border-left: 4px solid #FF8A00;
+      border-radius: 8px;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+    }
+
+    .warning-box p {
+      margin-bottom: 0;
+      color: #555;
+    }
+
+    /* 📊 Data Table */
+    .data-table {
+      background: rgba(249, 249, 249, 0.8);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .data-row {
+      display: flex;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+    }
+
+    .data-row:last-child {
+      border-bottom: none;
+    }
+
+    .data-label {
+      font-weight: 600;
+      color: #0A0F1C;
+      min-width: 200px;
+    }
+
+    .data-value {
+      color: #555;
+      flex: 1;
+    }
+
+    /* 🔗 Quick Nav */
+    .quick-nav {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.05), rgba(0, 184, 124, 0.05));
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .quick-nav-title {
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .quick-nav-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .quick-nav-link {
+      color: #FF8A00;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+
+    .quick-nav-link:hover {
+      background: rgba(255, 138, 0, 0.1);
+      transform: translateX(5px);
+    }
+
+    /* 📅 Update Banner */
+    .update-banner {
+      background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+      color: white;
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-top: 2rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* 🔄 Divider */
+    .divider {
+      margin: 2rem 0;
+      border: none;
+      border-top: 2px solid rgba(255, 138, 0, 0.1);
+    }
+
+    /* 👣 Footer */
+    footer {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 138, 0, 0.1);
+      padding: 2rem 0;
+      margin-top: 4rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #666;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: #FF8A00;
+    }
+
+    .copyright {
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .burger {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .legal-title {
+        font-size: 1.5rem;
+      }
+
+      .legal-card {
+        padding: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 1.2rem;
+      }
+
+      .data-row {
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .data-label {
+        min-width: auto;
+      }
+
+      .quick-nav-links {
+        grid-template-columns: 1fr;
+      }
+
+      p {
+        text-align: left;
+      }
+    }
+
+    /* 🎨 Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* 📍 Anchor Offset */
+    .section::before {
+      content: '';
+      display: block;
+      height: 80px;
+      margin-top: -80px;
+      visibility: hidden;
+    }
   </style>
 </head>
 <body>
+
+<!-- 🧭 Header -->
 <header>
   <div class="header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+    <div class="logo">KwikSend</div>
     <nav>
       <ul class="nav-links" id="nav-menu">
         <li><a href="dashboard.html">Accueil</a></li>
@@ -49,71 +427,384 @@
   </div>
 </header>
 
+<!-- 📄 Main Content -->
 <main>
-  <h1>📘 Mentions légales & Conditions d’utilisation</h1>
+  <h1 class="legal-title">📘 Mentions légales & CGU</h1>
+  <p class="legal-subtitle">
+    Conditions d'utilisation et informations légales de la plateforme KwikSend
+  </p>
 
-  <h2>1. Informations légales</h2>
-  <p><strong>Nom commercial :</strong> KwikSend</p>
-  <p><strong>Propriétaire :</strong> KwikGroupe — société en développement technologique.</p>
-  <p><strong>Siège social :</strong> Abidjan, Côte d’Ivoire / Paris, France.</p>
-  <p><strong>Email :</strong> kifouliw@gmail.com</p>
-  <p><strong>Responsable de la publication :</strong> Williams Kifouli</p>
+  <!-- Navigation rapide -->
+  <div class="quick-nav">
+    <div class="quick-nav-title">
+      <span>🔍</span>
+      Navigation rapide
+    </div>
+    <div class="quick-nav-links">
+      <a href="#infos-legales">→ Informations légales</a>
+      <a href="#hebergement">→ Hébergement</a>
+      <a href="#objet">→ Objet du site</a>
+      <a href="#propriete">→ Propriété intellectuelle</a>
+      <a href="#donnees">→ Données personnelles</a>
+      <a href="#cgu">→ Conditions générales</a>
+    </div>
+  </div>
 
-  <h2>2. Hébergement</h2>
-  <p>Le site KwikSend est hébergé par <strong>Render</strong> et/ou <strong>GitHub Pages</strong> dans le cadre de sa phase de test.  
-  Les données de simulation sont stockées localement sur le navigateur de l’utilisateur (aucune donnée réelle n’est collectée).</p>
+  <div class="legal-card">
+    <!-- Section 1: Informations légales -->
+    <section id="infos-legales" class="section">
+      <h2 class="section-title">
+        <span class="section-icon">🏢</span>
+        Informations légales
+      </h2>
+      
+      <div class="data-table">
+        <div class="data-row">
+          <div class="data-label">Nom commercial</div>
+          <div class="data-value">KwikSend</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Propriétaire</div>
+          <div class="data-value">KwikGroupe — Société en développement technologique</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Siège social</div>
+          <div class="data-value">Abidjan, Côte d'Ivoire / Paris, France</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Email de contact</div>
+          <div class="data-value"><a href="mailto:kifouliw@gmail.com" style="color: #FF8A00;">kifouliw@gmail.com</a></div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Responsable de la publication</div>
+          <div class="data-value">Williams Kifouli</div>
+        </div>
+      </div>
+    </section>
 
-  <h2>3. Objet du site</h2>
-  <p>KwikSend est une plateforme de transfert d’argent numérique permettant d’envoyer, recevoir et gérer des fonds entre l’Afrique et l’Europe.  
-  Dans cette version de démonstration, les opérations sont simulées à des fins de test et de présentation.</p>
+    <hr class="divider" />
 
-  <h2>4. Propriété intellectuelle</h2>
-  <p>Tous les contenus présents sur le site (textes, logos, graphismes, maquettes, codes sources) sont la propriété exclusive de KwikSend.  
-  Toute reproduction sans autorisation est interdite.</p>
+    <!-- Section 2: Hébergement -->
+    <section id="hebergement" class="section">
+      <h2 class="section-title">
+        <span class="section-icon">☁️</span>
+        Hébergement
+      </h2>
+      
+      <p>
+        Le site KwikSend est hébergé par <strong>Render</strong> et/ou <strong>GitHub Pages</strong> dans le cadre de sa phase de test et de développement.
+      </p>
+      
+      <div class="info-box">
+        <p>
+          <strong>ℹ️ Note importante :</strong> Les données de simulation sont stockées localement sur le navigateur de l'utilisateur via localStorage. Aucune donnée réelle n'est collectée ou transmise à des serveurs externes durant cette phase de démonstration.
+        </p>
+      </div>
+    </section>
 
-  <h2>5. Données personnelles</h2>
-  <p>Aucune donnée personnelle n’est collectée dans cette version de simulation.  
-  Dans la version finale, KwikSend s’engagera à respecter le RGPD et les lois locales en matière de protection des données.</p>
+    <hr class="divider" />
 
-  <h2>6. Responsabilité</h2>
-  <p>KwikSend ne saurait être tenu responsable de l’usage fait de cette simulation ou des données saisies par les utilisateurs.  
-  Aucune transaction réelle n’est effectuée sur la présente version.</p>
+    <!-- Section 3: Objet du site -->
+    <section id="objet" class="section">
+      <h2 class="section-title">
+        <span class="section-icon">🎯</span>
+        Objet du site
+      </h2>
+      
+      <p>
+        KwikSend est une plateforme innovante de transfert d'argent numérique permettant d'envoyer, de recevoir et de gérer des fonds de manière sécurisée entre l'Afrique et l'Europe.
+      </p>
+      
+      <p>
+        Notre mission est de faciliter les échanges financiers transfrontaliers en offrant une solution rapide, transparente et accessible à tous.
+      </p>
 
-  <h2>7. Conditions Générales d’Utilisation (CGU)</h2>
-  <h3>Article 1 — Objet</h3>
-  <p>Les présentes CGU ont pour objet de définir les conditions dans lesquelles l’utilisateur accède au site KwikSend et utilise ses services.</p>
+      <div class="warning-box">
+        <p>
+          <strong>⚠️ Version de démonstration :</strong> Dans cette version actuelle, toutes les opérations sont simulées à des fins de test et de présentation. Aucune transaction financière réelle n'est effectuée.
+        </p>
+      </div>
+    </section>
 
-  <h3>Article 2 — Accès au service</h3>
-  <p>L’accès à KwikSend est gratuit dans le cadre de la simulation. Certaines fonctionnalités peuvent être limitées à la phase de test.</p>
+    <hr class="divider" />
 
-  <h3>Article 3 — Création de compte</h3>
-  <p>L’utilisateur peut créer un compte de démonstration. Les informations saisies sont enregistrées localement (aucune base de données réelle).</p>
+    <!-- Section 4: Propriété intellectuelle -->
+    <section id="propriete" class="section">
+      <h2 class="section-title">
+        <span class="section-icon">©️</span>
+        Propriété intellectuelle
+      </h2>
+      
+      <p>
+        L'ensemble des contenus présents sur le site KwikSend, incluant mais ne se limitant pas aux éléments suivants, sont la propriété exclusive de KwikSend et sont protégés par les lois relatives à la propriété intellectuelle :
+      </p>
 
-  <h3>Article 4 — Obligations de l’utilisateur</h3>
-  <ul>
-    <li>Utiliser la plateforme de manière responsable et conforme à son objectif de test.</li>
-    <li>Ne pas tenter d’exploiter, copier ou détourner le code sans autorisation.</li>
-    <li>Respecter la confidentialité des informations simulées.</li>
-  </ul>
+      <ul>
+        <li>Textes, articles et descriptions</li>
+        <li>Logos, marques et identité visuelle</li>
+        <li>Graphismes, illustrations et photographies</li>
+        <li>Maquettes et design d'interface</li>
+        <li>Codes sources et algorithmes</li>
+        <li>Base de données et architecture technique</li>
+      </ul>
 
-  <h3>Article 5 — Sécurité</h3>
-  <p>KwikSend utilise des protocoles de chiffrement côté client et prévoit, dans la version finale, une vérification KYC et des API sécurisées pour toutes les transactions réelles.</p>
+      <p>
+        <strong>Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie de ces éléments, par quelque moyen que ce soit, est strictement interdite sans l'autorisation écrite préalable de KwikSend.</strong>
+      </p>
+    </section>
 
-  <h3>Article 6 — Modifications</h3>
-  <p>KwikSend se réserve le droit de modifier les présentes CGU à tout moment, notamment lors du passage de la version test à la version officielle.</p>
+    <hr class="divider" />
 
-  <h3>Article 7 — Loi applicable</h3>
-  <p>Les présentes conditions sont soumises aux lois ivoiriennes et françaises.  
-  Tout litige relatif à l’utilisation du site sera de la compétence des juridictions d’Abidjan ou de Paris.</p>
+    <!-- Section 5: Données personnelles -->
+    <section id="donnees" class="section">
+      <h2 class="section-title">
+        <span class="section-icon">🔒</span>
+        Protection des données personnelles
+      </h2>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">Version actuelle (Simulation)</h3>
+        <p>
+          Dans cette version de simulation, <strong>aucune donnée personnelle n'est collectée, transmise ou stockée sur des serveurs externes</strong>. Toutes les informations saisies sont conservées localement dans le navigateur de l'utilisateur et peuvent être effacées à tout moment.
+        </p>
+      </div>
 
-  <hr style="margin:2rem 0; border:none; border-top:1px solid #eee;">
-  <p style="font-size:0.9rem; color:#777;">Dernière mise à jour : octobre 2025 — Version simulation.</p>
+      <div class="subsection">
+        <h3 class="subsection-title">Version finale (Engagement)</h3>
+        <p>
+          Lors du déploiement de la version officielle de KwikSend, nous nous engageons à respecter scrupuleusement :
+        </p>
+        <ul>
+          <li>Le <strong>Règlement Général sur la Protection des Données (RGPD)</strong> de l'Union Européenne</li>
+          <li>Les lois locales en matière de protection des données en Côte d'Ivoire et en France</li>
+          <li>Les standards internationaux de sécurité et de confidentialité</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <p>
+          <strong>Vos droits :</strong> Dans la version finale, vous disposerez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données personnelles, conformément aux réglementations en vigueur.
+        </p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Section 6: Responsabilité -->
+    <section class="section">
+      <h2 class="section-title">
+        <span class="section-icon">⚖️</span>
+        Limitation de responsabilité
+      </h2>
+      
+      <p>
+        KwikSend ne saurait être tenu responsable :
+      </p>
+
+      <ul>
+        <li>De l'usage fait de cette simulation ou des données saisies par les utilisateurs</li>
+        <li>Des éventuelles interruptions ou dysfonctionnements techniques durant la phase de test</li>
+        <li>De la perte de données stockées localement dans le navigateur</li>
+        <li>Des dommages directs ou indirects résultant de l'utilisation de cette version de démonstration</li>
+      </ul>
+
+      <div class="warning-box">
+        <p>
+          <strong>Important :</strong> Aucune transaction financière réelle n'est effectuée sur la présente version. Il s'agit exclusivement d'une plateforme de démonstration et de test.
+        </p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Section 7: CGU -->
+    <section id="cgu" class="section">
+      <h2 class="section-title">
+        <span class="section-icon">📋</span>
+        Conditions Générales d'Utilisation (CGU)
+      </h2>
+
+      <div class="subsection">
+        <h3 class="subsection-title">Article 1 — Objet</h3>
+        <p>
+          Les présentes Conditions Générales d'Utilisation (ci-après "CGU") ont pour objet de définir les modalités et conditions dans lesquelles l'utilisateur accède au site KwikSend et utilise ses services de simulation.
+        </p>
+        <p>
+          L'utilisation du site implique l'acceptation pleine et entière des présentes CGU.
+        </p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">Article 2 — Accès au service</h3>
+        <p>
+          L'accès à KwikSend est <strong>gratuit</strong> dans le cadre de la simulation. Certaines fonctionnalités peuvent être limitées ou désactivées durant la phase de test.
+        </p>
+        <p>
+          KwikSend se réserve le droit de suspendre temporairement ou définitivement l'accès au site pour des raisons de maintenance, de mise à jour ou de sécurité.
+        </p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">Article 3 — Création de compte</h3>
+        <p>
+          L'utilisateur peut créer un compte de démonstration en fournissant des informations de base. Les informations saisies sont enregistrées localement dans le navigateur de l'utilisateur.
+        </p>
+        <p>
+          <strong>Aucune base de données réelle</strong> n'est utilisée dans cette version de simulation. Les comptes créés sont purement fictifs et à des fins de test.
+        </p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">Article 4 — Obligations de l'utilisateur</h3>
+        <p>
+          En utilisant KwikSend, l'utilisateur s'engage à :
+        </p>
+        <ul>
+          <li>Utiliser la plateforme de manière responsable et conforme à son objectif de test et de démonstration</li>
+          <li>Ne pas tenter d'exploiter, de copier ou de détourner le code source sans autorisation expresse</li>
+          <li>Respecter la confidentialité des informations simulées et ne pas les partager publiquement</li>
+          <li>Ne pas utiliser la plateforme à des fins illégales, frauduleuses ou contraires aux bonnes mœurs</li>
+          <li>Ne pas tenter de perturber le fonctionnement du site ou d'accéder à des zones non autorisées</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">Article 5 — Sécurité et confidentialité</h3>
+        <p>
+          KwikSend met en œuvre les mesures techniques appropriées pour assurer la sécurité de la plateforme :
+        </p>
+        <ul>
+          <li>Protocoles de chiffrement côté client pour les données sensibles</li>
+          <li>Validation et nettoyage des entrées utilisateur</li>
+          <li>Architecture sécurisée et tests de pénétration réguliers</li>
+        </ul>
+        <p>
+          Dans la version finale, KwikSend intégrera :
+        </p>
+        <ul>
+          <li>Une vérification KYC (Know Your Customer) complète</li>
+          <li>Des API sécurisées avec authentification forte</li>
+          <li>Un système de détection de fraude en temps réel</li>
+          <li>Une conformité totale avec les standards PCI-DSS pour les transactions</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">Article 6 — Modifications des CGU</h3>
+        <p>
+          KwikSend se réserve le droit de modifier les présentes CGU à tout moment, notamment lors du passage de la version test à la version officielle.
+        </p>
+        <p>
+          Les utilisateurs seront informés de toute modification substantielle par notification sur le site. L'utilisation continue du site après modification vaut acceptation des nouvelles CGU.
+        </p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">Article 7 — Loi applicable et juridiction</h3>
+        <p>
+          Les présentes conditions sont régies et interprétées conformément aux lois de la <strong>République de Côte d'Ivoire</strong> et de la <strong>République Française</strong>.
+        </p>
+        <p>
+          En cas de litige relatif à l'interprétation ou à l'exécution des présentes CGU, les parties s'efforceront de trouver une solution amiable. À défaut d'accord, le litige sera soumis à la compétence exclusive des juridictions compétentes d'<strong>Abidjan</strong> ou de <strong>Paris</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Update Banner -->
+    <div class="update-banner">
+      📅 Dernière mise à jour : Novembre 2025 — Version simulation
+    </div>
+  </div>
 </main>
 
+<!-- 👣 Footer -->
 <footer>
-  <p>© 2025 KwikSend. Tous droits réservés.</p>
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="dashboard.html">Accueil</a>
+      <a href="portefeuille.html">Portefeuille</a>
+      <a href="profile.html">Mon compte</a>
+      <a href="mentions.html">Mentions légales</a>
+      <a href="mailto:kifouliw@gmail.com">Contact</a>
+    </div>
+    <p class="copyright">© 2025 KwikSend. Tous droits réservés.</p>
+  </div>
 </footer>
-<!-- Appels scripts globaux -->
-<script src="app.js"></script>
+
+<!-- 📲 Scripts -->
+<script>
+(function(){
+  // Toggle menu (mobile)
+  window.toggleMenu = function() {
+    document.getElementById('nav-menu').classList.toggle('active');
+  };
+
+  // Logout
+  window.logout = function() {
+    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+      localStorage.removeItem('kwiksend_user');
+      window.location.href = 'index.html';
+    }
+  };
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+
+  // Highlight current section in quick nav
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.quick-nav-link');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 100;
+      if (window.pageYOffset >= sectionTop) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.style.fontWeight = '500';
+      if (link.getAttribute('href') === `#${current}`) {
+        link.style.fontWeight = '700';
+      }
+    });
+  });
+
+  // Add fade-in animation on scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    section.style.opacity = '0';
+    section.style.transform = 'translateY(20px)';
+    section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(section);
+  });
+})();
+</script>
+
 </body>
 </html>
