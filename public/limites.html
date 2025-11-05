@@ -3,21 +3,561 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KwikSend — Limites</title>
-  <link rel="stylesheet" href="style.css">
+  <title>KwikSend — Limites de compte</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
   <style>
-    .limit-card { background:#fff; padding:18px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.06); max-width:700px; margin:auto; }
-    .progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin:8px 0; }
-    .progress-fill { height:100%; background:var(--orange); transition:width .3s; }
-    .status-pill { display:inline-block; padding:4px 10px; border-radius:999px; font-weight:600; font-size:.85rem; }
-    .pending { background:#fff4e6; color:#b05900; border:1px solid #ffe7cc; }
-    .approved { background:#e8f8ef; color:#0a8f2f; border:1px solid #c9f0d6; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    /* ========================================
+       🎨 ANIMATIONS
+    ======================================== */
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes progressFill {
+      from { width: 0; }
+      to { width: var(--progress-width); }
+    }
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    /* ========================================
+       🧭 HEADER MODERNE
+    ======================================== */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    .burger {
+      display: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #FF8A00;
+    }
+
+    /* ========================================
+       💼 CONTAINER PRINCIPAL
+    ======================================== */
+    .limits-container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slideDown 0.6s ease;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+      animation: slideDown 0.6s ease 0.1s both;
+    }
+
+    /* ========================================
+       📊 CARTE STATUT COMPTE
+    ======================================== */
+    .account-status-card {
+      background: linear-gradient(135deg, #FF8A00, #00B87C);
+      padding: 2rem;
+      border-radius: 20px;
+      color: white;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 40px rgba(255, 138, 0, 0.3);
+      animation: slideDown 0.6s ease 0.2s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .account-status-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .status-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .status-info h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .status-badge.standard {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .status-badge.pending {
+      background: linear-gradient(135deg, #FFA500, #FFB84D);
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .status-badge.verified {
+      background: linear-gradient(135deg, #00B87C, #00D48F);
+      box-shadow: 0 4px 12px rgba(0, 184, 124, 0.4);
+    }
+
+    /* ========================================
+       💰 CARTES LIMITES
+    ======================================== */
+    .limits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .limit-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(10, 15, 28, 0.08);
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      transition: all 0.3s;
+      animation: slideInLeft 0.4s ease both;
+    }
+
+    .limit-card:nth-child(1) { animation-delay: 0.3s; }
+    .limit-card:nth-child(2) { animation-delay: 0.4s; }
+
+    .limit-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(255, 138, 0, 0.15);
+      border-color: rgba(255, 138, 0, 0.3);
+    }
+
+    .limit-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .limit-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.1), rgba(0, 184, 124, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .limit-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0A0F1C;
+    }
+
+    .limit-amounts {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1rem;
+    }
+
+    .amount-used {
+      font-size: 1.8rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .amount-limit {
+      font-size: 1rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    /* ========================================
+       📊 BARRE DE PROGRESSION MODERNE
+    ======================================== */
+    .progress-bar {
+      height: 12px;
+      background: rgba(255, 138, 0, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      border-radius: 999px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .progress-percentage {
+      text-align: right;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    /* ========================================
+       💡 INFO BOX
+    ======================================== */
+    .info-box {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(255, 138, 0, 0.05));
+      border-left: 4px solid #8B5CF6;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: #666;
+      animation: slideDown 0.6s ease 0.5s both;
+    }
+
+    .info-box strong {
+      color: #8B5CF6;
+      font-weight: 700;
+    }
+
+    /* ========================================
+       🎯 BOUTON D'ACTION
+    ======================================== */
+    .action-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(10, 15, 28, 0.08);
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      text-align: center;
+      animation: slideDown 0.6s ease 0.6s both;
+    }
+
+    .action-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 0.8rem;
+    }
+
+    .action-description {
+      color: #666;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .upgrade-btn {
+      width: 100%;
+      max-width: 400px;
+      padding: 1.2rem;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #00B87C, #00D48F);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upgrade-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .upgrade-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 184, 124, 0.4);
+    }
+
+    .upgrade-btn:hover::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    .upgrade-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ========================================
+       📋 AVANTAGES PREMIUM
+    ======================================== */
+    .premium-benefits {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.05), rgba(0, 184, 124, 0.05));
+      padding: 2rem;
+      border-radius: 20px;
+      margin-top: 2rem;
+      animation: slideDown 0.6s ease 0.7s both;
+    }
+
+    .benefits-title {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 1.5rem;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .benefit-item {
+      background: white;
+      padding: 1.2rem;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      transition: all 0.3s;
+    }
+
+    .benefit-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.15);
+    }
+
+    .benefit-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .benefit-text {
+      font-weight: 600;
+      color: #0A0F1C;
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    footer {
+      background: #0A0F1C;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    /* ========================================
+       📱 RESPONSIVE
+    ======================================== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 10px;
+        width: 200px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .burger {
+        display: block;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .limits-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .status-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========================================
+       💬 NOTIFICATION
+    ======================================== */
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(100px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #00B87C, #00D48F);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 184, 124, 0.4);
+      z-index: 99999;
+      font-weight: 600;
+      animation: slideInRight 0.4s ease;
+      display: none;
+    }
+
+    .notification.show {
+      display: block;
+    }
+
+    .notification.error {
+      background: linear-gradient(135deg, #d32f2f, #f44336);
+    }
   </style>
 </head>
 <body>
+
+<!-- 🧭 Header -->
 <header>
   <div class="header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+    <div class="logo" onclick="window.location.href='dashboard.html'">KwikSend</div>
     <nav>
       <ul class="nav-links" id="nav-menu">
         <li><a href="dashboard.html">Accueil</a></li>
@@ -33,87 +573,328 @@
   </div>
 </header>
 
-<main style="padding:2rem;">
-  <section class="limit-card">
-    <h2>📊 Limites d’envoi et de retrait</h2>
-    <p style="color:#666;">Vos limites actuelles. Pour augmenter vos plafonds, effectuez une demande ci-dessous.</p>
+<!-- 💼 Container principal -->
+<div class="limits-container">
+  
+  <h1 class="page-title">📊 Limites de compte</h1>
+  <p class="page-subtitle">Gérez vos plafonds d'envoi et de retrait</p>
 
-    <div style="margin-top:20px;">
-      <h3>Envoi mensuel</h3>
-      <p><b id="sendUsed">1200 €</b> / <span id="sendLimit">2500 €</span></p>
-      <div class="progress-bar"><div id="sendBar" class="progress-fill" style="width:0;"></div></div>
+  <!-- 📊 Carte statut compte -->
+  <div class="account-status-card">
+    <div class="status-content">
+      <div class="status-info">
+        <h3>Statut de votre compte</h3>
+        <p id="accountType">Compte Standard</p>
+      </div>
+      <div>
+        <span id="statusBadge" class="status-badge standard">
+          <span>⭐</span>
+          <span>Standard</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💰 Grille des limites -->
+  <div class="limits-grid">
+    
+    <!-- Envoi mensuel -->
+    <div class="limit-card">
+      <div class="limit-header">
+        <div class="limit-icon">💸</div>
+        <div class="limit-title">Envoi mensuel</div>
+      </div>
+      
+      <div class="limit-amounts">
+        <span class="amount-used" id="sendUsed">1,200 €</span>
+        <span class="amount-limit">/ <span id="sendLimit">2,500 €</span></span>
+      </div>
+      
+      <div class="progress-bar">
+        <div class="progress-fill" id="sendBar" style="width: 0"></div>
+      </div>
+      <div class="progress-percentage" id="sendPercentage">0%</div>
     </div>
 
-    <div style="margin-top:20px;">
-      <h3>Retrait mensuel</h3>
-      <p><b id="withdrawUsed">500 €</b> / <span id="withdrawLimit">2000 €</span></p>
-      <div class="progress-bar"><div id="withdrawBar" class="progress-fill" style="width:0;"></div></div>
+    <!-- Retrait mensuel -->
+    <div class="limit-card">
+      <div class="limit-header">
+        <div class="limit-icon">🏦</div>
+        <div class="limit-title">Retrait mensuel</div>
+      </div>
+      
+      <div class="limit-amounts">
+        <span class="amount-used" id="withdrawUsed">500 €</span>
+        <span class="amount-limit">/ <span id="withdrawLimit">2,000 €</span></span>
+      </div>
+      
+      <div class="progress-bar">
+        <div class="progress-fill" id="withdrawBar" style="width: 0"></div>
+      </div>
+      <div class="progress-percentage" id="withdrawPercentage">0%</div>
     </div>
 
-    <div style="margin-top:30px;">
-      <h3>Statut de votre compte :</h3>
-      <span id="limitStatus" class="status-pill">Standard</span>
-    </div>
+  </div>
 
-    <div style="margin-top:20px;">
-      <button id="requestBtn">Demander augmentation</button>
-    </div>
-  </section>
-</main>
+  <!-- 💡 Info box -->
+  <div class="info-box">
+    <strong>💡 Bon à savoir :</strong> Les limites se réinitialisent automatiquement chaque mois. 
+    Pour augmenter vos plafonds, vous pouvez passer à un compte vérifié ou premium.
+  </div>
 
+  <!-- 🎯 Action card -->
+  <div class="action-card">
+    <h3 class="action-title">Augmenter vos limites</h3>
+    <p class="action-description">
+      Passez à un compte vérifié pour bénéficier de plafonds plus élevés et d'avantages exclusifs
+    </p>
+    <button class="upgrade-btn" id="upgradeBtn" onclick="requestUpgrade()">
+      ✨ Demander une augmentation
+    </button>
+  </div>
+
+  <!-- 📋 Avantages premium -->
+  <div class="premium-benefits">
+    <h3 class="benefits-title">🌟 Avantages du compte vérifié</h3>
+    <div class="benefits-grid">
+      
+      <div class="benefit-item">
+        <div class="benefit-icon">📈</div>
+        <div class="benefit-text">Limites doublées</div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">💰</div>
+        <div class="benefit-text">Frais réduits</div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">⚡</div>
+        <div class="benefit-text">Transferts prioritaires</div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">🎁</div>
+        <div class="benefit-text">Offres exclusives</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
 <footer>
   <p>© 2025 KwikSend. Tous droits réservés.</p>
 </footer>
 
+<!-- Notification toast -->
+<div id="notification" class="notification"></div>
+
+<!-- 📜 Scripts -->
 <script>
-(function(){
-  // Valeurs simulées
-  let sendUsed = 1200, sendLimit = 2500;
-  let withdrawUsed = 500, withdrawLimit = 2000;
+/* ========================================
+   🎮 CONFIGURATION & ÉTAT
+======================================== */
+const LIMIT_STATUS_KEY = 'ks_limit_status';
+const HISTORY_KEY = 'ks_history';
 
-  const sendBar = document.getElementById('sendBar');
-  const withdrawBar = document.getElementById('withdrawBar');
-  const statusEl = document.getElementById('limitStatus');
-  const btn = document.getElementById('requestBtn');
-
-  function render(){
-    document.getElementById('sendUsed').textContent = sendUsed + " €";
-    document.getElementById('sendLimit').textContent = sendLimit + " €";
-    sendBar.style.width = Math.min((sendUsed/sendLimit)*100,100) + "%";
-
-    document.getElementById('withdrawUsed').textContent = withdrawUsed + " €";
-    document.getElementById('withdrawLimit').textContent = withdrawLimit + " €";
-    withdrawBar.style.width = Math.min((withdrawUsed/withdrawLimit)*100,100) + "%";
-
-    const st = localStorage.getItem('ks_limit_status') || 'standard';
-    if(st === 'pending'){
-      statusEl.textContent = "Demande en attente";
-      statusEl.className = 'status-pill pending';
-    } else if(st === 'approved'){
-      statusEl.textContent = "Plafonds augmentés";
-      statusEl.className = 'status-pill approved';
-      sendLimit = 5000;
-      withdrawLimit = 4000;
-    } else {
-      statusEl.textContent = "Standard";
-      statusEl.className = 'status-pill';
-    }
+// Limites par type de compte
+const LIMITS = {
+  standard: {
+    send: 2500,
+    withdraw: 2000
+  },
+  verified: {
+    send: 5000,
+    withdraw: 4000
+  },
+  premium: {
+    send: 10000,
+    withdraw: 8000
   }
+};
 
-  btn.addEventListener('click', ()=>{
-    localStorage.setItem('ks_limit_status','pending');
-    render();
-    setTimeout(()=>{
-      localStorage.setItem('ks_limit_status','approved');
-      render();
-      alert("✅ Votre demande d’augmentation a été approuvée (simulation).");
-    }, 2000);
+/* ========================================
+   💰 CALCUL DES MONTANTS UTILISÉS
+======================================== */
+function calculateUsedAmounts() {
+  const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  
+  let sendUsed = 0;
+  let withdrawUsed = 0;
+  
+  history.forEach(tx => {
+    const txDate = new Date(tx.date);
+    if (txDate >= firstDayOfMonth) {
+      const amount = Math.abs(parseFloat(tx.amount) || 0);
+      
+      if (tx.type && tx.type.toLowerCase().includes('envoi')) {
+        sendUsed += amount;
+      }
+      else if (tx.type && tx.type.toLowerCase().includes('retrait')) {
+        withdrawUsed += amount;
+      }
+    }
   });
+  
+  return {
+    sendUsed: Math.round(sendUsed * 100) / 100,
+    withdrawUsed: Math.round(withdrawUsed * 100) / 100
+  };
+}
 
-  render();
-})();
+/* ========================================
+   📊 RENDER DES LIMITES
+======================================== */
+function renderLimits() {
+  const status = localStorage.getItem(LIMIT_STATUS_KEY) || 'standard';
+  const limits = LIMITS[status] || LIMITS.standard;
+  const used = calculateUsedAmounts();
+  
+  // Mise à jour des montants
+  document.getElementById('sendUsed').textContent = used.sendUsed.toLocaleString('fr-FR') + ' €';
+  document.getElementById('sendLimit').textContent = limits.send.toLocaleString('fr-FR') + ' €';
+  document.getElementById('withdrawUsed').textContent = used.withdrawUsed.toLocaleString('fr-FR') + ' €';
+  document.getElementById('withdrawLimit').textContent = limits.withdraw.toLocaleString('fr-FR') + ' €';
+  
+  // Calcul des pourcentages
+  const sendPercent = Math.min((used.sendUsed / limits.send) * 100, 100);
+  const withdrawPercent = Math.min((used.withdrawUsed / limits.withdraw) * 100, 100);
+  
+  // Animation des barres de progression
+  setTimeout(() => {
+    document.getElementById('sendBar').style.width = sendPercent + '%';
+    document.getElementById('withdrawBar').style.width = withdrawPercent + '%';
+  }, 300);
+  
+  document.getElementById('sendPercentage').textContent = Math.round(sendPercent) + '%';
+  document.getElementById('withdrawPercentage').textContent = Math.round(withdrawPercent) + '%';
+  
+  // Mise à jour du statut
+  updateStatus(status);
+}
+
+/* ========================================
+   🏷️ MISE À JOUR DU BADGE STATUT
+======================================== */
+function updateStatus(status) {
+  const badge = document.getElementById('statusBadge');
+  const accountType = document.getElementById('accountType');
+  const upgradeBtn = document.getElementById('upgradeBtn');
+  
+  // Reset classes
+  badge.className = 'status-badge';
+  
+  switch(status) {
+    case 'pending':
+      badge.classList.add('pending');
+      badge.innerHTML = '<span>⏳</span><span>Demande en cours</span>';
+      accountType.textContent = 'Vérification en cours';
+      upgradeBtn.disabled = true;
+      upgradeBtn.textContent = '⏳ Demande en cours...';
+      break;
+      
+    case 'verified':
+      badge.classList.add('verified');
+      badge.innerHTML = '<span>✅</span><span>Compte vérifié</span>';
+      accountType.textContent = 'Compte Vérifié';
+      upgradeBtn.disabled = true;
+      upgradeBtn.textContent = '✅ Compte vérifié';
+      break;
+      
+    case 'premium':
+      badge.classList.add('verified');
+      badge.innerHTML = '<span>👑</span><span>Compte Premium</span>';
+      accountType.textContent = 'Compte Premium';
+      upgradeBtn.disabled = true;
+      upgradeBtn.textContent = '👑 Compte Premium';
+      break;
+      
+    default:
+      badge.classList.add('standard');
+      badge.innerHTML = '<span>⭐</span><span>Standard</span>';
+      accountType.textContent = 'Compte Standard';
+      upgradeBtn.disabled = false;
+      upgradeBtn.textContent = '✨ Demander une augmentation';
+  }
+}
+
+/* ========================================
+   ✅ DEMANDE D'AUGMENTATION
+======================================== */
+function requestUpgrade() {
+  const btn = document.getElementById('upgradeBtn');
+  const originalText = btn.innerHTML;
+  
+  // Animation bouton
+  btn.innerHTML = 'Traitement en cours<span class="loading"></span>';
+  btn.disabled = true;
+  
+  // Simulation du traitement
+  showNotification('📋 Demande d\'augmentation en cours de traitement...', false);
+  
+  // Étape 1: Pending
+  setTimeout(() => {
+    localStorage.setItem(LIMIT_STATUS_KEY, 'pending');
+    renderLimits();
+    showNotification('⏳ Votre demande est en cours de vérification', false);
+  }, 1500);
+  
+  // Étape 2: Approved
+  setTimeout(() => {
+    localStorage.setItem(LIMIT_STATUS_KEY, 'verified');
+    renderLimits();
+    showNotification('✅ Félicitations ! Votre compte a été vérifié. Vos limites ont été augmentées.', false);
+  }, 4000);
+}
+
+/* ========================================
+   💬 NOTIFICATION
+======================================== */
+function showNotification(message, isError = false) {
+  const notification = document.getElementById('notification');
+  notification.textContent = message;
+  notification.className = 'notification show' + (isError ? ' error' : '');
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 4000);
+}
+
+/* ========================================
+   🚪 DÉCONNEXION
+======================================== */
+function logout() {
+  localStorage.removeItem("kwiksend_user");
+  window.location.href = "index.html";
+}
+
+/* ========================================
+   🍔 TOGGLE MENU
+======================================== */
+function toggleMenu() {
+  document.getElementById("nav-menu").classList.toggle("active");
+}
+
+/* ========================================
+   🔄 INITIALISATION
+======================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  renderLimits();
+  
+  // Vérifier si on revient après une action
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('upgraded') === '1') {
+    showNotification('✅ Votre compte a été mis à niveau avec succès !', false);
+  }
+});
 </script>
-<!-- Appels scripts globaux -->
+
+<!-- Appel scripts globaux -->
 <script src="app.js"></script>
+
 </body>
 </html>
