@@ -531,9 +531,11 @@
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(paymentLink)}&color=FF8A00`;
     document.getElementById('qrCode').src = qrUrl;
     
-    // Switch to step 2
+    // Switch to step 2 (animation smooth)
     document.getElementById('amountStep').style.display = 'none';
-    document.getElementById('paymentStep').classList.add('active');
+    setTimeout(() => {
+      document.getElementById('paymentStep').classList.add('active');
+    }, 50);
     
     showToast('✅ Lien de paiement généré !', 'success');
   };
