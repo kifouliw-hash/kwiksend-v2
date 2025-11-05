@@ -3,130 +3,654 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>KwikSend - Recevoir de l'argent</title>
-  <meta name="description" content="Recevez de l’argent via KwikSend : partagez votre lien ou QR code pour des transferts rapides et sécurisés.">
-  <meta name="theme-color" content="#ff7a00">
-
-  <!-- Favicon & icônes -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
 
-  <!-- Manifest PWA -->
-  <link rel="manifest" href="site.webmanifest">
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
+    }
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
+    body {
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    /* 📱 Modal Container */
+    .receive-modal {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 2.5rem;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 138, 0, 0.1);
+      animation: modalAppear 0.4s ease;
+      position: relative;
+    }
+
+    @keyframes modalAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* 🎯 Modal Header */
+    .modal-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .modal-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .modal-title .icon {
+      font-size: 1.8rem;
+    }
+
+    .title-receive {
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .modal-subtitle {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* 💱 Currency Selector */
+    .currency-selector {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .currency-btn {
+      flex: 1;
+      padding: 0.8rem 1.2rem;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: #666;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .currency-btn:hover {
+      border-color: #FF8A00;
+      transform: translateY(-2px);
+    }
+
+    .currency-btn.active {
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      color: white;
+      border-color: #FF8A00;
+      box-shadow: 0 4px 12px rgba(255, 138, 0, 0.3);
+    }
+
+    /* 📝 Amount Input */
+    .amount-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .amount-input {
+      width: 100%;
+      padding: 1.2rem;
+      border: 2px solid #e0e0e0;
+      background: rgba(249, 249, 249, 0.8);
+      color: #0A0F1C;
+      border-radius: 16px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .amount-input:focus {
+      outline: none;
+      border-color: #FF8A00;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(255, 138, 0, 0.1);
+    }
+
+    .amount-input::placeholder {
+      color: #999;
+      font-weight: 500;
+    }
+
+    /* 🎨 Generate Button */
+    .generate-btn {
+      width: 100%;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, #FF8A00, #00B87C);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .generate-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .generate-btn:hover::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 138, 0, 0.4);
+    }
+
+    .generate-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* 📱 Payment Display (Step 2) */
+    .payment-display {
+      display: none;
+    }
+
+    .payment-display.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* 💰 Amount Display */
+    .amount-display {
+      background: linear-gradient(135deg, rgba(255, 138, 0, 0.05), rgba(0, 184, 124, 0.05));
+      border: 2px solid rgba(255, 138, 0, 0.2);
+      border-radius: 16px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .amount-label {
+      color: #666;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.3rem;
+    }
+
+    .amount-value {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 📱 QR Code */
+    .qr-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
+
+    /* 🔗 Link Container */
+    .link-container {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .link-input {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      background: rgba(249, 249, 249, 0.8);
+      color: #0A0F1C;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .copy-btn {
+      padding: 1rem 1.2rem;
+      background: linear-gradient(135deg, #FF8A00, #FFA500);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(255, 138, 0, 0.3);
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 138, 0, 0.4);
+    }
+
+    .copy-btn.copied {
+      background: linear-gradient(135deg, #00B87C, #00D48F);
+    }
+
+    /* 📲 Share Buttons */
+    .share-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .share-btn {
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: white;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-whatsapp:hover {
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+    }
+
+    .btn-email {
+      background: linear-gradient(135deg, #EA4335, #C5221F);
+      box-shadow: 0 4px 12px rgba(234, 67, 53, 0.3);
+    }
+
+    .btn-email:hover {
+      box-shadow: 0 6px 16px rgba(234, 67, 53, 0.4);
+    }
+
+    /* 🔙 Close Button */
+    .close-btn {
+      width: 100%;
+      padding: 1rem;
+      background: #f2f2f2;
+      color: #666;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: #e0e0e0;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .receive-modal {
+        padding: 2rem 1.5rem;
+        max-width: 95%;
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+      }
+
+      .qr-code {
+        width: 180px;
+        height: 180px;
+      }
+
+      .amount-value {
+        font-size: 1.6rem;
+      }
+
+      .link-container {
+        flex-direction: column;
+      }
+
+      .copy-btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- 🧭 Header -->
-<header>
-  <div class="container header-container">
-    <div class="logo">Kwik<span>Send</span></div>
-    <nav>
-      <ul class="nav-links">
-        <li><a href="dashboard.html">Accueil</a></li>
-        <li><a href="portefeuille.html">Portefeuille</a></li>
-        <li><a href="transfert.html">Transfert</a></li>
-        <li><a href="kwiktransfert.html">KwikTransfert</a></li>
-        <li><a href="mobile.html">Mobile Money</a></li>
-      </ul>
-    </nav>
-    <div class="header-actions">
-      <button class="cta" onclick="logout()">Déconnexion</button>
+<!-- 📱 Receive Modal -->
+<div class="receive-modal">
+  <!-- Step 1: Amount Input -->
+  <div id="amountStep">
+    <div class="modal-header">
+      <h1 class="modal-title">
+        <span class="icon">💰</span>
+        <span class="title-receive">Recevoir de l'argent</span>
+      </h1>
+      <p class="modal-subtitle">Entrez le montant à recevoir</p>
     </div>
+
+    <!-- Currency Selector -->
+    <div class="currency-selector">
+      <button class="currency-btn active" data-currency="EUR">EUR (€)</button>
+      <button class="currency-btn" data-currency="FCFA">FCFA</button>
+    </div>
+
+    <!-- Amount Input -->
+    <div class="amount-group">
+      <input 
+        type="number" 
+        id="receiveAmount" 
+        class="amount-input" 
+        placeholder="Ex: 50"
+        min="1"
+        step="0.01"
+      />
+    </div>
+
+    <!-- Generate Button -->
+    <button class="generate-btn" onclick="generatePaymentLink()">
+      Générer le lien
+    </button>
+    <br><br>
+    <button class="close-btn" onclick="goBack()">
+      Fermer
+    </button>
   </div>
-</header>
 
-<!-- 📥 Recevoir -->
-<section class="hero" style="padding:2rem 1rem;">
-  <div class="hero-content" style="max-width:650px;margin:auto;text-align:center;">
-    <h1>📥 Recevoir de l’argent</h1>
-    <p>Partagez votre lien ou QR code pour recevoir un transfert instantané.</p>
-
-    <!-- QR Code mock -->
-    <div style="margin:2rem auto;width:200px;height:200px;background:white;padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://kwiksend.com/user123" alt="QR Code KwikSend">
+  <!-- Step 2: Payment Display -->
+  <div id="paymentStep" class="payment-display">
+    <div class="modal-header">
+      <h1 class="modal-title">
+        <span class="icon">📦</span>
+        <span class="title-receive">Paiement généré</span>
+      </h1>
     </div>
 
-    <!-- Lien unique -->
-    <p><strong>Mon lien KwikSend :</strong></p>
-    <p style="word-break:break-all;color:#0a8f2f;">https://kwiksend.com/user123</p>
-
-    <!-- Boutons de partage -->
-    <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;">
-      <button onclick="shareWhatsApp()">📲 Partager WhatsApp</button>
-      <button onclick="shareEmail()">✉️ Partager Email</button>
+    <!-- Amount Display -->
+    <div class="amount-display">
+      <div class="amount-label">Montant</div>
+      <div class="amount-value" id="displayAmount">0 €</div>
     </div>
 
-    <!-- Simulation réception -->
-    <div style="margin-top:2rem;">
-      <button onclick="simulateIncoming()" class="cta">💰 Simuler un virement reçu</button>
+    <!-- QR Code -->
+    <div class="qr-container">
+      <img 
+        id="qrCode" 
+        class="qr-code"
+        alt="QR Code"
+      />
     </div>
+
+    <!-- Link with Copy Button -->
+    <div class="link-container">
+      <input 
+        type="text" 
+        id="paymentLink" 
+        class="link-input" 
+        readonly
+      />
+      <button class="copy-btn" id="copyBtn" onclick="copyLink()">
+        📋
+      </button>
+    </div>
+
+    <!-- Share Buttons -->
+    <div class="share-buttons">
+      <button class="share-btn btn-whatsapp" onclick="shareWhatsApp()">
+        📲 WhatsApp
+      </button>
+      <button class="share-btn btn-email" onclick="shareEmail()">
+        📧 Email
+      </button>
+    </div>
+
+    <!-- Close Button -->
+    <button class="close-btn" onclick="goBack()">
+      Fermer
+    </button>
   </div>
-</section>
+</div>
 
-<!-- 📝 Footer -->
-<footer>
-  <p>© 2025 KwikSend. <span>Tous droits réservés.</span></p>
-</footer>
-
-<!-- 📜 Scripts communs -->
-<script src="script.js"></script>
-<script src="translate.js"></script>
-<script src="app.js"></script>
-
-<!-- 📲 Logique -->
+<!-- 📲 Scripts -->
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(console.error);
-  }
+(function(){
+  let selectedCurrency = 'EUR';
+  let currentAmount = 0;
+  let paymentLink = '';
 
-  // --- Partage
-  function shareWhatsApp() {
-    const link = encodeURIComponent("Reçois de l’argent via mon lien KwikSend : https://kwiksend.com/user123");
-    window.open("https://wa.me/?text=" + link, "_blank");
-  }
+  const user = JSON.parse(localStorage.getItem("kwiksend_user") || "{}");
+  const userId = user.email ? user.email.split("@")[0] : "kifouli";
 
-  function shareEmail() {
-    window.location.href = "mailto:?subject=Mon lien KwikSend&body=Reçois de l’argent via mon lien KwikSend : https://kwiksend.com/user123";
-  }
-
-  // --- Simulation réception avec mise à jour portefeuille + historique
-  function simulateIncoming() {
-    const BAL_KEY = 'ks_balance';
-    const HIST_KEY = 'ks_history';
-
-    const amount = 75; // montant test
-    let balance = parseFloat(localStorage.getItem(BAL_KEY) || '0');
-    let history = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
-
-    // crédit
-    balance += amount;
-    localStorage.setItem(BAL_KEY, balance);
-
-    // historique
-    history.unshift({
-      date: new Date().toLocaleString(),
-      type: "Réception",
-      amount: amount,
-      from: "Transfert externe",
-      status: "validé"
+  // Currency selection
+  const currencyBtns = document.querySelectorAll('.currency-btn');
+  currencyBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currencyBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedCurrency = btn.dataset.currency;
     });
-    localStorage.setItem(HIST_KEY, JSON.stringify(history));
+  });
 
-    alert(`✅ Vous avez reçu ${amount} EUR sur votre portefeuille KwikSend.`);
-    window.location.href = "portefeuille.html";
+  // Generate payment link
+  window.generatePaymentLink = function() {
+    const amount = parseFloat(document.getElementById('receiveAmount').value);
+    
+    if (!amount || amount <= 0) {
+      showToast('⚠️ Veuillez entrer un montant valide', 'warning');
+      return;
+    }
+
+    if (amount > 50000) {
+      showToast('⚠️ Le montant maximum est de 50 000 €', 'warning');
+      return;
+    }
+
+    currentAmount = amount;
+    
+    // Generate link
+    paymentLink = `https://kwiksend.com/pay/${userId}?amount=${amount}`;
+    
+    // Update display
+    const symbol = selectedCurrency === 'EUR' ? '€' : 'FCFA';
+    document.getElementById('displayAmount').textContent = `${amount.toLocaleString('fr-FR', {minimumFractionDigits: 2})} ${symbol}`;
+    document.getElementById('paymentLink').value = paymentLink;
+    
+    // Generate QR code
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(paymentLink)}&color=FF8A00`;
+    document.getElementById('qrCode').src = qrUrl;
+    
+    // Switch to step 2
+    document.getElementById('amountStep').style.display = 'none';
+    document.getElementById('paymentStep').classList.add('active');
+    
+    showToast('✅ Lien de paiement généré !', 'success');
+  };
+
+  // Copy link
+  window.copyLink = function() {
+    const linkInput = document.getElementById('paymentLink');
+    const copyBtn = document.getElementById('copyBtn');
+    
+    linkInput.select();
+    linkInput.setSelectionRange(0, 99999);
+    
+    navigator.clipboard.writeText(linkInput.value).then(() => {
+      const originalContent = copyBtn.innerHTML;
+      copyBtn.innerHTML = '✓';
+      copyBtn.classList.add('copied');
+      
+      showToast('✅ Lien copié dans le presse-papiers !', 'success');
+      
+      setTimeout(() => {
+        copyBtn.innerHTML = originalContent;
+        copyBtn.classList.remove('copied');
+      }, 2000);
+    }).catch(() => {
+      linkInput.select();
+      document.execCommand('copy');
+      showToast('✅ Lien copié !', 'success');
+    });
+  };
+
+  // Share WhatsApp
+  window.shareWhatsApp = function() {
+    const message = encodeURIComponent(`💰 Envoyez-moi ${currentAmount} ${selectedCurrency} via KwikSend !\n\n${paymentLink}`);
+    window.open(`https://wa.me/?text=${message}`, "_blank");
+  };
+
+  // Share Email
+  window.shareEmail = function() {
+    const subject = encodeURIComponent("Demande de paiement KwikSend");
+    const body = encodeURIComponent(`Bonjour,\n\nMerci de m'envoyer ${currentAmount} ${selectedCurrency} via ce lien sécurisé :\n\n${paymentLink}\n\nCordialement`);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
+
+  // Go back
+  window.goBack = function() {
+    window.location.href = 'portefeuille.html';
+  };
+
+  // Toast notification
+  function showToast(message, type = 'info') {
+    const colors = {
+      success: 'linear-gradient(135deg, #00B87C, #00D48F)',
+      warning: 'linear-gradient(135deg, #FF8A00, #FFA500)',
+      error: 'linear-gradient(135deg, #DC2626, #EF4444)',
+      info: 'linear-gradient(135deg, #8B5CF6, #A78BFA)'
+    };
+
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${colors[type]};
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      z-index: 99999;
+      font-weight: 600;
+      animation: slideIn 0.4s ease;
+      max-width: 300px;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.animation = 'slideOut 0.4s ease';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
   }
 
-  // --- Déconnexion
-  function logout(){
-    localStorage.removeItem("kwiksend_user");
-    window.location.href = "index.html";
-  }
+  // Animation styles
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Enter key support
+  document.getElementById('receiveAmount').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      generatePaymentLink();
+    }
+  });
+})();
 </script>
+
 </body>
 </html>
