@@ -3,30 +3,555 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KwikSend — Paramètres</title>
-  <link rel="stylesheet" href="style.css">
+  <title>KwikSend - Paramètres</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
   <style>
-    .settings-section {
-      background:#fff; padding:20px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.06);
-      margin-bottom:20px; max-width:700px; margin:auto;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, sans-serif;
     }
-    .settings-section h3 { margin-bottom:10px; color:var(--orange); }
-    .toggle {
-      appearance:none; width:45px; height:22px; background:#ccc; border-radius:50px;
-      position:relative; outline:none; cursor:pointer; transition:.3s;
+
+    @keyframes bgGradient {
+      0% { background: linear-gradient(135deg, #ffffff 0%, #fff8f2 100%); }
+      33% { background: linear-gradient(135deg, #fff8f2 0%, #ffe7cc 100%); }
+      66% { background: linear-gradient(135deg, #ffe7cc 0%, #f3e5f5 100%); }
+      100% { background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); }
     }
-    .toggle:checked { background:var(--orange); }
-    .toggle:checked::before { left:25px; }
-    .toggle::before {
-      content:''; position:absolute; top:3px; left:3px; width:16px; height:16px;
-      background:#fff; border-radius:50%; transition:.3s;
+
+    body {
+      background: #ffffff;
+      animation: bgGradient 12s ease-in-out infinite;
+      color: #0A0F1C;
+      min-height: 100vh;
+    }
+
+    body.dark {
+      background: #0A0F1C;
+      animation: none;
+    }
+
+    body.dark .settings-card,
+    body.dark .header-container,
+    body.dark footer {
+      background: rgba(30, 30, 35, 0.95);
+    }
+
+    body.dark .settings-card {
+      border-color: rgba(255, 138, 0, 0.3);
+    }
+
+    body.dark .setting-label,
+    body.dark .setting-description,
+    body.dark .section-title,
+    body.dark .settings-title {
+      color: #E0E0E0;
+    }
+
+    body.dark .select-input {
+      background: rgba(50, 50, 55, 0.8);
+      color: #E0E0E0;
+      border-color: rgba(255, 138, 0, 0.3);
+    }
+
+    /* 🧭 Header moderne */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .header-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FF8A00, #00B87C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #0A0F1C;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    body.dark .nav-links a {
+      color: #E0E0E0;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #FF8A00;
+    }
+
+    .burger {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #FF8A00;
+    }
+
+    /* ⚙️ Settings Container */
+    .settings-container {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .settings-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF8A00, #00B87C, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .settings-subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    /* 🎴 Settings Card */
+    .settings-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 138, 0, 0.15);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      margin-bottom: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .settings-card:hover {
+      box-shadow: 0 12px 32px rgba(255, 138, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0A0F1C;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-icon {
+      font-size: 1.6rem;
+      filter: drop-shadow(0 2px 4px rgba(255, 138, 0, 0.3));
+    }
+
+    .section-description {
+      color: #666;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* 🎚️ Toggle Switch */
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 138, 0, 0.1);
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .setting-item:first-child {
+      padding-top: 0;
+    }
+
+    .setting-info {
+      flex: 1;
+    }
+
+    .setting-label {
+      font-weight: 600;
+      color: #0A0F1C;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .setting-badge {
+      background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .setting-description {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ccc;
+      transition: 0.3s;
+      border-radius: 50px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background: white;
+      transition: 0.3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    input:checked + .toggle-slider {
+      background: linear-gradient(135deg, #FF8A00, #FFA500);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    /* 🎨 Select Input */
+    .select-wrapper {
+      position: relative;
+      margin-top: 0.5rem;
+    }
+
+    .select-input {
+      width: 100%;
+      padding: 0.9rem 2.5rem 0.9rem 1rem;
+      border: 2px solid #e0e0e0;
+      background: rgba(249, 249, 249, 0.8);
+      color: #0A0F1C;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      appearance: none;
+    }
+
+    .select-input:focus {
+      outline: none;
+      border-color: #FF8A00;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.1);
+    }
+
+    .select-wrapper::after {
+      content: '▼';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #FF8A00;
+      pointer-events: none;
+      font-size: 0.8rem;
+    }
+
+    /* 🔘 Button */
+    .btn {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF8A00, #FFA500);
+      color: white;
+      box-shadow: 0 4px 16px rgba(255, 138, 0, 0.3);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 24px rgba(255, 138, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+      color: white;
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-secondary:hover {
+      box-shadow: 0 6px 24px rgba(139, 92, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #DC2626, #EF4444);
+      color: white;
+      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+    }
+
+    .btn-danger:hover {
+      box-shadow: 0 6px 24px rgba(220, 38, 38, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* 🎯 Action Group */
+    .action-group {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* 🚨 Danger Zone */
+    .danger-zone {
+      background: rgba(220, 38, 38, 0.05);
+      border: 2px solid rgba(220, 38, 38, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .danger-zone-title {
+      color: #DC2626;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .danger-zone-description {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    /* 👣 Footer */
+    footer {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 138, 0, 0.1);
+      padding: 2rem 0;
+      margin-top: 4rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #666;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: #FF8A00;
+    }
+
+    .copyright {
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    body.dark .copyright {
+      color: #666;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .burger {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      body.dark .nav-links {
+        background: rgba(30, 30, 35, 0.98);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .settings-title {
+        font-size: 1.5rem;
+      }
+
+      .settings-card {
+        padding: 1.5rem;
+      }
+
+      .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .toggle-switch {
+        align-self: flex-end;
+      }
+    }
+
+    /* 🎉 Animations */
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .settings-card {
+      animation: fadeIn 0.5s ease;
+    }
+
+    .settings-card:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .settings-card:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .settings-card:nth-child(4) {
+      animation-delay: 0.3s;
     }
   </style>
 </head>
 <body>
+
+<!-- 🧭 Header -->
 <header>
   <div class="header-container">
-    <div class="logo">Kwik<span>Send</span></div>
+    <div class="logo">KwikSend</div>
     <nav>
       <ul class="nav-links" id="nav-menu">
         <li><a href="dashboard.html">Accueil</a></li>
@@ -34,7 +559,7 @@
         <li><a href="transfert.html">Transfert</a></li>
         <li><a href="kwiktransfert.html">KwikTransfert</a></li>
         <li><a href="releves.html">Relevés</a></li>
-        <li><a href="profile.html">Compte</a></li>
+        <li><a href="profile.html" class="active">Compte</a></li>
         <li><a href="#" onclick="logout()">Déconnexion</a></li>
       </ul>
     </nav>
@@ -42,102 +567,436 @@
   </div>
 </header>
 
-<main style="padding:1.5rem;">
-  <h2>⚙️ Paramètres du compte</h2>
+<!-- ⚙️ Settings Container -->
+<section class="settings-container">
+  <h1 class="settings-title">⚙️ Paramètres du compte</h1>
+  <p class="settings-subtitle">
+    Personnalisez votre expérience KwikSend selon vos préférences
+  </p>
 
-  <!-- Thème -->
-  <section class="settings-section">
-    <h3>🎨 Thème</h3>
-    <p>Choisissez votre mode d’affichage préféré.</p>
-    <label>
-      <input type="checkbox" id="themeToggle" class="toggle"> Mode sombre
-    </label>
-  </section>
+  <!-- 🎨 Apparence -->
+  <div class="settings-card">
+    <h2 class="section-title">
+      <span class="section-icon">🎨</span>
+      Apparence
+    </h2>
+    <p class="section-description">
+      Personnalisez l'affichage de votre interface pour un confort optimal
+    </p>
+    
+    <div class="setting-item">
+      <div class="setting-info">
+        <div class="setting-label">
+          Mode sombre
+          <span class="setting-badge">NOUVEAU</span>
+        </div>
+        <div class="setting-description">
+          Réduisez la fatigue oculaire avec le thème sombre
+        </div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
 
-  <!-- Langue -->
-  <section class="settings-section">
-    <h3>🌍 Langue</h3>
-    <p>Sélectionnez la langue d’affichage de l’interface.</p>
-    <select id="langSelect" style="padding:8px;border-radius:6px;border:1px solid #ccc;">
-      <option value="fr">Français 🇫🇷</option>
-      <option value="en">English 🇬🇧</option>
-    </select>
-  </section>
+  <!-- 🌍 Langue et région -->
+  <div class="settings-card">
+    <h2 class="section-title">
+      <span class="section-icon">🌍</span>
+      Langue et région
+    </h2>
+    <p class="section-description">
+      Sélectionnez votre langue préférée pour l'interface
+    </p>
+    
+    <div class="select-wrapper">
+      <select id="langSelect" class="select-input">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="ar">🇸🇦 العربية</option>
+        <option value="es">🇪🇸 Español</option>
+      </select>
+    </div>
+  </div>
 
-  <!-- Sécurité -->
-  <section class="settings-section">
-    <h3>🔐 Sécurité</h3>
-    <p>Protégez votre compte.</p>
-    <button id="changePwdBtn">Modifier le mot de passe</button>
-    <br><br>
-    <label><input type="checkbox" id="twofaToggle" class="toggle"> Activer la vérification 2FA (simulation)</label>
-  </section>
+  <!-- 🔐 Sécurité -->
+  <div class="settings-card">
+    <h2 class="section-title">
+      <span class="section-icon">🔐</span>
+      Sécurité et confidentialité
+    </h2>
+    <p class="section-description">
+      Renforcez la protection de votre compte avec nos options de sécurité avancées
+    </p>
 
-</main>
+    <div class="setting-item">
+      <div class="setting-info">
+        <div class="setting-label">
+          Authentification à deux facteurs (2FA)
+          <span class="setting-badge">RECOMMANDÉ</span>
+        </div>
+        <div class="setting-description">
+          Ajoutez une couche de sécurité supplémentaire à votre connexion
+        </div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="twofaToggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
 
+    <div class="action-group">
+      <button class="btn btn-primary" id="changePwdBtn">
+        🔑 Modifier le mot de passe
+      </button>
+      <button class="btn btn-secondary" id="exportDataBtn">
+        📥 Exporter mes données
+      </button>
+    </div>
+  </div>
+
+  <!-- 🔔 Notifications -->
+  <div class="settings-card">
+    <h2 class="section-title">
+      <span class="section-icon">🔔</span>
+      Notifications
+    </h2>
+    <p class="section-description">
+      Gérez la façon dont vous recevez les notifications
+    </p>
+
+    <div class="setting-item">
+      <div class="setting-info">
+        <div class="setting-label">Notifications par email</div>
+        <div class="setting-description">
+          Recevez des alertes pour les transactions importantes
+        </div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="emailNotifToggle" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-item">
+      <div class="setting-info">
+        <div class="setting-label">Notifications push</div>
+        <div class="setting-description">
+          Alertes instantanées sur votre appareil
+        </div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="pushNotifToggle" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-item">
+      <div class="setting-info">
+        <div class="setting-label">Alertes de sécurité</div>
+        <div class="setting-description">
+          Soyez informé des activités suspectes
+        </div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="securityNotifToggle" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- ⚠️ Zone dangereuse -->
+  <div class="settings-card">
+    <h2 class="section-title">
+      <span class="section-icon">⚠️</span>
+      Zone dangereuse
+    </h2>
+    
+    <div class="danger-zone">
+      <div class="danger-zone-title">
+        🗑️ Supprimer le compte
+      </div>
+      <div class="danger-zone-description">
+        Cette action est irréversible. Toutes vos données seront définitivement supprimées.
+      </div>
+      <button class="btn btn-danger" id="deleteAccountBtn">
+        Supprimer définitivement mon compte
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- 👣 Footer -->
 <footer>
-  <p>© 2025 KwikSend. Tous droits réservés.</p>
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="dashboard.html">Accueil</a>
+      <a href="portefeuille.html">Portefeuille</a>
+      <a href="profile.html">Mon compte</a>
+      <a href="mentions.html">Mentions légales</a>
+      <a href="mailto:kifouliw@gmail.com">Contact</a>
+    </div>
+    <p class="copyright">© 2025 KwikSend. Tous droits réservés.</p>
+  </div>
 </footer>
 
+<!-- 📲 Scripts -->
 <script>
 (function(){
+  // Elements
   const themeToggle = document.getElementById('themeToggle');
   const langSelect = document.getElementById('langSelect');
   const twofaToggle = document.getElementById('twofaToggle');
+  const emailNotifToggle = document.getElementById('emailNotifToggle');
+  const pushNotifToggle = document.getElementById('pushNotifToggle');
+  const securityNotifToggle = document.getElementById('securityNotifToggle');
+  const changePwdBtn = document.getElementById('changePwdBtn');
+  const exportDataBtn = document.getElementById('exportDataBtn');
+  const deleteAccountBtn = document.getElementById('deleteAccountBtn');
 
-  // Charger préférences existantes
+  // Load existing preferences
   const theme = localStorage.getItem('ks_theme') || 'light';
-  const lang = localStorage.getItem('lang') || 'fr';
+  const lang = localStorage.getItem('ks_lang') || 'fr';
   const twofa = localStorage.getItem('ks_2fa') === 'true';
+  const emailNotif = localStorage.getItem('ks_email_notif') !== 'false';
+  const pushNotif = localStorage.getItem('ks_push_notif') !== 'false';
+  const securityNotif = localStorage.getItem('ks_security_notif') !== 'false';
 
-  if(theme === 'dark'){
+  // Apply saved preferences
+  if (theme === 'dark') {
     document.body.classList.add('dark');
     themeToggle.checked = true;
   }
   langSelect.value = lang;
   twofaToggle.checked = twofa;
+  emailNotifToggle.checked = emailNotif;
+  pushNotifToggle.checked = pushNotif;
+  securityNotifToggle.checked = securityNotif;
 
-  // Changement de thème
-  themeToggle.addEventListener('change', ()=>{
-    const dark = themeToggle.checked;
-    if(dark){
+  // Theme toggle
+  themeToggle.addEventListener('change', () => {
+    const isDark = themeToggle.checked;
+    if (isDark) {
       document.body.classList.add('dark');
-      localStorage.setItem('ks_theme','dark');
+      localStorage.setItem('ks_theme', 'dark');
+      showToast('🌙 Mode sombre activé', 'success');
     } else {
       document.body.classList.remove('dark');
-      localStorage.setItem('ks_theme','light');
+      localStorage.setItem('ks_theme', 'light');
+      showToast('☀️ Mode clair activé', 'success');
     }
   });
 
-  // Langue
-  langSelect.addEventListener('change', ()=>{
-    localStorage.setItem('lang', langSelect.value);
-    alert('🌍 Langue changée. Recharger la page pour appliquer.');
+  // Language change
+  langSelect.addEventListener('change', () => {
+    const selectedLang = langSelect.value;
+    localStorage.setItem('ks_lang', selectedLang);
+    
+    const langNames = {
+      'fr': '🇫🇷 Français',
+      'en': '🇬🇧 English',
+      'ar': '🇸🇦 العربية',
+      'es': '🇪🇸 Español'
+    };
+    
+    showToast(`Langue changée en ${langNames[selectedLang]}`, 'success');
   });
 
-  // 2FA (simulation)
-  twofaToggle.addEventListener('change', ()=>{
-    localStorage.setItem('ks_2fa', twofaToggle.checked);
-    if(twofaToggle.checked){
-      alert('🔐 Vérification 2FA activée (simulation).');
+  // 2FA toggle
+  twofaToggle.addEventListener('change', () => {
+    const isEnabled = twofaToggle.checked;
+    localStorage.setItem('ks_2fa', isEnabled);
+    
+    if (isEnabled) {
+      showToast('🔐 Authentification 2FA activée (simulation)', 'success');
     } else {
-      alert('2FA désactivée.');
+      showToast('2FA désactivée', 'info');
     }
   });
 
-  // Changement mot de passe (simulation)
-  document.getElementById('changePwdBtn').addEventListener('click', ()=>{
-    const newPwd = prompt('Entrez un nouveau mot de passe (simulation) :');
-    if(newPwd && newPwd.length >= 6){
-      localStorage.setItem('ks_password','******');
-      alert('✅ Mot de passe modifié (simulation).');
+  // Email notifications
+  emailNotifToggle.addEventListener('change', () => {
+    localStorage.setItem('ks_email_notif', emailNotifToggle.checked);
+    showToast(
+      emailNotifToggle.checked 
+        ? '📧 Notifications email activées' 
+        : 'Notifications email désactivées',
+      emailNotifToggle.checked ? 'success' : 'info'
+    );
+  });
+
+  // Push notifications
+  pushNotifToggle.addEventListener('change', () => {
+    localStorage.setItem('ks_push_notif', pushNotifToggle.checked);
+    showToast(
+      pushNotifToggle.checked 
+        ? '🔔 Notifications push activées' 
+        : 'Notifications push désactivées',
+      pushNotifToggle.checked ? 'success' : 'info'
+    );
+  });
+
+  // Security notifications
+  securityNotifToggle.addEventListener('change', () => {
+    localStorage.setItem('ks_security_notif', securityNotifToggle.checked);
+    showToast(
+      securityNotifToggle.checked 
+        ? '🛡️ Alertes de sécurité activées' 
+        : 'Alertes de sécurité désactivées',
+      securityNotifToggle.checked ? 'success' : 'info'
+    );
+  });
+
+  // Change password
+  changePwdBtn.addEventListener('click', () => {
+    const currentPwd = prompt('Entrez votre mot de passe actuel (simulation) :');
+    if (!currentPwd) return;
+
+    const newPwd = prompt('Entrez votre nouveau mot de passe :');
+    if (!newPwd) return;
+
+    if (newPwd.length < 8) {
+      showToast('⚠️ Le mot de passe doit contenir au moins 8 caractères', 'warning');
+      return;
+    }
+
+    const confirmPwd = prompt('Confirmez votre nouveau mot de passe :');
+    if (newPwd !== confirmPwd) {
+      showToast('❌ Les mots de passe ne correspondent pas', 'error');
+      return;
+    }
+
+    localStorage.setItem('ks_password', '******');
+    showToast('✅ Mot de passe modifié avec succès (simulation)', 'success');
+  });
+
+  // Export data
+  exportDataBtn.addEventListener('click', () => {
+    const user = JSON.parse(localStorage.getItem('kwiksend_user') || '{}');
+    const balance = localStorage.getItem('ks_balance') || '0';
+    const history = localStorage.getItem('ks_history') || '[]';
+    const kycStatus = localStorage.getItem('ks_kyc_status') || 'not_submitted';
+
+    const exportData = {
+      user,
+      balance,
+      history: JSON.parse(history),
+      kycStatus,
+      exportDate: new Date().toISOString(),
+      settings: {
+        theme: localStorage.getItem('ks_theme'),
+        lang: localStorage.getItem('ks_lang'),
+        twofa: localStorage.getItem('ks_2fa'),
+        notifications: {
+          email: localStorage.getItem('ks_email_notif'),
+          push: localStorage.getItem('ks_push_notif'),
+          security: localStorage.getItem('ks_security_notif')
+        }
+      }
+    };
+
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `kwiksend-data-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    showToast('📥 Données exportées avec succès', 'success');
+  });
+
+  // Delete account
+  deleteAccountBtn.addEventListener('click', () => {
+    const confirmation = confirm(
+      '⚠️ ATTENTION !\n\n' +
+      'Êtes-vous absolument certain de vouloir supprimer votre compte ?\n\n' +
+      'Cette action est IRRÉVERSIBLE et entraînera :\n' +
+      '• La suppression de toutes vos données\n' +
+      '• La perte de votre historique de transactions\n' +
+      '• La fermeture définitive de votre compte\n\n' +
+      'Cliquez sur OK pour continuer la suppression.'
+    );
+
+    if (!confirmation) return;
+
+    const finalConfirm = prompt(
+      'Pour confirmer la suppression, tapez "SUPPRIMER" en majuscules :'
+    );
+
+    if (finalConfirm === 'SUPPRIMER') {
+      // Clear all user data
+      localStorage.removeItem('kwiksend_user');
+      localStorage.removeItem('ks_balance');
+      localStorage.removeItem('ks_history');
+      localStorage.removeItem('ks_kyc_status');
+      localStorage.removeItem('ks_kyc_data');
+      localStorage.removeItem('ks_theme');
+      localStorage.removeItem('ks_lang');
+      localStorage.removeItem('ks_2fa');
+      localStorage.removeItem('ks_password');
+      
+      showToast('🗑️ Compte supprimé. Redirection...', 'success');
+      
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
     } else {
-      alert('Mot de passe trop court.');
+      showToast('❌ Suppression annulée', 'info');
     }
   });
+
+  // Toast notification
+  function showToast(message, type = 'info') {
+    const colors = {
+      success: 'linear-gradient(135deg, #00B87C, #00D48F)',
+      warning: 'linear-gradient(135deg, #FF8A00, #FFA500)',
+      error: 'linear-gradient(135deg, #DC2626, #EF4444)',
+      info: 'linear-gradient(135deg, #8B5CF6, #A78BFA)'
+    };
+
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${colors[type]};
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      z-index: 99999;
+      font-weight: 600;
+      animation: slideIn 0.4s ease;
+      max-width: 300px;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.animation = 'slideOut 0.4s ease';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  // Toggle menu (mobile)
+  window.toggleMenu = function() {
+    document.getElementById('nav-menu').classList.toggle('active');
+  };
+
+  // Logout
+  window.logout = function() {
+    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+      localStorage.removeItem('kwiksend_user');
+      window.location.href = 'index.html';
+    }
+  };
 })();
 </script>
-<!-- Appels scripts globaux -->
-<script src="app.js"></script>
+
 </body>
 </html>
