@@ -1,116 +1,417 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KwikSend - Recevoir un paiement</title>
+<meta name="description" content="Générez un lien de paiement pour recevoir de l'argent avec KwikSend.">
+<meta name="theme-color" content="#ff7a00">
+<!-- Favicon & icônes -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<!-- Manifest PWA -->
+<link rel="manifest" href="site.webmanifest">
+<!-- Styles -->
+<link rel="stylesheet" href="style.css">
+<style>
+.payment-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 450px;
+    margin: 2rem auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    text-align: center;
+}
 
-  <title>KwikSend - Retrait IBAN</title>
-  <meta name="description" content="Effectuez un retrait sécurisé vers votre compte bancaire IBAN avec KwikSend.">
-  <meta name="theme-color" content="#ff7a00">
+.payment-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
 
-  <!-- Favicon & icônes -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+.payment-header .icon {
+    font-size: 2rem;
+}
 
-  <!-- Manifest PWA -->
-  <link rel="manifest" href="site.webmanifest">
+.payment-header .title-orange {
+    color: #ff7a00;
+}
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
+.payment-header .title-green {
+    color: #4caf50;
+}
+
+.qr-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+#qrcode {
+    width: 250px;
+    height: 250px;
+}
+
+.amount-display {
+    background: #fff5eb;
+    border: 2px solid #ff7a00;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.amount-label {
+    color: #999;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.amount-value {
+    color: #ff7a00;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.payment-link {
+    background: #f5f5f5;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    color: #666;
+    word-break: break-all;
+}
+
+.copy-btn {
+    background: #ff7a00;
+    color: white;
+    border: none;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: all 0.3s;
+}
+
+.copy-btn:hover {
+    background: #e66900;
+    transform: scale(1.05);
+}
+
+.share-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.share-btn {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.whatsapp-btn {
+    background: #25d366;
+    color: white;
+}
+
+.whatsapp-btn:hover {
+    background: #1fb855;
+    transform: translateY(-2px);
+}
+
+.email-btn {
+    background: #ea4335;
+    color: white;
+}
+
+.email-btn:hover {
+    background: #d33426;
+    transform: translateY(-2px);
+}
+
+.close-btn {
+    background: #f5f5f5;
+    color: #666;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.close-btn:hover {
+    background: #e0e0e0;
+}
+
+.amount-input-section {
+    margin-bottom: 2rem;
+}
+
+.amount-input-section label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.amount-input-section input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.generate-btn {
+    background: #ff7a00;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.generate-btn:hover {
+    background: #e66900;
+    transform: translateY(-2px);
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .payment-card {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    #qrcode {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .amount-value {
+        font-size: 2rem;
+    }
+}
+</style>
 </head>
 <body>
-
 <!-- 🧭 Header -->
 <header>
-  <div class="container header-container">
-    <div class="logo">Kwik<span>Send</span></div>
-    <nav>
-      <ul class="nav-links">
-        <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
-        <li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
-        <li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
-        <li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
-        <li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
-      </ul>
-    </nav>
-    <div class="header-actions">
-      <select id="langSwitcher" onchange="switchLang(this.value)">
-        <option value="fr">🇫🇷 FR</option>
-        <option value="en">🇬🇧 EN</option>
-      </select>
-      <button id="darkToggle">🌙</button>
-    </div>
-  </div>
+<div class="container header-container">
+<div class="logo">Kwik<span>Send</span></div>
+<nav>
+<ul class="nav-links">
+<li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
+<li><a href="index.html#fonctionnalites" data-i18n="nav.features">Fonctionnalités</a></li>
+<li><a href="index.html#avantages" data-i18n="nav.advantages">Avantages</a></li>
+<li><a href="portefeuille.html" data-i18n="nav.wallet">Portefeuille</a></li>
+<li><a href="connexion.html" class="cta-nav" data-i18n="nav.login">Connexion</a></li>
+</ul>
+</nav>
+<div class="header-actions">
+<select id="langSwitcher" onchange="switchLang(this.value)">
+<option value="fr">🇫🇷 FR</option>
+<option value="en">🇬🇧 EN</option>
+</select>
+<button id="darkToggle">🌙</button>
+</div>
+</div>
 </header>
 
-<!-- 🏦 Retrait -->
-<section class="hero" style="padding:2rem 1rem;">
-  <div class="hero-content" style="max-width:600px;margin:auto;">
-    <h1>🏦 Retrait bancaire (IBAN)</h1>
-    <p>Saisissez votre IBAN et le montant à retirer.</p>
+<!-- 💰 Section Recevoir -->
+<section class="hero" style="padding:2rem 1rem; min-height: 80vh;">
+<!-- Formulaire de saisie du montant -->
+<div id="amountForm" class="payment-card">
+<div class="payment-header">
+<span class="icon">💰</span>
+<span>Recevoir de l'argent</span>
+</div>
+<p style="color: #666; margin-bottom: 2rem;">Saisissez le montant que vous souhaitez recevoir</p>
+<div class="amount-input-section">
+<label for="receiveAmount">Montant (EUR) :</label>
+<input type="number" id="receiveAmount" placeholder="Ex: 50" min="1" required>
+</div>
+<button class="generate-btn" onclick="generatePayment()">
+Générer le lien de paiement
+</button>
+</div>
 
-    <!-- Formulaire -->
-    <form id="withdrawForm" style="display:flex;flex-direction:column;gap:1rem;margin-top:2rem;">
-      <label>IBAN :</label>
-      <input type="text" id="iban" placeholder="FR76 3000 6000 ..." required>
+<!-- Carte de paiement générée (cachée au départ) -->
+<div id="paymentCard" class="payment-card hidden">
+<div class="payment-header">
+<span class="icon">📦</span>
+<span class="title-orange">Paiement</span>
+<span class="title-green">généré</span>
+</div>
 
-      <label>Montant :</label>
-      <input type="number" id="withdrawAmount" placeholder="Ex: 200" required min="1">
+<!-- QR Code -->
+<div class="qr-container">
+<div id="qrcode"></div>
+</div>
 
-      <button type="submit" class="cta">Valider le retrait</button>
-    </form>
-  </div>
+<!-- Montant -->
+<div class="amount-display">
+<div class="amount-label">Montant</div>
+<div class="amount-value" id="displayAmount">50 €</div>
+</div>
+
+<!-- Lien de paiement -->
+<div class="payment-link">
+<span id="paymentLinkText">https://kwiksend.com/pay/kifoull?amount=50</span>
+<button class="copy-btn" onclick="copyLink()" title="Copier le lien">
+📋
+</button>
+</div>
+
+<!-- Boutons de partage -->
+<div class="share-buttons">
+<button class="share-btn whatsapp-btn" onclick="shareWhatsApp()">
+📱 WhatsApp
+</button>
+<button class="share-btn email-btn" onclick="shareEmail()">
+📧 Email
+</button>
+</div>
+
+<!-- Bouton fermer -->
+<button class="close-btn" onclick="closePayment()">
+Fermer
+</button>
+</div>
 </section>
 
 <!-- 📝 Footer -->
 <footer>
-  <p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+<p>© 2025 KwikSend. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
 </footer>
+
+<!-- QR Code Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <!-- 📜 Scripts communs -->
 <script src="script.js"></script>
 <script src="translate.js"></script>
 <script src="app.js"></script>
 
-<!-- 📲 Service Worker + logique -->
+<!-- 📲 Logique de génération de paiement -->
 <script>
-  if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(console.error);
-  }
+}
 
-  const form = document.getElementById("withdrawForm");
+let currentAmount = 0;
+let paymentLink = '';
+let qrCodeInstance = null;
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const iban = document.getElementById("iban").value.trim();
-    const amount = parseFloat(document.getElementById("withdrawAmount").value);
-
-    if (!iban || iban.length < 15) {
-      alert("⚠️ Veuillez saisir un IBAN valide.");
-      return;
-    }
+function generatePayment() {
+    const amountInput = document.getElementById('receiveAmount');
+    const amount = parseFloat(amountInput.value);
+    
     if (isNaN(amount) || amount <= 0) {
-      alert("⚠️ Veuillez entrer un montant valide.");
-      return;
+        alert('⚠️ Veuillez entrer un montant valide.');
+        return;
     }
-
-    // Simulation du retrait
-    wallet.balance -= amount;
-    wallet.history.unshift({
-      type: "Retrait IBAN",
-      amount: -amount,
-      to: iban,
-      date: new Date().toLocaleDateString(),
-      status: "attente"
+    
+    currentAmount = amount;
+    
+    // Récupérer l'ID utilisateur (à adapter selon votre système)
+    const userId = localStorage.getItem('userId') || 'kifoull';
+    
+    // Générer le lien de paiement
+    paymentLink = `https://kwiksend.com/pay/${userId}?amount=${amount}`;
+    
+    // Afficher le montant
+    document.getElementById('displayAmount').textContent = `${amount} €`;
+    
+    // Afficher le lien
+    document.getElementById('paymentLinkText').textContent = paymentLink;
+    
+    // Générer le QR code
+    document.getElementById('qrcode').innerHTML = '';
+    qrCodeInstance = new QRCode(document.getElementById('qrcode'), {
+        text: paymentLink,
+        width: 250,
+        height: 250,
+        colorDark: '#ff7a00',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
     });
+    
+    // Masquer le formulaire et afficher la carte
+    document.getElementById('amountForm').classList.add('hidden');
+    document.getElementById('paymentCard').classList.remove('hidden');
+}
 
-    alert(`⏳ Votre retrait de ${amount} EUR vers l’IBAN ${iban} est en cours de traitement.`);
+function copyLink() {
+    navigator.clipboard.writeText(paymentLink).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✅';
+        btn.style.background = '#4caf50';
+        
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '#ff7a00';
+        }, 2000);
+    }).catch(err => {
+        alert('❌ Erreur lors de la copie du lien');
+    });
+}
 
-    // Redirection portefeuille
-    window.location.href = "portefeuille.html";
-  });
+function shareWhatsApp() {
+    const message = `Bonjour ! Merci de me payer ${currentAmount} € via ce lien : ${paymentLink}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+function shareEmail() {
+    const subject = 'Demande de paiement KwikSend';
+    const body = `Bonjour,\n\nMerci de me payer ${currentAmount} € via ce lien :\n${paymentLink}\n\nCordialement`;
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+}
+
+function closePayment() {
+    document.getElementById('paymentCard').classList.add('hidden');
+    document.getElementById('amountForm').classList.remove('hidden');
+    document.getElementById('receiveAmount').value = '';
+}
 </script>
 </body>
 </html>
