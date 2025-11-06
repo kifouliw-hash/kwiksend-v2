@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KwikSend - Recevoir de l'argent</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
   
@@ -46,13 +45,12 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
       border: 1px solid rgba(255, 138, 0, 0.1);
       animation: modalAppear 0.4s ease;
-      position: relative;
     }
 
     @keyframes modalAppear {
       from {
         opacity: 0;
-        transform: scale(0.9) translateY(20px);
+        transform: scale(0.95) translateY(20px);
       }
       to {
         opacity: 1;
@@ -76,7 +74,7 @@
       gap: 0.5rem;
     }
 
-    .modal-title .icon {
+    .icon {
       font-size: 1.8rem;
     }
 
@@ -125,10 +123,6 @@
     }
 
     /* 📝 Amount Input */
-    .amount-group {
-      margin-bottom: 1.5rem;
-    }
-
     .amount-input {
       width: 100%;
       padding: 1.2rem;
@@ -140,6 +134,7 @@
       font-weight: 700;
       text-align: center;
       transition: all 0.2s;
+      margin-bottom: 1.5rem;
     }
 
     .amount-input:focus {
@@ -154,24 +149,21 @@
       font-weight: 500;
     }
 
-    /* 🎨 Generate Button */
-    .generate-btn {
+    /* 🎨 Buttons */
+    .btn {
       width: 100%;
       padding: 1.2rem;
-      background: linear-gradient(135deg, #FF8A00, #00B87C);
-      color: white;
       border: none;
       border-radius: 16px;
       font-weight: 900;
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s;
-      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.3);
       position: relative;
       overflow: hidden;
     }
 
-    .generate-btn::before {
+    .btn::before {
       content: '';
       position: absolute;
       top: 50%;
@@ -184,33 +176,49 @@
       transition: width 0.5s, height 0.5s;
     }
 
-    .generate-btn:hover::before {
+    .btn:hover::before {
       width: 400px;
       height: 400px;
     }
 
-    .generate-btn:hover {
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF8A00, #00B87C);
+      color: white;
+      box-shadow: 0 6px 20px rgba(255, 138, 0, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(255, 138, 0, 0.4);
     }
 
-    .generate-btn:active {
-      transform: scale(0.98);
+    .btn-secondary {
+      background: #f2f2f2;
+      color: #666;
     }
 
-    /* 📱 Payment Display (Step 2) */
-    .payment-display {
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    /* Step 2 Hidden */
+    .step-2 {
       display: none;
     }
 
-    .payment-display.active {
+    .step-2.active {
       display: block;
-      animation: fadeIn 0.4s ease;
+      animation: fadeIn 0.3s ease;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* 💰 Amount Display */
@@ -253,7 +261,6 @@
     .qr-code {
       width: 200px;
       height: 200px;
-      margin: 0 auto;
     }
 
     /* 🔗 Link Container */
@@ -273,9 +280,6 @@
       font-size: 0.85rem;
       font-weight: 500;
       font-family: 'Courier New', monospace;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
     .copy-btn {
@@ -340,23 +344,6 @@
       box-shadow: 0 6px 16px rgba(234, 67, 53, 0.4);
     }
 
-    /* 🔙 Close Button */
-    .close-btn {
-      width: 100%;
-      padding: 1rem;
-      background: #f2f2f2;
-      color: #666;
-      border: none;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .close-btn:hover {
-      background: #e0e0e0;
-    }
-
     /* 📱 Responsive */
     @media (max-width: 768px) {
       .receive-modal {
@@ -389,10 +376,9 @@
 </head>
 <body>
 
-<!-- 📱 Receive Modal -->
 <div class="receive-modal">
-  <!-- Step 1: Amount Input -->
-  <div id="amountStep">
+  <!-- STEP 1: Amount Input -->
+  <div id="step1" class="step-1">
     <div class="modal-header">
       <h1 class="modal-title">
         <span class="icon">💰</span>
@@ -401,36 +387,30 @@
       <p class="modal-subtitle">Entrez le montant à recevoir</p>
     </div>
 
-    <!-- Currency Selector -->
     <div class="currency-selector">
       <button class="currency-btn active" data-currency="EUR">EUR (€)</button>
       <button class="currency-btn" data-currency="FCFA">FCFA</button>
     </div>
 
-    <!-- Amount Input -->
-    <div class="amount-group">
-      <input 
-        type="number" 
-        id="receiveAmount" 
-        class="amount-input" 
-        placeholder="Ex: 50"
-        min="1"
-        step="0.01"
-      />
-    </div>
+    <input 
+      type="number" 
+      id="receiveAmount" 
+      class="amount-input" 
+      placeholder="Ex: 50"
+      min="1"
+      step="0.01"
+    />
 
-    <!-- Generate Button -->
-    <button class="generate-btn" onclick="generatePaymentLink()">
+    <button class="btn btn-primary" onclick="generatePayment()">
       Générer le lien
     </button>
-    <br><br>
-    <button class="close-btn" onclick="goBack()">
+    <button class="btn btn-secondary" onclick="goBack()">
       Fermer
     </button>
   </div>
 
-  <!-- Step 2: Payment Display -->
-  <div id="paymentStep" class="payment-display">
+  <!-- STEP 2: Payment Generated -->
+  <div id="step2" class="step-2">
     <div class="modal-header">
       <h1 class="modal-title">
         <span class="icon">📦</span>
@@ -438,35 +418,20 @@
       </h1>
     </div>
 
-    <!-- Amount Display -->
     <div class="amount-display">
       <div class="amount-label">Montant</div>
       <div class="amount-value" id="displayAmount">0 €</div>
     </div>
 
-    <!-- QR Code -->
     <div class="qr-container">
-      <img 
-        id="qrCode" 
-        class="qr-code"
-        alt="QR Code"
-      />
+      <img id="qrCode" class="qr-code" alt="QR Code" />
     </div>
 
-    <!-- Link with Copy Button -->
     <div class="link-container">
-      <input 
-        type="text" 
-        id="paymentLink" 
-        class="link-input" 
-        readonly
-      />
-      <button class="copy-btn" id="copyBtn" onclick="copyLink()">
-        📋
-      </button>
+      <input type="text" id="paymentLink" class="link-input" readonly />
+      <button class="copy-btn" id="copyBtn" onclick="copyLink()">📋</button>
     </div>
 
-    <!-- Share Buttons -->
     <div class="share-buttons">
       <button class="share-btn btn-whatsapp" onclick="shareWhatsApp()">
         📲 WhatsApp
@@ -476,14 +441,12 @@
       </button>
     </div>
 
-    <!-- Close Button -->
-    <button class="close-btn" onclick="goBack()">
+    <button class="btn btn-secondary" onclick="goBack()">
       Fermer
     </button>
   </div>
 </div>
 
-<!-- 📲 Scripts -->
 <script>
 (function(){
   let selectedCurrency = 'EUR';
@@ -494,50 +457,42 @@
   const userId = user.email ? user.email.split("@")[0] : "kifouli";
 
   // Currency selection
-  const currencyBtns = document.querySelectorAll('.currency-btn');
-  currencyBtns.forEach(btn => {
+  document.querySelectorAll('.currency-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      currencyBtns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedCurrency = btn.dataset.currency;
     });
   });
 
-  // Generate payment link
-  window.generatePaymentLink = function() {
+  // Generate payment
+  window.generatePayment = function() {
     const amount = parseFloat(document.getElementById('receiveAmount').value);
     
     if (!amount || amount <= 0) {
-      showToast('⚠️ Veuillez entrer un montant valide', 'warning');
+      alert('⚠️ Veuillez entrer un montant valide');
       return;
     }
 
     if (amount > 50000) {
-      showToast('⚠️ Le montant maximum est de 50 000 €', 'warning');
+      alert('⚠️ Le montant maximum est de 50 000 €');
       return;
     }
 
     currentAmount = amount;
-    
-    // Generate link
     paymentLink = `https://kwiksend.com/pay/${userId}?amount=${amount}`;
     
-    // Update display
     const symbol = selectedCurrency === 'EUR' ? '€' : 'FCFA';
-    document.getElementById('displayAmount').textContent = `${amount.toLocaleString('fr-FR', {minimumFractionDigits: 2})} ${symbol}`;
+    document.getElementById('displayAmount').textContent = 
+      `${amount.toLocaleString('fr-FR', {minimumFractionDigits: 2})} ${symbol}`;
     document.getElementById('paymentLink').value = paymentLink;
     
-    // Generate QR code
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(paymentLink)}&color=FF8A00`;
     document.getElementById('qrCode').src = qrUrl;
     
-    // Switch to step 2 (animation smooth)
-    document.getElementById('amountStep').style.display = 'none';
-    setTimeout(() => {
-      document.getElementById('paymentStep').classList.add('active');
-    }, 50);
-    
-    showToast('✅ Lien de paiement généré !', 'success');
+    // Switch steps
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').classList.add('active');
   };
 
   // Copy link
@@ -546,37 +501,28 @@
     const copyBtn = document.getElementById('copyBtn');
     
     linkInput.select();
-    linkInput.setSelectionRange(0, 99999);
-    
     navigator.clipboard.writeText(linkInput.value).then(() => {
-      const originalContent = copyBtn.innerHTML;
+      const original = copyBtn.innerHTML;
       copyBtn.innerHTML = '✓';
       copyBtn.classList.add('copied');
       
-      showToast('✅ Lien copié dans le presse-papiers !', 'success');
-      
       setTimeout(() => {
-        copyBtn.innerHTML = originalContent;
+        copyBtn.innerHTML = original;
         copyBtn.classList.remove('copied');
       }, 2000);
-    }).catch(() => {
-      linkInput.select();
-      document.execCommand('copy');
-      showToast('✅ Lien copié !', 'success');
     });
   };
 
-  // Share WhatsApp
+  // Share
   window.shareWhatsApp = function() {
-    const message = encodeURIComponent(`💰 Envoyez-moi ${currentAmount} ${selectedCurrency} via KwikSend !\n\n${paymentLink}`);
-    window.open(`https://wa.me/?text=${message}`, "_blank");
+    const msg = encodeURIComponent(`💰 Envoyez-moi ${currentAmount} ${selectedCurrency} via KwikSend !\n\n${paymentLink}`);
+    window.open(`https://wa.me/?text=${msg}`, "_blank");
   };
 
-  // Share Email
   window.shareEmail = function() {
-    const subject = encodeURIComponent("Demande de paiement KwikSend");
-    const body = encodeURIComponent(`Bonjour,\n\nMerci de m'envoyer ${currentAmount} ${selectedCurrency} via ce lien sécurisé :\n\n${paymentLink}\n\nCordialement`);
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    const subj = encodeURIComponent("Demande de paiement KwikSend");
+    const body = encodeURIComponent(`Montant : ${currentAmount} ${selectedCurrency}\n\n${paymentLink}`);
+    window.location.href = `mailto:?subject=${subj}&body=${body}`;
   };
 
   // Go back
@@ -584,72 +530,9 @@
     window.location.href = 'portefeuille.html';
   };
 
-  // Toast notification
-  function showToast(message, type = 'info') {
-    const colors = {
-      success: 'linear-gradient(135deg, #00B87C, #00D48F)',
-      warning: 'linear-gradient(135deg, #FF8A00, #FFA500)',
-      error: 'linear-gradient(135deg, #DC2626, #EF4444)',
-      info: 'linear-gradient(135deg, #8B5CF6, #A78BFA)'
-    };
-
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    toast.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: ${colors[type]};
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      z-index: 99999;
-      font-weight: 600;
-      animation: slideIn 0.4s ease;
-      max-width: 300px;
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-      toast.style.animation = 'slideOut 0.4s ease';
-      setTimeout(() => toast.remove(), 400);
-    }, 3000);
-  }
-
-  // Animation styles
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes slideIn {
-      from {
-        transform: translateX(400px);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateX(400px);
-        opacity: 0;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-
-  // Enter key support
+  // Enter key
   document.getElementById('receiveAmount').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      generatePaymentLink();
-    }
+    if (e.key === 'Enter') generatePayment();
   });
 })();
 </script>
